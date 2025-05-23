@@ -1,65 +1,78 @@
+@import 'src/scss/variable';
 @import 'src/scss/mixin';
+@import 'src/scss/color';
+@import 'src/scss/root';
+@import 'src/scss/globals';
+@import 'src/scss/base';
+@import 'src/scss/button';
+@import 'src/scss/footer';
+@import 'src/scss/header';
+@import 'src/scss/style';
 
 /* Work Section Styles */
-.work-section {
+.project-box {
+    padding: 40px;
+    border-radius: 8px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     position: relative;
+    overflow: hidden;
     z-index: 1;
+    @include down-md {
+        padding: 30px;
+    }
     
-    .work-box {
-        position: relative;
-        border-radius: 10px;
-        overflow: hidden;
-        margin-bottom: 30px;
-        
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+    &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--px-blue);
+        opacity: 0.5;
+        z-index: -1;
+    }
+    
+    .project-desc {
+        margin-top: 150px;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(16px);
+        padding: 35px;
+        border-radius: 4px;
+        @include down-md {
+            padding: 25px;
         }
         
-        .work-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: ease all 0.35s;
-            
-            .content {
-                text-align: center;
-                padding: 20px;
-                
-                h4 {
-                    color: var(--px-white);
-                    margin-bottom: 10px;
-                }
-                
-                span {
-                    color: var(--px-theme);
-                    display: block;
-                    margin-bottom: 15px;
-                }
-                
-                .px-btn {
-                    background: var(--px-theme);
-                    color: var(--px-theme-text);
-                    
-                    &:hover {
-                        background: var(--px-theme-text);
-                        color: var(--px-theme);
-                    }
-                }
-            }
+        h3 {
+            color: var(--px-white);
+            margin-bottom: 15px;
         }
         
-        &:hover {
-            .work-content {
-                opacity: 1;
+        p {
+            color: var(--px-white);
+            margin: 0;
+        }
+        
+        .btn-bar {
+            padding-top: 25px;
+        }
+    }
+    
+    .project-tags {
+        span {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            display: inline-flex;
+            border-radius: 4px;
+            padding: 8px 17px;
+            color: var(--px-white);
+            + span {
+                margin-left: 8px;
             }
         }
     }

@@ -15,13 +15,14 @@
 @import "assets/vendor/bootstrap/icons/bootstrap-icons.css";
 @import "assets/vendor/font-awesome/css/all.min.css";
 
-
+/* Base Styles */
 @import "scss/variable";
 @import "scss/mixin";
+@import "scss/color";
 @import "scss/root";
+@import "scss/base";
+@import "scss/button";
+@import "scss/globals";
 @import "scss/header";
 @import "scss/footer";
-@import "scss/button";
-@import "scss/color";
-@import "scss/base";
 @import "scss/style";

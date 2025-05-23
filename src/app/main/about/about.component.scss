@@ -1,67 +1,94 @@
+@import 'src/scss/variable';
 @import 'src/scss/mixin';
+@import 'src/scss/color';
+@import 'src/scss/root';
+@import 'src/scss/globals';
+@import 'src/scss/base';
+@import 'src/scss/button';
+@import 'src/scss/footer';
+@import 'src/scss/header';
+@import 'src/scss/style';
 
 /* About Section Styles */
 .about-section {
+    background: var(--px-blue);
+    padding-top: 50px;
+    overflow: hidden;
     position: relative;
     z-index: 1;
     
-    .about-image {
+    .about-banner {
         position: relative;
         z-index: 1;
-        
-        img {
-            width: 100%;
-            border-radius: 10px;
-        }
-        
-        .experience {
-            position: absolute;
-            right: -30px;
-            bottom: 30px;
+        &:after {
+            content: "";
+            width: 500px;
+            height: 500px;
             background: var(--px-theme);
-            color: var(--px-theme-text);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            z-index: 1;
-            
-            @include down-md {
-                right: 0;
-                bottom: 0;
-            }
-            
-            h3 {
-                font-size: 48px;
-                margin: 0;
-                line-height: 1;
-            }
-            
-            span {
-                font-size: 16px;
-                text-transform: uppercase;
-                letter-spacing: 2px;
-            }
+            position: absolute;
+            right: 0;
+            bottom: -50px;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        img {
+            max-width: 380px;
+            margin: 0 auto;
+            display: block;
+        }
+    }
+
+    .about-text {
+        padding: 80px 0;
+        @include down-lg {
+            padding: 30px 0;
+        }
+        @include down-md {
+            padding: 0 0 40px;
+        }
+        h6 {
+            margin: 0 0 15px;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--px-white);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        h3 {
+            margin: 0 0 25px;
+            font-size: 42px;
+            font-weight: 400;
+            color: var(--px-white);
+            line-height: 1.15;
+        }
+        p {
+            color: var(--px-white);
         }
     }
     
-    .about-content {
-        padding-left: 30px;
-        
-        @include down-md {
-            padding-left: 0;
-            margin-top: 30px;
-        }
-        
-        h2 {
-            margin-bottom: 20px;
-        }
-        
-        p {
-            margin-bottom: 20px;
-        }
-        
-        .px-btn {
-            margin-top: 20px;
+    .social-icon {
+        display: flex;
+        padding-top: 15px;
+        a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--px-white);
+            border-radius: 8px;
+            transition: ease all 0.35s;
+            font-size: 14px;
+            &:hover {
+                border: 1px solid var(--px-blue);
+                background: var(--px-white);
+                color: var(--px-blue);
+            }
+            + a {
+                margin-left: 8px;
+            }
         }
     }
 }

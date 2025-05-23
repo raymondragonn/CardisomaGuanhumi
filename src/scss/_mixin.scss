@@ -1,5 +1,3 @@
-@import 'variable';
-
 // Media Responsive
 @mixin up-xsm {
 	@media(min-width: $px-media-xsm + 1 ){

@@ -1,17 +1,23 @@
+@import 'src/scss/variable';
 @import 'src/scss/mixin';
+@import 'src/scss/color';
+@import 'src/scss/root';
+@import 'src/scss/globals';
+@import 'src/scss/base';
+@import 'src/scss/button';
+@import 'src/scss/footer';
+@import 'src/scss/header';
+@import 'src/scss/style';
 
-/* Home Banner Styles */
 .home-section {
     background: var(--px-blue);
     position: relative;
     overflow: hidden;
     z-index: 1;
     padding-top: 100px;
-    
     @include down-md {
         padding-top: 150px;
     }
-    
     &:after {
         content: "";
         position: absolute;
@@ -22,13 +28,11 @@
         background: var(--px-theme);
         pointer-events: none;
         z-index: -1;
-        
         @include down-md {
             width: 100%;
             top: 75%;
         }
     }
-    
     .hs-banner {
         @include down-md {
             display: block;
@@ -36,33 +40,27 @@
             margin: 0 auto;
         }
     }
-    
     .fixed-skill {
         position: absolute;
         right: 30px;
         bottom: 50px;
         display: flex;
         align-items: center;
-        
         @include down-md {
             display: none;
         }
-        
         ul {
             margin: 0;
             padding: 0;
             list-style: none;
-            
             li {
                 margin: 10px 0;
                 position: relative;
-                
                 &:first-child {
                     margin-bottom: 40px;
                 }
             }
         }
-        
         span {
             display: flex;
             align-items: center;
@@ -72,7 +70,6 @@
             background: var(--px-white);
             border-radius: 50%;
         }
-        
         label {
             text-transform: uppercase;
             color: var(--px-blue);
@@ -85,7 +82,6 @@
             letter-spacing: 4px;
             font-size: 14px;
             font-weight: 500;
-            
             &:after {
                 content: "";
                 position: absolute;
@@ -99,16 +95,14 @@
             }
         }
     }
-    
     .container {
         position: relative;
     }
-    
+
     .hs-text-box {
         @include down-md {
             text-align: center;
         }
-        
         h1 {
             font-weight: 400;
             font-size: 100px;
@@ -116,16 +110,13 @@
             color: var(--px-white);
             margin: 0 0 30px;
             line-height: 1.1;
-            
             @include down-lg {
                 font-size: 80px;
             }
-            
             @include down-md {
                 font-size: 60px;
             }
         }
-        
         h2 {
             border: 3px solid var(--px-theme);
             background: #FEEEB7;
@@ -136,11 +127,9 @@
             font-weight: 600;
             letter-spacing: 3px;
             position: relative;
-            
             @include down-md {
                 font-size: 18px;
             }
-            
             &:before,
             &:after {
                 content: "";
@@ -150,15 +139,12 @@
                 position: absolute;
                 top: -8px;
             }
-            
             &:before {
                 left: -8px;
             }
-            
             &:after {
                 right: -8px;
             }
-            
             > span {
                 &:before,
                 &:after {
@@ -169,14 +155,52 @@
                     position: absolute;
                     bottom: -8px;
                 }
-                
                 &:before {
                     left: -8px;
                 }
-                
                 &:after {
                     right: -8px;
                 }
+            }
+        }
+    }
+    .btn-bar {
+        padding: 40px 0 60px;
+        @include down-md {
+            padding: 30px 0;
+        }
+    }
+    .review-box {
+        display: flex;
+        padding-bottom: 100px;
+        @include down-md {
+            justify-content: center;
+            padding-bottom: 50px;
+        }
+        .r-box {
+            + .r-box {
+                padding-left: 40px;
+                @include down-md {
+                    padding-left: 20px;
+                }
+            }
+        }
+        h3 {
+            color: var(--px-white);
+            font-weight: 700;
+            margin: 0;
+            font-size: 35px;
+            @include down-md {
+                font-size: 25px;
+            }
+            span {
+                color: var(--px-theme);
+            }
+        }
+        label {
+            color: var(--px-white);
+            @include down-md {
+                font-size: 12px;
             }
         }
     }

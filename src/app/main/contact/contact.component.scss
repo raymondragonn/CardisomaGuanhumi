@@ -1,67 +1,115 @@
+@import 'src/scss/variable';
 @import 'src/scss/mixin';
+@import 'src/scss/color';
+@import 'src/scss/root';
+@import 'src/scss/globals';
+@import 'src/scss/base';
+@import 'src/scss/button';
+@import 'src/scss/footer';
+@import 'src/scss/header';
+@import 'src/scss/style';
 
 /* Contact Section Styles */
-.contact-section {
+.contactus-section {
+    background: var(--px-blue);
     position: relative;
     z-index: 1;
     
-    .contact-info {
-        margin-bottom: 30px;
+    .contact-form {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(16px);
+        padding: 35px;
+        border-radius: 16px;
+        @include down-md {
+            padding: 25px;
+        }
         
-        .info-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 30px;
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--px-white);
+            box-shadow: none;
+            padding: 0.575rem .75rem;
             
-            .icon {
-                width: 50px;
-                height: 50px;
-                background: var(--px-theme);
-                color: var(--px-theme-text);
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                margin-right: 20px;
-                font-size: 20px;
+            &::-webkit-input-placeholder {
+                color: rgba(255, 255, 255, 0.5);
             }
-            
-            .info {
-                h5 {
-                    margin-bottom: 5px;
-                }
-                
-                p {
-                    margin: 0;
-                }
+            &:-moz-placeholder {
+               color: rgba(255, 255, 255, 0.5);
+               opacity:  1;
+            }
+            &::-moz-placeholder {
+               color: rgba(255, 255, 255, 0.5);
+               opacity:  1;
+            }
+            &:-ms-input-placeholder {
+               color: rgba(255, 255, 255, 0.5);
+            }
+            &::-ms-input-placeholder {
+               color: rgba(255, 255, 255, 0.5);
+            }
+            &::placeholder {
+               color: rgba(255, 255, 255, 0.5);
             }
         }
     }
-    
-    .contact-form {
-        .form-group {
-            margin-bottom: 20px;
-            
-            .form-control {
-                height: 50px;
-                border: 1px solid var(--px-border);
-                border-radius: 5px;
-                padding: 10px 15px;
-                
-                &:focus {
-                    border-color: var(--px-theme);
-                    box-shadow: none;
-                }
-            }
-            
-            textarea.form-control {
-                height: 150px;
-                resize: none;
+
+    .contact-info-title {
+        color: var(--px-white);
+        margin-bottom: 30px;
+    }
+
+    .contact-infos {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        
+        li {
+            display: flex;
+            + li {
+                margin-top: 25px;
             }
         }
         
-        .px-btn {
-            margin-top: 10px;
+        .icon {
+            width: 60px;
+            height: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            color: #fff;
+        }
+        
+        .col {
+            padding-left: 20px;
+        }
+        
+        h5 {
+            color: var(--px-white);
+            margin: 0 0 4px;
+        }
+        
+        p {
+            color: rgba(255,255,255,.7);
+            margin: 0;
+            font-size: 15px;
+        }
+    }
+    
+    .google-map {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(16px);
+        padding: 10px;
+        border-radius: 8px;
+        
+        iframe {
+            border-radius: 6px;
         }
     }
 }
