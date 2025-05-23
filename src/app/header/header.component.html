@@ -1,0 +1,50 @@
+  <!-- Header -->
+  <div class="header-top-fixed one-page-nav" [ngClass]="{'menu-open menu-open-desk' : sidebarOpen}">
+    <div class="container">
+        <!-- Brand -->
+        <div class="logo">
+            <a class="navbar-brand" href="javascript:">
+                <img class="logo-dark" title="" alt="" src="assets/img/logo.svg">
+                <img class="logo-light" title="" alt="" src="assets/img/logo-light.svg">
+            </a>
+        </div>
+        <!-- / -->
+        <ul class="main-menu">
+            <li>
+                <a class="menu-item"  spyOn="home" activeClass="active"  href="#home" (click)="fullPageScroll('home')">
+                    Inicio
+                </a>
+            </li>
+            <li>
+                <a class="menu-item"  spyOn="services" activeClass="active" href="#services" (click)="fullPageScroll('services')">
+                    Servicios
+                </a>
+            </li>
+            <li>
+                <a class="menu-item" spyOn="project" activeClass="active"  href="#project" (click)="fullPageScroll('project')">
+                    Proyectos
+                </a>
+            </li>
+            <li>
+                <a class="menu-item" spyOn="about" activeClass="active"  href="#about" (click)="fullPageScroll('about')"> 
+                    Sobre Mí
+                </a>
+            </li>
+            <li>
+                <a class="menu-item"  spyOn="contactus" activeClass="active"  href="#contactus" (click)="fullPageScroll('contactus')">
+                    Contacto
+                </a>
+            </li>
+        </ul>
+        <!-- Top Menu -->
+        <div class="ms-auto d-flex" (clickOutside)="onClickedOutside($event)">
+            <!-- to scroll let's talk to Contact Page change below "href="javascript:" to " spyOn="contactus" href="#contactus" "-->
+            <a class="px-btn dark d-none d-lg-inline-flex" href="javascript:">Hablemos</a>
+            <button class="toggler-menu d-lg-none" [ngClass]="{'open': sidebarOpen}" (click)="toggleMenu()">
+                <span></span>
+            </button>
+        </div>
+        <!-- / -->
+    </div>
+</div>
+<!-- End Header -->

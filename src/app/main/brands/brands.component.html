@@ -1,0 +1,11 @@
+<div class="container">
+    <owl-carousel-o [options]="customOptions2">
+        <ng-container *ngFor="let slide of slidesStore">
+            <ng-template carouselSlide>
+                <div class="p-3 text-center d-flex align-items-center justify-content-center w-100">
+                        <img [src]="slide.src" [alt]="slide.alt" [title]="slide.title">
+                    </div>
+            </ng-template>
+        </ng-container>
+    </owl-carousel-o>
+</div>
