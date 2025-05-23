@@ -11,7 +11,7 @@
 
 /* About Section Styles */
 .about-section {
-    background: var(--px-blue);
+    background: var(--px-purple);
     padding-top: 50px;
     overflow: hidden;
     position: relative;
@@ -82,9 +82,9 @@
             transition: ease all 0.35s;
             font-size: 14px;
             &:hover {
-                border: 1px solid var(--px-blue);
+                border: 1px solid var(--px-purple);
                 background: var(--px-white);
-                color: var(--px-blue);
+                color: var(--px-purple);
             }
             + a {
                 margin-left: 8px;

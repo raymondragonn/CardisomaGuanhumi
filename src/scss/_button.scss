@@ -5,7 +5,7 @@
 	justify-content: center;
 	border-radius: 4px;;
 	background-color: var(--px-theme);
-	color: var(--px-blue);
+	color: var(--px-purple);
 	text-decoration: none;
 	transition: ease all 0.35s;
 	font-weight: 500;
@@ -21,12 +21,12 @@
 		background-size: 200% 100%;
 	}
 	&.dark {
-		background: var(--px-blue);
-		border: 1px solid var(--px-blue);
+		background: var(--px-purple);
+		border: 1px solid var(--px-purple);
 		color: var(--px-white);
 		&:hover {
 			background: var(--px-white);
-			color: var(--px-blue);
+			color: var(--px-purple);
 		}
 	}
 	&.light {
@@ -35,13 +35,13 @@
 		color: var(--px-white);
 		&:hover {
 			background: var(--px-white);
-			color: var(--px-blue);
+			color: var(--px-purple);
 		}
 	}
 	&.white {
 		background: var(--px-white);
 		border: 1px solid var(--px-white);
-		color: var(--px-blue);
+		color: var(--px-purple);
 		&:hover {
 			background: rgba(255, 255, 255, 0.1);
 			border: 1px solid rgba(255, 255, 255, 0.15);

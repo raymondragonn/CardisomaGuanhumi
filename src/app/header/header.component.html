@@ -3,7 +3,7 @@
     <div class="container">
         <!-- Brand -->
         <div class="logo">
-            <a class="navbar-brand" href="javascript:">
+            <a class="navbar-brand" href="#home">
                 <img class="logo-dark" title="" alt="" src="assets/img/logo.svg">
                 <img class="logo-light" title="" alt="" src="assets/img/logo-light.svg">
             </a>
@@ -39,7 +39,7 @@
         <!-- Top Menu -->
         <div class="ms-auto d-flex" (clickOutside)="onClickedOutside($event)">
             <!-- to scroll let's talk to Contact Page change below "href="javascript:" to " spyOn="contactus" href="#contactus" "-->
-            <a class="px-btn dark d-none d-lg-inline-flex" href="javascript:">Hablemos</a>
+            <a class="px-btn light d-none d-lg-inline-flex" href="#contactus">Hablemos</a>
             <button class="toggler-menu d-lg-none" [ngClass]="{'open': sidebarOpen}" (click)="toggleMenu()">
                 <span></span>
             </button>

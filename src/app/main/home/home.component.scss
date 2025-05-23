@@ -10,7 +10,7 @@
 @import 'src/scss/style';
 
 .home-section {
-    background: var(--px-blue);
+    background: var(--px-purple);
     position: relative;
     overflow: hidden;
     z-index: 1;
@@ -18,21 +18,7 @@
     @include down-md {
         padding-top: 150px;
     }
-    &:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        width: 35%;
-        background: var(--px-theme);
-        pointer-events: none;
-        z-index: -1;
-        @include down-md {
-            width: 100%;
-            top: 75%;
-        }
-    }
+
     .hs-banner {
         @include down-md {
             display: block;
@@ -72,7 +58,7 @@
         }
         label {
             text-transform: uppercase;
-            color: var(--px-blue);
+            color: var(--px-purple);
             transform: rotate(90deg) translatey(80px);
             width: 200px;
             height: 20px;

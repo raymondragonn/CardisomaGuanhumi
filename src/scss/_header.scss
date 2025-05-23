@@ -9,7 +9,7 @@
     position: relative;
     margin-left: 15px;
     .fixed-header & {
-    	color: var(--px-blue);
+    	color: var(--px-purple);
     	border: 1px solid rgba(0,0,0,.2) !important;
     }
     span {
@@ -81,7 +81,7 @@
 				font-weight: 500;
 				position: relative;
 				@include down-md {
-					color: var(--px-blue);
+					color: var(--px-purple);
 				}
 				&:after {
 					content: "";
@@ -102,7 +102,7 @@
 					}
 				}
 				.fixed-header & {
-					color: var(--px-blue);
+					color: var(--px-purple);
 				}
 			}
 		}
