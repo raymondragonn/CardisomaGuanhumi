@@ -1,0 +1,67 @@
+@import 'src/scss/mixin';
+
+/* About Section Styles */
+.about-section {
+    position: relative;
+    z-index: 1;
+    
+    .about-image {
+        position: relative;
+        z-index: 1;
+        
+        img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        
+        .experience {
+            position: absolute;
+            right: -30px;
+            bottom: 30px;
+            background: var(--px-theme);
+            color: var(--px-theme-text);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1;
+            
+            @include down-md {
+                right: 0;
+                bottom: 0;
+            }
+            
+            h3 {
+                font-size: 48px;
+                margin: 0;
+                line-height: 1;
+            }
+            
+            span {
+                font-size: 16px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+        }
+    }
+    
+    .about-content {
+        padding-left: 30px;
+        
+        @include down-md {
+            padding-left: 0;
+            margin-top: 30px;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+        }
+        
+        p {
+            margin-bottom: 20px;
+        }
+        
+        .px-btn {
+            margin-top: 20px;
+        }
+    }
+}

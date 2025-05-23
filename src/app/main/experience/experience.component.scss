@@ -1,0 +1,41 @@
+@import 'src/scss/mixin';
+
+/* Experience Section Styles */
+.experience-section {
+    position: relative;
+    z-index: 1;
+    
+    .experience-box {
+        background: var(--px-white);
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        position: relative;
+        
+        .year {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--px-theme);
+            color: var(--px-theme-text);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        h4 {
+            margin-bottom: 10px;
+            padding-right: 100px;
+        }
+        
+        .company {
+            color: var(--px-theme);
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        p {
+            margin-bottom: 0;
+        }
+    }
+}

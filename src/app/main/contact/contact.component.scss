@@ -1,0 +1,67 @@
+@import 'src/scss/mixin';
+
+/* Contact Section Styles */
+.contact-section {
+    position: relative;
+    z-index: 1;
+    
+    .contact-info {
+        margin-bottom: 30px;
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            
+            .icon {
+                width: 50px;
+                height: 50px;
+                background: var(--px-theme);
+                color: var(--px-theme-text);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                margin-right: 20px;
+                font-size: 20px;
+            }
+            
+            .info {
+                h5 {
+                    margin-bottom: 5px;
+                }
+                
+                p {
+                    margin: 0;
+                }
+            }
+        }
+    }
+    
+    .contact-form {
+        .form-group {
+            margin-bottom: 20px;
+            
+            .form-control {
+                height: 50px;
+                border: 1px solid var(--px-border);
+                border-radius: 5px;
+                padding: 10px 15px;
+                
+                &:focus {
+                    border-color: var(--px-theme);
+                    box-shadow: none;
+                }
+            }
+            
+            textarea.form-control {
+                height: 150px;
+                resize: none;
+            }
+        }
+        
+        .px-btn {
+            margin-top: 10px;
+        }
+    }
+}

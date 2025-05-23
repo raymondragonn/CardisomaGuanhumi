@@ -1,10 +1,4 @@
 /*------------------------------------------------------------------
-Project:    Mikon Personal Portfolio
-Version:    1.0
-Primary use:    design-alchemy
-
-[Table of contents]
-
 1. Body
 2. Header
 3. Footer
@@ -22,12 +16,12 @@ Primary use:    design-alchemy
 @import "assets/vendor/font-awesome/css/all.min.css";
 
 
-@import "assets/scss/variable";
-@import "assets/scss/mixin";
-@import "assets/scss/root";
-@import "assets/scss/header";
-@import "assets/scss/footer";
-@import "assets/scss/button";
-@import "assets/scss/color";
-@import "assets/scss/base";
-@import "assets/scss/style";
+@import "scss/variable";
+@import "scss/mixin";
+@import "scss/root";
+@import "scss/header";
+@import "scss/footer";
+@import "scss/button";
+@import "scss/color";
+@import "scss/base";
+@import "scss/style";

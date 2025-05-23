@@ -1,4 +1,4 @@
-/* Background
+/* Global Styles
 -------------------------------*/
 body {
     background-color: var(--px-bg);
@@ -11,16 +11,49 @@ body {
 }
 
 a {
-	text-decoration: none;
+    text-decoration: none;
 }
 
-/* ----------------------
-*   owl 
----------------------------*/
+/* Common Components
+-------------------------------*/
+.px-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: var(--px-theme);
+    color: var(--px-theme-text);
+    border-radius: 5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: ease all 0.35s;
+    
+    &:hover {
+        background: var(--px-theme-text);
+        color: var(--px-theme);
+    }
+}
+
+.section-title {
+    margin-bottom: 50px;
+    text-align: center;
+    
+    h2 {
+        margin-bottom: 15px;
+    }
+    
+    p {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
+
+/* Owl Carousel Styles
+-------------------------------*/
 .owl-dots {
     text-align: center;
     font-size: 0px;
     padding-top: 35px;
+    
     .owl-dot {
         display: inline-block;
         vertical-align: top;
@@ -37,8 +70,6 @@ a {
             width: 20px;
         }
     }
-
-
 }
 
 .owl-nav {
@@ -68,8 +99,8 @@ a {
         transition: ease all 0.35s;
 
         &:hover {
-        	background: var(--px-theme-text);
-        	color: var(--px-theme);
+            background: var(--px-theme-text);
+            color: var(--px-theme);
         }
     }
 
@@ -90,12 +121,78 @@ a {
     }
 }
 
+/* Feature Box Styles
+-------------------------------*/
+.feature-box-01 {
+    background: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    border-radius: 8px;
+    padding: 35px;
+    display: flex;
+    @include down-md {
+        padding: 25px;
+    }
+    + .feature-box-01 {
+        margin-top: 30px;
+    }
+    .feature-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        background: var(--px-blue);
+        align-items: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        color: var(--px-white);
+        font-size: 22px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    .feature-content {
+        flex: 1;
+        padding-left: 20px;
+    }
+    p {
+        margin: 0;
+    }
+    h5 {
+        letter-spacing: 3px;
+        font-weight: 400;
+        font-size: 22px;
+        text-transform: uppercase;
+        @include down-md {
+            font-size: 18px;
+        }
+    }
+    ul {
+        margin: 0;
+        padding: 15px 0 0;
+        list-style: none;
+        li {
+            padding-left: 15px;
+            position: relative;
+            + li {
+                margin-top: 8px;
+            }
+            &:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 10px;
+                width: 5px;
+                height: 5px;
+                background: #707476;
+                border-radius: 50%;
+            }
+        }
+    }
+}
 
 /* ----------------------
 *   Home Banner
 ---------------------------*/
 .home-section {
-    background: var(--px-black);
+    background: var(--px-blue);
     position: relative;
     overflow: hidden;
     z-index: 1;
@@ -157,7 +254,7 @@ a {
         }
         label {
             text-transform: uppercase;
-            color: var(--px-black);
+            color: var(--px-blue);
             transform: rotate(90deg) translatey(80px);
             width: 200px;
             height: 20px;
@@ -298,74 +395,6 @@ a {
 
 
 /* ----------------------
-*   Feature Box
----------------------------*/
-.feature-box-01 {
-    background: #FFFFFF;
-    border: 1px solid #E8E8E8;
-    border-radius: 8px;
-    padding: 35px;
-    display: flex;
-    @include down-md {
-        padding: 25px;
-    }
-    + .feature-box-01 {
-        margin-top: 30px;
-    }
-    .feature-icon {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        background: var(--px-black);
-        align-items: center;
-        -ms-flex-pack: center;
-        justify-content: center;
-        color: var(--px-white);
-        font-size: 22px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-    }
-    .feature-content {
-        flex: 1;
-        padding-left: 20px;
-    }
-    p {
-        margin: 0;
-    }
-    h5 {
-        letter-spacing: 3px;
-        font-weight: 400;
-        font-size: 22px;
-        text-transform: uppercase;
-        @include down-md {
-            font-size: 18px;
-        }
-    }
-    ul {
-        margin: 0;
-        padding: 15px 0 0;
-        list-style: none;
-        li {
-            padding-left: 15px;
-            position: relative;
-            + li {
-                margin-top: 8px;
-            }
-            &:after {
-                content: "";
-                position: absolute;
-                left: 0;
-                top: 10px;
-                width: 5px;
-                height: 5px;
-                background: #707476;
-                border-radius: 50%;
-            }
-        }
-    }
-}
-
-/* ----------------------
 *   Projects
 ---------------------------*/
 .project-box {
@@ -387,7 +416,7 @@ a {
         left: 0;
         right: 0;
         bottom: 0;
-        background: var(--px-black);
+        background: var(--px-blue);
         opacity: 0.5;
         z-index: -1;
     }
@@ -435,7 +464,7 @@ a {
 *   About
 ---------------------------*/
 .about-section {
-    background: var(--px-black);
+    background: var(--px-blue);
     padding-top: 50px;
     overflow: hidden;
     .about-banner {
@@ -502,9 +531,9 @@ a {
             transition: ease all 0.35s;
             font-size: 14px;
             &:hover {
-                border: 1px solid var(--px-black);
+                border: 1px solid var(--px-blue);
                 background: var(--px-white);
-                color: var(--px-black);
+                color: var(--px-blue);
             }
             + a {
                 margin-left: 8px;
@@ -563,7 +592,7 @@ a {
 *   Contact Us
 ---------------------------*/
 .contactus-section {
-    background: var(--px-black);
+    background: var(--px-blue);
     .contact-form {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.15);
