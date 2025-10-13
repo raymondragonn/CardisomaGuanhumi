@@ -1,0 +1,12 @@
+<div id="home" class="saas-banner-area">
+    <div class="container">
+        <div class="main-banner-content" *ngFor="let Content of bannerContent;">
+            <h1>{{Content.title}}</h1>
+            <p>{{Content.paragraph}}</p>
+            <a href="#{{Content.buttonID}}" class="default-btn">{{Content.buttonText}}<span></span></a>
+        </div>
+        <div class="main-banner-image" *ngFor="let Image of bannerImage;">
+            <img [src]="Image.img" alt="image">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+.products-area {
+    background-color: #f9f9f9;
+}
+.single-products-box {
+    margin-bottom: 30px;
+    transition: var(--transition);
+
+    .products-image {
+        text-align: center;
+        overflow: hidden;
+
+        a {
+            display: block;
+
+            img {
+                transition: var(--transition);
+            }
+        }
+    }
+    .products-content {
+        margin-top: 25px;
+        position: relative;
+
+        h3 {
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+        .price {
+            font-weight: 500;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+
+            .old-price {
+                text-decoration: line-through;
+                color: #999999;
+                margin-right: 10px;
+                display: inline-block;
+            }
+        }
+        .star-rating {
+            color: #f49f0b;
+            font-size: 18px;
+        }
+    }
+    &:hover {
+        .products-image {
+            a {
+                img {
+                    transform: scale(1.07);
+                }
+            }
+        }
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .single-products-box {
+        .products-content {
+            margin-top: 20px;
+            
+            h3 {
+                font-size: 18px;
+            }
+            .price {
+                .old-price {
+                    margin-right: 5px;
+                }
+            }
+            .star-rating {
+                font-size: 16px;
+            }
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .single-products-box {
+        .products-content {
+            h3 {
+                font-size: 20px;
+            }
+            .star-rating {
+                font-size: 17px;
+            }
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {}

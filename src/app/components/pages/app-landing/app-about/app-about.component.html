@@ -1,0 +1,23 @@
+<section id="about" class="app-about-area pb-100">
+    <div class="container">
+        <div class="about-inner-area">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-12">
+                    <div class="app-about-image" *ngFor="let Image of aboutImage;">
+                        <img [src]="Image.img" alt="image">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <div class="app-about-content" *ngFor="let Content of aboutContent;">
+                        <h3>{{Content.title}}</h3>
+                        <p *ngFor="let pList of Content.paragraphList">{{pList.paragraph}}</p>
+                        <ul class="app-list">
+                            <li *ngFor="let List of Content.featuresList"><i class="{{List.itemIcon}}"></i> {{List.item}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

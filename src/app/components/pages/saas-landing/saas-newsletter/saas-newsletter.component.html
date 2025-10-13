@@ -1,0 +1,22 @@
+<div class="newsletter-area ptb-100">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="newsletter-form-content" *ngFor="let Content of newsletterContent;">
+                    <h2>{{Content.title}}</h2>
+                    <p>{{Content.paragraph}}</p>
+                    <form class="newsletter-form">
+                        <input type="email" class="input-newsletter" placeholder="{{Content.inputPlaceholder}}" name="email">
+                        <button type="submit">{{Content.buttonText}}</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="newsletter-image" *ngFor="let Image of newsletterImage;">
+                    <img [src]="Image.img" alt="image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

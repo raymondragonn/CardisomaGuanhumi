@@ -1,0 +1,107 @@
+.single-products-features {
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 30px;
+    background-color: #fafafa;
+    border-radius: 5px;
+
+    .icon {
+        height: 75px;
+        width: 75px;
+        line-height: 75px;
+        background-color: #f3f3f3;
+        color: var(--mainColor);
+        font-size: 45px;
+        border-radius: 50%;
+        transition: var(--transition);
+        text-align: center;
+        margin: {
+            left: auto;
+            right: auto;
+            bottom: 25px;
+        };
+    }
+    h3 {
+        font-size: 23px;
+        margin-bottom: 12px;
+        transition: var(--transition);
+    }
+    p {
+        transition: var(--transition);
+    }
+    &::before {
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: -1;
+        content: "";
+        height: 100%;
+        position: absolute;
+        border-radius: 5px;
+        background-color: var(--mainColor);
+        transition: var(--transition);
+        transform: scaleY(0);
+    }
+    &:hover {
+        &::before {
+            transform: scaleY(1);
+        }
+        .icon {
+            background-color: var(--whiteColor);
+            color: var(--mainColor);
+        }
+        h3 {
+            color: var(--whiteColor);
+        }
+        p {
+            color: var(--whiteColor);
+        }
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .single-products-features {
+        padding: 20px 15px;
+    
+        .icon {
+            height: 60px;
+            width: 60px;
+            line-height: 60px;
+            font-size: 35px;
+            margin-bottom: 20px;
+        }
+        h3 {
+            font-size: 18px;
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .single-products-features {
+        padding: 25px;
+
+        .icon {
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
+            font-size: 40px;
+        }
+        h3 {
+            font-size: 20px;
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {}

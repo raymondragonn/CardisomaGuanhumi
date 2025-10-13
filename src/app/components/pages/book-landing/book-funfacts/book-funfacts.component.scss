@@ -1,0 +1,140 @@
+.fun-facts-area {
+    position: relative;
+    z-index: 1;
+    background: {
+        image: url(../../../../../assets/img/fun-facts-bg.jpg);
+        position: center center;
+        size: cover;
+        repeat: no-repeat;
+    };
+    &::before {
+        left: 0;
+        right: 0;
+        top: 0;
+        content: "";
+        height: 100%;
+        width: 100%;
+        opacity: .50;
+        z-index: -1;
+        position: absolute;
+        background-color: #000000;
+    }
+}
+.single-fun-fact {
+    text-align: center;
+    position: relative;
+    margin-bottom: 30px;
+    background-color: #f3f3f3;
+    padding: 30px 40px;
+    z-index: 1;
+    transition: var(--transition);
+    border-radius: 5px;
+
+    .icon {
+        font-size: 50px;
+        color: var(--mainColor);
+        line-height: 1;
+        transition: var(--transition);
+    }
+    h3 {
+        position: relative;
+        font-size: 40px;
+        transition: var(--transition);
+        margin: {
+            top: 15px;
+            bottom: 5px;
+        };
+    }
+    p {
+        line-height: initial;
+        transition: var(--transition);
+        font-size: 17px;
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        width: 100%;
+        height: 0%;
+        background: var(--mainColor);
+        border-radius: 5px;
+        transition: var(--transition);
+    }
+    &:hover {
+        &::before {
+            height: 100%;
+        }
+        .icon {
+            color: var(--whiteColor);
+        }
+        h3 {
+            color: var(--whiteColor);
+        }
+        p {
+            color: var(--whiteColor);
+        }
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .single-fun-fact {
+        padding: 20px 15px;
+    
+        .icon {
+            font-size: 35px;
+        }
+        h3 {
+            font-size: 25px;
+            margin-top: 12px;
+        }
+        p {
+            font-size: 13px;
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .single-fun-fact {
+        padding: 25px 15px;
+    
+        .icon {
+            font-size: 40px;
+        }
+        h3 {
+            font-size: 30px;
+        }
+        p {
+            font-size: 15px;
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .single-fun-fact {
+        padding: 30px;
+    
+        .icon {
+            font-size: 45px;
+        }
+        h3 {
+            font-size: 35px;
+        }
+        p {
+            font-size: 16px;
+        }
+    }
+
+}

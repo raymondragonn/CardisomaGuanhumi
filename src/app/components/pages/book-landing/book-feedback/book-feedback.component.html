@@ -1,0 +1,23 @@
+<section id="feedback" class="reviews-area ptb-100">
+    <div class="container">
+        <div class="section-title" *ngFor="let Content of sectionTitle;">
+            <h2>{{Content.title}}</h2>
+            <p>{{Content.paragraphText}}</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6 col-md-6" *ngFor="let Content of singleFeedback;">
+                <div class="single-feedback-box">
+                    <p>{{Content.paragraph}}</p>
+                    <div class="d-flex align-items-center">
+                        <img [src]="Content.userImg" alt="client">
+                        <div class="title">
+                            <h3>{{Content.userName}}</h3>
+                            <span>{{Content.userDesignation}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

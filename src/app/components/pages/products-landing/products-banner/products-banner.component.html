@@ -1,0 +1,19 @@
+<div id="home" class="products-banner-area">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="banner-image" *ngFor="let Image of bannerImage;">
+                    <img [src]="Image.img" alt="image">
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="banner-content" *ngFor="let Content of bannerContent;">
+                    <h1>{{Content.title}}</h1>
+                    <p>{{Content.paragraph}}</p>
+                    <a routerLink="/{{Content.buttonLink}}" class="default-btn">{{Content.buttonText}}<span></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

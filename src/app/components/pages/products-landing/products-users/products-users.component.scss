@@ -1,0 +1,76 @@
+.users-area {
+    position: relative;
+    z-index: 1;
+    background: {
+        image: url(../../../../../assets/img/users-bg.jpg);
+        position: center center;
+        size: cover;
+        repeat: no-repeat;
+    };
+    &::before {
+        top: 0;
+        left: 0;
+        right: 0;
+        content: "";
+        z-index: -1;
+        width: 100%;
+        opacity: .50;
+        height: 100%;
+        position: absolute;
+        background-color: #000000;
+    }
+}
+.users-content {
+    max-width: 650px;
+
+    h2 {
+        font-size: 45px;
+        color: var(--whiteColor);
+        margin-bottom: 15px;
+    }
+    p {
+        color: var(--whiteColor);
+    }
+    .default-btn {
+        margin-top: 10px;
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .users-content {
+        max-width: 100%;
+        text-align: center;
+    
+        h2 {
+            font-size: 27px;
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .users-content {
+        h2 {
+            font-size: 33px;
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .users-content {
+        h2 {
+            font-size: 37px;
+        }
+    }
+
+}

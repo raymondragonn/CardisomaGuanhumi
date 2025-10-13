@@ -1,0 +1,60 @@
+<section id="contact" class="contact-area ptb-100">
+    <div class="container">
+        <div class="section-title" *ngFor="let sectionTitleContent of sectionTitle;">
+            <h2>{{sectionTitleContent.title}}</h2>
+            <p>{{sectionTitleContent.paragraphText}}</p>
+        </div>
+
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="contact-image text-center" *ngFor="let Image of contactImage;">
+                    <img [src]="Image.img" alt="image">
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="name" id="name" class="form-control" placeholder="Your Name">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6">
+                                <div class="form-group">
+                                    <input type="email" name="email" id="email" class="form-control" placeholder="Your Email">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <input type="text" name="phone-number" id="phone-number" required class="form-control" placeholder="Your Phone">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <input type="text" name="msg-subject" id="msg-subject" class="form-control" placeholder="Your Subject">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <textarea name="message" class="form-control" id="message" cols="30" rows="6" placeholder="Your Message"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12">
+                                <div class="send-btn">
+                                    <button type="submit" class="default-btn">Send Message<span></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

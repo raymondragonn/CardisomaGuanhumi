@@ -1,0 +1,20 @@
+<section class="saas-features-area pt-100 pb-70">
+    <div class="container">
+        <div class="section-title" *ngFor="let sectionTitleContent of sectionTitle;">
+            <h2>{{sectionTitleContent.title}}</h2>
+            <p>{{sectionTitleContent.paragraphText}}</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let FeaturesContent of singleSaasFeatures;">
+                <div class="single-saas-features">
+                    <div class="icon">
+                        <i class="{{FeaturesContent.icon}}"></i>
+                    </div>
+                    <h3>{{FeaturesContent.title}}</h3>
+                    <p>{{FeaturesContent.paragraph}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

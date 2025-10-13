@@ -1,0 +1,121 @@
+.app-banner-area {
+    background-color: #fafafa;
+    background: transparent url(../../../../../assets/img/banner-bg.jpg) left top no-repeat;
+    padding: {
+        top: 160px;
+        bottom: 80px;
+    };
+    .main-banner-content {
+        h1 {
+            margin-bottom: 15px;
+            font-size: 60px;
+        }
+        p {
+            max-width: 520px;
+            font-size: 16px;
+        }
+        .banner-holder {
+            margin-top: 30px;
+
+            a {
+                margin-right: 15px;
+                display: inline-block;
+                
+                &:hover {
+                    transform: translateY(-5px);
+                }
+            }
+        }
+    }
+    .banner-image {
+        text-align: center;
+
+        img {
+            animation: movebounce 5s linear infinite;
+        }
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .app-banner-area {
+        padding: {
+            top: 140px;
+            bottom: 60px;
+        };
+        .main-banner-content {
+            text-align: center;
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 32px;
+            }
+            p {
+                max-width: 100%;
+                font-size: 14px;
+            }
+            .banner-holder {
+                margin-top: 20px;
+    
+                a {
+                    margin: {
+                        left: 5px;
+                        right: 5px;
+                    };
+                    img {
+                        width: 120px;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .app-banner-area {
+        .main-banner-content {
+            text-align: center;
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 40px;
+            }
+            p {
+                max-width: 100%;
+                font-size: 15px;
+            }
+            .banner-holder {
+                margin-top: 20px;
+    
+                a {
+                    margin: {
+                        left: 5px;
+                        right: 5px;
+                    };
+                }
+            }
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .app-banner-area {
+        .main-banner-content {
+            h1 {
+                font-size: 54px;
+            }
+            p {
+                max-width: 100%;
+                font-size: 15px;
+            }
+        }
+    }
+
+}

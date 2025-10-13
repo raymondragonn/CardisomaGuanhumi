@@ -1,0 +1,57 @@
+.specification-area {
+    background-color: #f9f9f9;
+}
+.specification-content {
+    p {
+        color: var(--optionalColor);
+        line-height: initial;
+        margin-bottom: 22px;
+        font: {
+            size: 18px;
+            weight: 500;
+            family: var(--headingFontFamily);
+        };
+        span {
+            color: var(--blackColor);
+        }
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .specification-content {
+        margin-top: 35px;
+        text-align: center;
+
+        p {
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .specification-content {
+        margin-top: 35px;
+        text-align: center;
+
+        p {
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {}

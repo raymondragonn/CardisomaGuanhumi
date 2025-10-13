@@ -1,38 +1,48 @@
-import { Component, OnInit, HostListener, AfterViewInit } from '@angular/core';
-import { fromEvent, Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationStart, NavigationCancel, NavigationEnd } from '@angular/router';
+import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { filter } from 'rxjs/operators';
+declare let $: any;
 
-import { throttleTime} from 'rxjs/operators';
-import { ScrollSpyService } from 'ng-spy';
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    providers: [
+        Location, {
+            provide: LocationStrategy,
+            useClass: PathLocationStrategy
+        }
+    ]
 })
-export class AppComponent implements OnInit, AfterViewInit{
-  public fixedHeader: boolean = false;
-  private windowScroll$: Subscription = Subscription.EMPTY;
-  constructor(private spyService: ScrollSpyService){}
-  
-  ngOnInit() {
-    this.windowScroll$ = fromEvent(window, 'scroll')
-      .pipe(throttleTime(30))
-      .subscribe(() => this.onScroll());
-  }
+export class AppComponent implements OnInit {
+    location: any;
+    routerSubscription: any;
 
-  ngAfterViewInit() {
-    this.spyService.spy({ thresholdBottom: 50 });
-  }
-
-  ngOnDestroy() {
-    this.windowScroll$.unsubscribe();
-  }
-  
-  onScroll(){
-    //code to fix header on scroll
-    if (document.documentElement.scrollTop >= 100 || document.body.scrollTop >= 100) {
-      this.fixedHeader = true;
-    } else {
-      this.fixedHeader = false;
+    constructor(private router: Router) {
     }
-  }
+
+    ngOnInit(){
+        this.recallJsFuntions();
+    }
+
+    recallJsFuntions() {
+        this.router.events
+        .subscribe((event) => {
+            if ( event instanceof NavigationStart ) {
+                $('.preloader').fadeIn('slow');
+            }
+        });
+        this.routerSubscription = this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd || event instanceof NavigationCancel))
+        .subscribe(event => {
+            $.getScript('../assets/js/main.js');
+            $('.preloader').fadeOut('slow');
+            this.location = this.router.url;
+            if (!(event instanceof NavigationEnd)) {
+                return;
+            }
+            window.scrollTo(0, 0);
+        });
+    }
 }

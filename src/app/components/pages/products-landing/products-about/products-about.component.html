@@ -1,0 +1,22 @@
+<section id="about" class="products-about-area pt-100">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="products-about-content" *ngFor="let Content of aboutContent;">
+                    <span>{{Content.subTitle}}</span>
+                    <h2>{{Content.title}}</h2>
+                    <p>{{Content.paragraph}}</p>
+                    <ul class="products-list">
+                        <li *ngFor="let List of Content.featuresList"><i class="{{List.itemIcon}}"></i> {{List.item}}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="products-about-image" *ngFor="let Image of aboutImage;">
+                    <img [src]="Image.img" alt="image">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

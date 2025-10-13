@@ -1,0 +1,21 @@
+<section id="spec" class="specification-area ptb-100">
+    <div class="container">
+        <div class="section-title">
+            <h2>Specification</h2>
+        </div>
+
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="specification-image text-center" *ngFor="let Image of specificationImage;">
+                    <img [src]="Image.img" alt="image">
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="specification-content">
+                    <p *ngFor="let Content of specificationContent;"><span>{{Content.title}}</span> {{Content.subText}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

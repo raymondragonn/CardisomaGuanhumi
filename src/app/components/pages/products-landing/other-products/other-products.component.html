@@ -1,0 +1,28 @@
+<section id="products" class="products-area ptb-100">
+    <div class="container">
+        <div class="section-title" *ngFor= "let Title of sectionTitle;">
+            <h2>{{Title.title}}</h2>
+            <p>{{Title.paragraph}}</p>
+        </div>
+
+        <div class="products-slider owl-carousel owl-theme">
+            <div class="single-products-box" *ngFor= "let Content of singleProductsBox;">
+                <div class="products-image">
+                    <a routerLink="/{{Content.detailsLink}}">
+                        <img [src]="Content.img" alt="image">
+                    </a>
+                </div>
+                <div class="products-content">
+                    <h3><a routerLink="/{{Content.detailsLink}}">{{Content.title}}</a></h3>
+                    <div class="price">
+                        <span class="old-price">{{Content.oldPrice}}</span>
+                        <span class="new-price">{{Content.newPrice}}</span>
+                    </div>
+                    <div class="star-rating">
+                        <i *ngFor="let Star of Content.starRating" class="{{Star.rating}}"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

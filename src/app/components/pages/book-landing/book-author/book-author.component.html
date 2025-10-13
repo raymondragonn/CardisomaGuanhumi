@@ -1,0 +1,28 @@
+<section id="author" class="author-area pt-100">
+    <div class="container">
+        <div class="section-title" *ngFor="let Content of sectionTitle;">
+            <h2>{{Content.title}}</h2>
+            <p>{{Content.paragraphText}}</p>
+        </div>
+
+        <div class="author-inner-area">
+            <div class="row align-items-center">
+                <div class="col-lg-8 col-md-12">
+                    <div class="author-content" *ngFor="let Content of authorContent;">
+                        <h3>{{Content.title}}</h3>
+                        <p *ngFor="let pList of Content.paragraphList">{{pList.paragraph}}</p>
+                        <ul class="social-icon">
+                            <li *ngFor="let List of Content.social"><a href="{{List.link}}" target="_blank"><i class="{{List.icon}}"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+    
+                <div class="col-lg-4 col-md-12">
+                    <div class="author-image" *ngFor="let Image of authorImage;">
+                        <img [src]="Image.img" alt="image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,26 @@
+<section id="feedback" class="feedback-area ptb-100">
+    <div class="container">
+        <div class="section-title" *ngFor="let sectionTitleContent of sectionTitle;">
+            <h2>{{sectionTitleContent.title}}</h2>
+            <p>{{sectionTitleContent.paragraphText}}</p>
+        </div>
+        
+        <div class="feedback-slides owl-carousel owl-theme">
+            <div class="single-feedback-item" *ngFor="let Content of singleFeedbackItem;">
+                <div class="icon">
+                    <i class="las la-quote-left"></i>
+                </div>
+                <p>{{Content.feedbackText}}</p>
+                <div class="client-info">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img [src]="Content.userImg" alt="image">
+                        <div class="title">
+                            <h3>{{Content.userName}}</h3>
+                            <span>{{Content.userDesignation}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

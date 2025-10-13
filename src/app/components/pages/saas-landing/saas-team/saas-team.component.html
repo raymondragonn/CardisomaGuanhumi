@@ -1,0 +1,25 @@
+<section id="team" class="team-area bg-ffffff pt-100 pb-70">
+    <div class="container">
+        <div class="section-title" *ngFor="let sectionTitleContent of sectionTitle;">
+            <h2>{{sectionTitleContent.title}}</h2>
+            <p>{{sectionTitleContent.paragraphText}}</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let Content of singleTeamBox;">
+                <div class="single-team-box">
+                    <div class="image">
+                        <img [src]="Content.img" alt="image">
+                        <ul class="social">
+                            <li *ngFor="let List of Content.social"><a href="{{List.link}}" target="_blank"><i class="{{List.icon}}"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="content">
+                        <h3>{{Content.title}}</h3>
+                        <span>{{Content.designation}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

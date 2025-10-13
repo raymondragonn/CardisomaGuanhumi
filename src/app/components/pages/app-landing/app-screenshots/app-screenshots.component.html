@@ -1,0 +1,16 @@
+<section id="screenshots" class="screenshot-area ptb-100 jarallax" data-jarallax='{"speed": 0.3}'>
+    <div class="container">
+        <div class="section-title" *ngFor="let sectionTitleContent of sectionTitle;">
+            <h2>{{sectionTitleContent.title}}</h2>
+            <p>{{sectionTitleContent.paragraphText}}</p>
+        </div>
+
+        <div class="screenshot-slider owl-carousel owl-theme">
+            <div class="screenshot-item" *ngFor="let Image of screenshotImage;">
+                <div class="image">
+                    <img [src]="Image.img" alt="image">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

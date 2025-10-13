@@ -1,0 +1,16 @@
+<section class="gallery-area pt-100 pb-70">
+    <div class="container">
+        <div class="section-title" *ngFor= "let Title of sectionTitle;">
+            <h2>{{Title.title}}</h2>
+            <p>{{Title.paragraph}}</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6" *ngFor="let Item of galleryItem;">
+                <div class="single-gallery-item">
+                    <a href="{{Item.img}}" class="d-block popup-btn"><img [src]="Item.img" alt="image"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

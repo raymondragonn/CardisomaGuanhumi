@@ -1,0 +1,135 @@
+.pricing-area {
+    background-image: radial-gradient(at bottom center,#482be7 0%,#000 70%);
+
+    .section-title {
+        h2, p {
+            color: var(--whiteColor);
+        }
+    }
+}
+.single-pricing-box {
+    margin-bottom: 30px;
+    border: 1px solid var(--whiteColor);
+    padding: 30px;
+    border-radius: 5px;
+    text-align: center;
+
+    .pricing-header {
+        h3 {
+            margin-bottom: 10px;
+            font-size: 22px;
+            color: var(--whiteColor);
+        }
+    }
+    .price {
+        margin-bottom: 15px;
+        color: var(--whiteColor);
+        font: {
+            size: 50px;
+            weight: 700;
+            family: var(--headingFontFamily);
+        };
+        span {
+            display: inline-block;
+            font: {
+                size: 20px;
+                weight: 500;
+            };
+        }
+    }
+    .pricing-features {
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style-type: none;
+
+        li {
+            margin-bottom: 13px;
+            position: relative;
+            color: var(--whiteColor);
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+            i {
+                margin-right: 3px;
+                color: var(--whiteColor);
+
+                &.la-times {
+                    color: red;
+                }
+            }
+        }
+    }
+    .pricing-btn {
+        margin-top: 30px;
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .single-pricing-box {
+        padding: 20px 15px;
+    
+        .pricing-header {
+            h3 {
+                font-size: 18px;
+            }
+        }
+        .price {
+            margin-bottom: 10px;
+            font-size: 40px;
+
+            span {
+                font-size: 16px;
+            }
+        }
+        .pricing-btn {
+            margin-top: 25px;
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .single-pricing-box {
+        padding: 25px 20px;
+        
+        .pricing-header {
+            h3 {
+                font-size: 20px;
+            }
+        }
+        .price {
+            font-size: 40px;
+
+            span {
+                font-size: 20px;
+            }
+        }
+        .pricing-btn {
+            margin-top: 30px;
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .single-pricing-box {
+        .price {
+            font-size: 40px;
+
+            span {
+                font-size: 20px;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,22 @@
+<div id="home" class="book-banner-area jarallax" data-jarallax='{"speed": 0.3}'>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="main-banner-content" *ngFor="let Content of bannerContent;">
+                    <span class="sub-title">{{Content.subTitle}}</span>
+                    <h1>{{Content.title}}</h1>
+                    <p *ngFor="let List of Content.paragraphList">{{List.text}}</p>
+                    <div class="banner-btn">
+                        <a routerLink="/{{Content.buttonLink}}" class="default-btn">{{Content.buttonText}}<span></span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="banner-image text-center" *ngFor="let Image of bannerImage;">
+                    <img [src]="Image.img" alt="image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

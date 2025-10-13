@@ -1,0 +1,194 @@
+.video-area {
+    &.bg-ffffff {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        padding: {
+            top: 140px;
+            bottom: 150px;
+        };
+        background: {
+            image: url(../../../../../assets/img/video-bg2.jpg);
+            position: center center;
+            size: cover;
+            repeat: no-repeat;
+        };
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            opacity: 0.6;
+        }
+        .video-content {
+            background-image: none;
+            padding: {
+                top: 0;
+                bottom: 0;
+            };
+            &::before {
+                display: none;
+            }
+        }
+    }
+}
+.video-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    background: {
+        image: url(../../../../../assets/img/video-bg.jpg);
+        position: center center;
+        size: cover;
+        repeat: no-repeat;
+        attachment: fixed;
+    };
+    padding: {
+        top: 150px;
+        bottom: 150px;
+    };
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        opacity: 0.6;
+    }
+    h2 {
+        font-size: 40px;
+        margin-bottom: 50px;
+        color: var(--whiteColor);
+        line-height: 1;
+    }
+    .video-btn {
+        display: inline-block;
+        width: 90px;
+        height: 90px;
+        line-height: 100px;
+        background-color: var(--whiteColor);
+        border-radius: 50%;
+        color: var(--mainColor);
+        position: relative;
+        z-index: 1;
+
+        i {
+            font-size: 50px;
+            position: relative;
+            top: 10px;
+            left: 0;
+        }
+        &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: -1;
+            bottom: 0;
+            left: 0;
+            border-radius: 50%;
+            border: 1px solid var(--whiteColor);
+            animation: ripple 2s linear 1s infinite;
+        }
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: -1;
+            bottom: 0;
+            left: 0;
+            border-radius: 50%;
+            border: 1px solid var(--whiteColor);
+            animation: ripple 2s linear infinite;
+        }
+        &:hover, .video-content .video-btn:focus {
+            background-color: var(--mainColor);
+            color: var(--whiteColor);
+        }
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .video-area {
+        &.bg-ffffff {
+            padding: {
+                top: 60px;
+                bottom: 60px;
+            };
+        }
+    }
+    .video-content {
+        h2 {
+            font-size: 27px;
+            margin-bottom: 40px;
+        }
+        .video-btn {
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+    
+            i {
+                font-size: 35px;
+                top: 9px;
+            }
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .video-area {
+        &.bg-ffffff {
+            padding: {
+                top: 80px;
+                bottom: 80px;
+            };
+        }
+    }
+    .video-content {
+        h2 {
+            font-size: 33px;
+            margin-bottom: 40px;
+        }
+        .video-btn {
+            width: 80px;
+            height: 80px;
+            line-height: 90px;
+    
+            i {
+                font-size: 50px;
+                top: 10px;
+            }
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .video-content {
+        h2 {
+            font-size: 37px;
+            margin-bottom: 40px;
+        }
+    }
+
+}

@@ -1,0 +1,17 @@
+<section id="faq" class="faq-area pt-100 pb-70">
+    <div class="container">
+        <div class="section-title" *ngFor="let sectionTitleContent of sectionTitle;">
+            <h2>{{sectionTitleContent.title}}</h2>
+            <p>{{sectionTitleContent.paragraphText}}</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6" *ngFor="let Content of accordionItem;">
+                <div class="accordion-item">
+                    <a class="accordion-title" href="javascript:void(0)">{{Content.title}}</a>
+                    <p class="accordion-content">{{Content.paragraph}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,22 @@
+<div id="home" class="app-banner-area">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="main-banner-content" *ngFor="let Content of mainBannerContent;">
+                    <h1>{{Content.title}}</h1>
+                    <p>{{Content.paragraph}}</p>
+                    <div class="banner-holder">
+                        <a href="#"><img [src]="Content.button1" alt="image"></a>
+                        <a href="#"><img [src]="Content.button2" alt="image"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="banner-image" *ngFor="let Image of bannerImage;">
+                    <img [src]="Image.img" alt="image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,177 @@
+.book-banner-area {
+    position: relative;
+    z-index: 1;
+    background: {
+        image: url(../../../../../assets/img/book-banner-bg.jpg);
+        position: center center;
+        size: cover;
+        repeat: no-repeat;
+    };
+    padding: {
+        top: 200px;
+        bottom: 120px;
+    };
+    &::before {
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: -1;
+        content: "";
+        width: 100%;
+        height: 100%;
+        opacity: .95;
+        position: absolute;
+        background-color: var(--whiteColor);
+    }
+}
+.main-banner-content {
+    .sub-title {
+        display: block;
+        color: var(--mainColor);
+        margin-bottom: 15px;
+        font: {
+            weight: 600;
+            family: var(--headingFontFamily);
+            size: 17px;
+        };
+    }
+    h1 {
+        font-size: 60px;
+        margin-bottom: 12px;
+    }
+    p {
+        font-size: 16px;
+    }
+    .banner-btn {
+        margin-top: 20px;
+    }
+    .text {
+        margin-top: 15px;
+    }
+}
+.banner-image {
+    position: relative;
+    z-index: 1;
+
+    img {
+        animation: movebounce 5s linear infinite;
+    }
+    &::before {
+        left: 0;
+        top: 50%;
+        right: 0;
+        z-index: -1;
+        content: "";
+        width: 500px;
+        height: 500px;
+        position: absolute;
+        transform: translateY(-50%);
+        background-color: var(--whiteColor);
+        animation: border-transform 10s linear infinite alternate forwards;
+        margin: {
+            left: auto;
+            right: auto;
+        };
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .book-banner-area {
+        padding: {
+            top: 170px;
+            bottom: 80px;
+        };
+    }
+    .banner-image {
+        margin-top: 30px;
+
+        &::before {
+            display: none;
+        }
+    }
+    .main-banner-content {
+        text-align: center;
+
+        .sub-title {
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        h1 {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 14px;
+        }
+        .banner-btn {
+            margin-top: 20px;
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .book-banner-area {
+        padding: {
+            top: 180px;
+            bottom: 80px;
+        };
+    }
+    .main-banner-content {
+        text-align: center;
+        
+        .sub-title {
+            font-size: 15px;
+        }
+        h1 {
+            font-size: 45px;
+        }
+        p {
+            font-size: 15px;
+            max-width: 540px;
+            margin: {
+                left: auto;
+                right: auto;
+            };
+        }
+    }
+    .banner-image {
+        margin-top: 35px;
+
+        &::before {
+            width: 480px;
+            height: 480px;
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .main-banner-content {
+        .sub-title {
+            font-size: 16px;
+        }
+        h1 {
+            font-size: 50px;
+        }
+        p {
+            font-size: 15px;
+        }
+    }
+    .banner-image {
+        &::before {
+            width: 450px;
+            height: 450px;
+        }
+    }
+
+}

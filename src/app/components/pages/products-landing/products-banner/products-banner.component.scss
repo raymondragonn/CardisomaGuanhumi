@@ -1,0 +1,109 @@
+.products-banner-area {
+    background-color: #fafafa;
+    background: transparent url(../../../../../assets/img/banner-bg2.jpg) right top no-repeat;
+    padding: {
+        top: 170px;
+        bottom: 100px;
+    };
+}
+.banner-content {
+    padding-left: 15px;
+
+    h1 {
+        margin-bottom: 18px;
+        font-size: 54px;
+    }
+    .default-btn {
+        margin-top: 10px;
+    }
+}
+.banner-image {
+    padding-right: 15px;
+
+    img {
+        animation: movebounce 5s linear infinite;
+    }
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .products-banner-area {
+        padding: {
+            top: 140px;
+            bottom: 70px;
+        };
+    }
+    .banner-image {
+        padding-right: 0;
+        margin-bottom: 35px;
+        text-align: center;
+    }
+    .banner-content {
+        padding-left: 0;
+        text-align: center;
+    
+        h1 {
+            margin-bottom: 15px;
+            font-size: 35px;
+        }
+        .default-btn {
+            margin-top: 5px;
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media only screen and (min-width: 576px) and (max-width: 767px) {}
+
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .products-banner-area {
+        padding: {
+            top: 150px;
+            bottom: 80px;
+        };
+    }
+    .banner-image {
+        padding-right: 0;
+        margin-bottom: 35px;
+        text-align: center;
+
+        img {
+            max-width: 500px;
+        }
+    }
+    .banner-content {
+        padding-left: 0;
+        text-align: center;
+    
+        h1 {
+            margin-bottom: 15px;
+            font-size: 45px;
+        }
+        p {
+            max-width: 540px;
+            margin: {
+                left: auto;
+                right: auto;
+            };
+        }
+        .default-btn {
+            margin-top: 5px;
+        }
+    }
+
+}
+
+/* Min width 992px to Max width 1199px */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .banner-content {
+        h1 {
+            font-size: 50px;
+        }
+    }
+
+}
