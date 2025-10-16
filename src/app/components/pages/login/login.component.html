@@ -1,0 +1,128 @@
+<!-- Formulario de Login - Cangrejo Azul -->
+<section class="login-section">
+    <div class="login-container">
+        <!-- Fondo decorativo con animación -->
+        <div class="background-animation">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+        </div>
+
+        <!-- Tarjeta del formulario -->
+        <div class="login-card" data-aos="fade-up" data-aos-duration="800">
+            <!-- Logo del cangrejo -->
+            <div class="logo-container">
+                <img src="assets/img/CangrejoSinFondo.png" alt="Cangrejo Azul" class="logo-img">
+                <h2 class="login-title">Bienvenido de vuelta</h2>
+                <p class="login-subtitle">Continúa protegiendo al Cangrejo Azul</p>
+            </div>
+
+            <!-- Formulario -->
+            <form class="login-form" (ngSubmit)="onSubmit()">
+                <!-- Correo electrónico -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="las la-envelope"></i>
+                        Correo Electrónico
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-control"
+                        [(ngModel)]="loginForm.email"
+                        name="email"
+                        placeholder="ejemplo@correo.com"
+                        required
+                        autocomplete="email">
+                </div>
+
+                <!-- Contraseña -->
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="las la-lock"></i>
+                        Contraseña
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input 
+                            [type]="showPassword ? 'text' : 'password'" 
+                            id="password" 
+                            class="form-control"
+                            [(ngModel)]="loginForm.password"
+                            name="password"
+                            placeholder="Ingresa tu contraseña"
+                            required
+                            autocomplete="current-password">
+                        <button 
+                            type="button" 
+                            class="password-toggle"
+                            (click)="togglePasswordVisibility()">
+                            <i [class]="showPassword ? 'las la-eye-slash' : 'las la-eye'"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recordarme y Olvidé contraseña -->
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input 
+                            type="checkbox" 
+                            [(ngModel)]="loginForm.rememberMe"
+                            name="rememberMe">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-text">Recordarme</span>
+                    </label>
+
+                    <button 
+                        type="button" 
+                        class="forgot-password-link"
+                        (click)="forgotPassword()">
+                        ¿Olvidaste tu contraseña?
+                    </button>
+                </div>
+
+                <!-- Botón de envío -->
+                <button 
+                    type="submit" 
+                    class="btn-submit"
+                    [disabled]="isSubmitting">
+                    <span *ngIf="!isSubmitting">
+                        <i class="las la-sign-in-alt"></i>
+                        Iniciar Sesión
+                    </span>
+                    <span *ngIf="isSubmitting">
+                        <i class="las la-spinner la-spin"></i>
+                        Iniciando sesión...
+                    </span>
+                </button>
+
+                <!-- Separador -->
+                <div class="divider">
+                    <span>o</span>
+                </div>
+
+                <!-- Botón para registrarse -->
+                <button 
+                    type="button" 
+                    class="btn-secondary"
+                    (click)="goToRegister()">
+                    <i class="las la-user-plus"></i>
+                    Crear nueva cuenta
+                </button>
+
+                <!-- Volver al inicio -->
+                <button 
+                    type="button" 
+                    class="btn-link"
+                    (click)="goToHome()">
+                    <i class="las la-arrow-left"></i>
+                    Volver al inicio
+                </button>
+            </form>
+
+            <!-- Mensaje de conservación -->
+            <div class="conservation-message">
+                <p>🦀 Cada acción cuenta. Juntos podemos hacer la diferencia por el <strong>Cardisoma Guanhumi</strong></p>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -57,6 +58,8 @@ import { ProductsFeedbackComponent } from './components/pages/products-landing/p
 import { ProductsFaqComponent } from './components/pages/products-landing/products-faq/products-faq.component';
 import { ProductsGalleryComponent } from './components/pages/products-landing/products-gallery/products-gallery.component';
 import { OtherProductsComponent } from './components/pages/products-landing/other-products/other-products.component';
+import { RegisterComponent } from './components/pages/register/register.component';
+import { LoginComponent } from './components/pages/login/login.component';
 
 @NgModule({
   declarations: [
@@ -114,11 +117,14 @@ import { OtherProductsComponent } from './components/pages/products-landing/othe
     ProductsFeedbackComponent,
     ProductsFaqComponent,
     ProductsGalleryComponent,
-    OtherProductsComponent
+    OtherProductsComponent,
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

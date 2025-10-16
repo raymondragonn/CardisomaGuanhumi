@@ -76,6 +76,58 @@
             }
         }
     }
+    
+    .brand-logo {
+        height: 50px;
+        width: auto;
+        max-width: 180px;
+        object-fit: contain;
+    }
+    
+    .cta-item {
+        margin-left: 20px;
+        
+        .cta-btn {
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 50px;
+            padding: 14px 32px;
+            color: #fff !important;
+            background: linear-gradient(135deg, #1976d2, #0d47a1);
+            border: none;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+            position: relative;
+            overflow: hidden;
+            
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #0d47a1, #1565c0);
+                transition: left 0.4s ease;
+                z-index: -1;
+            }
+            
+            &:hover, &:focus {
+                color: #fff !important;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+                
+                &::before {
+                    left: 0;
+                }
+            }
+            
+            &:active {
+                transform: translateY(-1px);
+            }
+        }
+    }
 }
 
 /* Max width 767px */
@@ -89,6 +141,9 @@
         }
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+        .brand-logo {
+            height: 40px;
         }
         .navbar-nav {
             margin-left: 0;
@@ -109,6 +164,18 @@
                     a {
                         margin-top: 0;
                     }
+                }
+            }
+            .cta-item {
+                margin-left: 0;
+                margin-top: 15px;
+                
+                .cta-btn {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    font-size: 15px;
+                    padding: 13px 28px;
                 }
             }
         }
@@ -135,6 +202,9 @@
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
         }
+        .brand-logo {
+            height: 45px;
+        }
         .navbar-nav {
             margin-left: 0;
             background-color: #f9f9f9;
@@ -154,6 +224,18 @@
                     a {
                         margin-top: 0;
                     }
+                }
+            }
+            .cta-item {
+                margin-left: 0;
+                margin-top: 15px;
+                
+                .cta-btn {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    font-size: 15px;
+                    padding: 13px 28px;
                 }
             }
         }

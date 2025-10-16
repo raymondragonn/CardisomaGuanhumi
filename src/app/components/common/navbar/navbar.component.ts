@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
 
     location: any;
     routerSubscription: any;
+    isCollapsed: boolean = true;
 
     constructor(private router: Router) {
     }
@@ -26,7 +27,22 @@ export class NavbarComponent implements OnInit {
         this.recallJsFuntions();
     }
 
+    goLogin(){
+        this.router.navigate(['/login']);
+    }
+
+    toggleNavbar() {
+        this.isCollapsed = !this.isCollapsed;
+    }
+
+    closeNavbar() {
+        this.isCollapsed = true;
+    }
+
     recallJsFuntions() {
+        // Inicializar la ubicación actual inmediatamente
+        this.location = this.router.url;
+        
         this.routerSubscription = this.router.events
         .pipe(filter(event => event instanceof NavigationEnd || event instanceof NavigationCancel))
         .subscribe(event => {
@@ -36,36 +52,28 @@ export class NavbarComponent implements OnInit {
     
     appLandingNavItem = [
         {
-            id: 'home',
-            title: 'Home',
+            id: 'inicio',
+            title: 'Inicio',
         },
         {
-            id: 'about',
-            title: 'About',
+            id: 'educativo',
+            title: 'Educativo',
         },
         {
-            id: 'pricing',
-            title: 'Pricing',
+            id: 'datos',
+            title: 'Datos',
         },
         {
-            id: 'screenshots',
-            title: 'Screenshots',
+            id: 'mapas',
+            title: 'Mapas',
         },
         {
-            id: 'team',
-            title: 'Team',
+            id: 'participa',
+            title: 'Participa',
         },
         {
-            id: 'faq',
-            title: 'FAQ',
-        },
-        {
-            id: 'feedback',
-            title: 'Feedback',
-        },
-        {
-            id: 'contact',
-            title: 'Contact',
+            id: 'ayuda',
+            title: 'Ayuda',
         }
     ];
     bookLandingNavItem = [

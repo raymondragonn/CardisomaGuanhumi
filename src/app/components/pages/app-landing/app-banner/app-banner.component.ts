@@ -1,5 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 
+// Interfaces
+class Content {
+    title : string;
+    subtitle? : string;
+    paragraph : string;
+    button1 : string;
+    button2 : string;
+}
+class Image {
+    img : string;
+}
+class Stat {
+    number : string;
+    label : string;
+}
+
 @Component({
   selector: 'app-app-banner',
   templateUrl: './app-banner.component.html',
@@ -14,25 +30,32 @@ export class AppBannerComponent implements OnInit {
 
     mainBannerContent: Content[] = [
         {
-            title: 'Best Mobile App For Your Business',
-            paragraph: 'App ipsum dolor sit amet, consectetur adipiscing elit, sed do mo tempor incididunt ut labore et dolore magna aliqua.',
-            button1: 'assets/img/store/1.png',
-            button2: 'assets/img/store/2.png'
+            title: 'Cardisoma Guanhumi',
+            subtitle: 'El Cangrejo Azul de las Antillas',
+            paragraph: 'Conoce y protege una especie única en peligro. Juntos podemos garantizar su conservación y preservar la biodiversidad de nuestros ecosistemas costeros.',
+            button1: 'Aprende Más',
+            button2: 'Participa Ahora'
         }
     ]
     bannerImage: Image[] = [
         {
-            img: 'assets/img/app-banner.png'
+            img: 'assets/img/CangrejoSinFondo.png'
+        }
+    ]
+    
+    stats: Stat[] = [
+        {
+            number: '50%',
+            label: 'Reducción poblacional'
+        },
+        {
+            number: '3-5',
+            label: 'Países donde habita'
+        },
+        {
+            number: '20+',
+            label: 'Años de vida'
         }
     ]
 
-}
-class Content {
-    title : string;
-    paragraph : string;
-    button1 : string;
-    button2 : string;
-}
-class Image {
-    img : string;
 }
