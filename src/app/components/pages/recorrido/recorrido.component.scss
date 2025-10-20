@@ -1,0 +1,456 @@
+.recorrido-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 80vh;
+
+  .section-header {
+    margin-bottom: 30px;
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 300;
+    }
+  }
+
+  .map-wrapper {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    background: white;
+    height: 700px;
+    
+    google-map {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  // Tarjetas de Información
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .info-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      i {
+        font-size: 1.8rem;
+        color: white;
+      }
+
+      h3 {
+        margin: 0;
+        color: white;
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+    }
+
+    .info-body {
+      padding: 20px;
+    }
+  }
+
+  // Estadística Destacada
+  .stat-highlight {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 10px;
+    margin-bottom: 15px;
+
+    .stat-number {
+      display: block;
+      font-size: 3rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+    }
+
+    .stat-unit {
+      display: block;
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 5px;
+    }
+  }
+
+  .info-description {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  // Tasa de Supervivencia
+  .survival-stats {
+    .survival-bar {
+      width: 100%;
+      height: 30px;
+      background: #e0e0e0;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+
+      .survival-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #ff6b6b, #ee5a6f);
+        border-radius: 15px;
+        transition: width 1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+        color: white;
+        font-weight: bold;
+      }
+    }
+
+    .survival-text {
+      text-align: center;
+      color: #555;
+      font-size: 1rem;
+      margin: 0;
+    }
+  }
+
+  .alert-danger {
+    background: #ffebee;
+    border-left: 4px solid #f44336;
+    padding: 15px;
+    border-radius: 5px;
+
+    i {
+      color: #f44336;
+      margin-right: 8px;
+    }
+
+    strong {
+      color: #d32f2f;
+    }
+  }
+
+  // Amenazas
+  .amenaza-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #e3f2fd;
+      transform: translateX(5px);
+    }
+
+    .amenaza-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      i {
+        font-size: 1.5rem;
+        color: white;
+      }
+
+      &.car {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+      }
+
+      &.building {
+        background: linear-gradient(135deg, #ffa502, #ff6348);
+      }
+
+      &.human {
+        background: linear-gradient(135deg, #5f27cd, #341f97);
+      }
+
+      &.pollution {
+        background: linear-gradient(135deg, #222f3e, #576574);
+      }
+    }
+
+    .amenaza-content {
+      flex: 1;
+
+      h4 {
+        font-size: 1.1rem;
+        color: #333;
+        margin: 0 0 8px 0;
+        font-weight: 600;
+      }
+
+      p {
+        font-size: 0.9rem;
+        color: #666;
+        margin: 0;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  // Datos Adicionales
+  .dato-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+
+    i {
+      font-size: 1.5rem;
+      color: #667eea;
+      margin-top: 3px;
+    }
+
+    div {
+      flex: 1;
+
+      strong {
+        display: block;
+        color: #333;
+        font-size: 1rem;
+        margin-bottom: 3px;
+      }
+
+      p {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+    }
+  }
+
+  // Leyenda del Mapa
+  .map-legend {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    h5 {
+      margin: 0 0 15px 0;
+      color: #333;
+      font-size: 1.2rem;
+      font-weight: 600;
+
+      i {
+        color: #667eea;
+        margin-right: 8px;
+      }
+    }
+
+    .legend-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 15px;
+      background: #f8f9fa;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #555;
+
+      .legend-marker {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+        &.green {
+          background: #34a853;
+        }
+
+        &.yellow {
+          background: #fbbc04;
+        }
+
+        &.red {
+          background: #ea4335;
+        }
+      }
+
+      .legend-line {
+        width: 30px;
+        height: 4px;
+        background: linear-gradient(90deg, #1e88e5, #0d47a1);
+        border-radius: 2px;
+      }
+    }
+  }
+
+  // Caja de información (antigua - por si acaso)
+  .info-box {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+
+    h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        font-size: 1rem;
+        color: #444;
+
+        .marker-color {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          margin-right: 10px;
+          border: 2px solid #fff;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+          &.green {
+            background-color: #34a853;
+          }
+
+          &.yellow {
+            background-color: #fbbc04;
+          }
+
+          &.red {
+            background-color: #ea4335;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .recorrido-section {
+    padding: 40px 0;
+
+    .section-header {
+      .title {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    .map-wrapper {
+      height: 400px;
+      margin-top: 20px;
+    }
+
+    .info-card {
+      margin-bottom: 15px;
+
+      .info-header {
+        padding: 15px;
+
+        h3 {
+          font-size: 1.1rem;
+        }
+
+        i {
+          font-size: 1.5rem;
+        }
+      }
+
+      .info-body {
+        padding: 15px;
+      }
+    }
+
+    .stat-highlight {
+      .stat-number {
+        font-size: 2.5rem;
+      }
+
+      .stat-unit {
+        font-size: 1rem;
+      }
+    }
+
+    .amenaza-item {
+      flex-direction: column;
+      text-align: center;
+
+      .amenaza-icon {
+        margin: 0 auto;
+      }
+
+      .amenaza-content {
+        h4 {
+          font-size: 1rem;
+        }
+
+        p {
+          font-size: 0.85rem;
+        }
+      }
+    }
+
+    .map-legend {
+      .legend-items {
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .recorrido-section {
+    .map-wrapper {
+      height: 500px;
+    }
+  }
+}

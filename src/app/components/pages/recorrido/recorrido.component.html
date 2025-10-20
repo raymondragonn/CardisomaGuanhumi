@@ -1,0 +1,194 @@
+<section class="recorrido-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="section-header text-center mb-4">
+          <h1 class="title">Recorrido del Cangrejo Azul</h1>
+          <p class="subtitle">Del manglar al mar: La travesía reproductiva del Cardisoma Guanhumi</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Panel de Información Lateral -->
+      <div class="col-lg-4 col-md-12 mb-4">
+        
+        <!-- Distancia del Recorrido -->
+        <div class="info-card">
+          <div class="info-header">
+            <i class="bi bi-arrow-left-right"></i>
+            <h3>Distancia del Recorrido</h3>
+          </div>
+          <div class="info-body">
+            <div class="stat-highlight">
+              <span class="stat-number">2.5 - 3.5</span>
+              <span class="stat-unit">kilómetros</span>
+            </div>
+            <p class="info-description">
+              Los cangrejos azules pueden recorrer hasta 3.5 km desde el manglar hasta la costa durante la temporada de reproducción.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tasa de Supervivencia -->
+        <div class="info-card mt-3">
+          <div class="info-header">
+            <i class="bi bi-heart-pulse"></i>
+            <h3>Tasa de Supervivencia</h3>
+          </div>
+          <div class="info-body">
+            <div class="survival-stats">
+              <div class="survival-bar">
+                <div class="survival-fill" style="width: 30%"></div>
+              </div>
+              <div class="stat-highlight mt-2">
+                <span class="stat-number">30</span>
+                <span class="stat-unit">de cada 100</span>
+              </div>
+              <p class="survival-text">cangrejos logran llegar a desovar</p>
+            </div>
+            <div class="alert-danger mt-3">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              <strong>70% no completa el recorrido</strong> debido a las amenazas en el camino
+            </div>
+          </div>
+        </div>
+
+        <!-- Amenazas en el Camino -->
+        <div class="info-card mt-3">
+          <div class="info-header">
+            <i class="bi bi-shield-exclamation"></i>
+            <h3>Amenazas en el Camino</h3>
+          </div>
+          <div class="info-body">
+            <div class="amenaza-item">
+              <div class="amenaza-icon car">
+                <i class="bi bi-car-front-fill"></i>
+              </div>
+              <div class="amenaza-content">
+                <h4>Atropellamientos</h4>
+                <p>Los vehículos son la principal causa de muerte. Miles de cangrejos cruzan carreteras durante la noche.</p>
+              </div>
+            </div>
+
+            <div class="amenaza-item">
+              <div class="amenaza-icon building">
+                <i class="bi bi-buildings-fill"></i>
+              </div>
+              <div class="amenaza-content">
+                <h4>Urbanización y Fraccionamientos</h4>
+                <p>La expansión urbana destruye su hábitat y bloquea sus rutas migratorias naturales.</p>
+              </div>
+            </div>
+
+            <div class="amenaza-item">
+              <div class="amenaza-icon human">
+                <i class="bi bi-person-fill"></i>
+              </div>
+              <div class="amenaza-content">
+                <h4>Captura Humana</h4>
+                <p>Muchos cangrejos son capturados para consumo, especialmente durante su migración nocturna.</p>
+              </div>
+            </div>
+
+            <div class="amenaza-item">
+              <div class="amenaza-icon pollution">
+                <i class="bi bi-exclamation-octagon-fill"></i>
+              </div>
+              <div class="amenaza-content">
+                <h4>Contaminación y Pérdida de Hábitat</h4>
+                <p>La degradación de manglares y zonas costeras reduce las áreas seguras de tránsito.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos Adicionales -->
+        <div class="info-card mt-3">
+          <div class="info-header">
+            <i class="bi bi-info-circle-fill"></i>
+            <h3>Datos Importantes</h3>
+          </div>
+          <div class="info-body">
+            <div class="dato-item">
+              <i class="bi bi-moon-stars-fill"></i>
+              <div>
+                <strong>Horario:</strong>
+                <p>Recorrido nocturno (7 PM - 3 AM)</p>
+              </div>
+            </div>
+            <div class="dato-item">
+              <i class="bi bi-calendar-event"></i>
+              <div>
+                <strong>Temporada:</strong>
+                <p>Abril a Octubre (época de lluvias)</p>
+              </div>
+            </div>
+            <div class="dato-item">
+              <i class="bi bi-clock-fill"></i>
+              <div>
+                <strong>Duración:</strong>
+                <p>2 a 4 horas aproximadamente</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Mapa de Google -->
+      <div class="col-lg-8 col-md-12">
+        <div class="map-wrapper">
+          <google-map
+            [center]="center"
+            [zoom]="zoom"
+            [options]="mapOptions"
+            width="100%"
+            height="100%">
+            
+            <!-- Línea del recorrido (Polyline) -->
+            <map-polyline
+              [path]="polylinePath"
+              [options]="polylineOptions">
+            </map-polyline>
+            
+            <!-- Marcadores (Markers) -->
+            <map-marker
+              *ngFor="let marker of markers"
+              [position]="marker.position"
+              [title]="marker.title"
+              [label]="marker.label"
+              [options]="marker.options"
+              (mapClick)="onMarkerClick(marker)">
+            </map-marker>
+
+          </google-map>
+        </div>
+
+        <!-- Leyenda del Mapa -->
+        <div class="map-legend mt-3">
+          <h5><i class="bi bi-map"></i> Leyenda del Recorrido</h5>
+          <div class="legend-items">
+            <div class="legend-item">
+              <span class="legend-marker green"></span>
+              <span>Inicio - Zona de Manglar</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-marker yellow"></span>
+              <span>Puntos Intermedios</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-marker red"></span>
+              <span>Destino - Zona de Desove</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-line"></div>
+              <span>Ruta de Migración</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

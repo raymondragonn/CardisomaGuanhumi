@@ -81,7 +81,6 @@ $error-red: #f44336;
 
 .register-card {
     background: $white;
-    border-radius: 24px;
     padding: 40px 32px;
     box-shadow: 
         0 10px 40px rgba(33, 150, 243, 0.15),
@@ -113,7 +112,7 @@ $error-red: #f44336;
         height: 100px;
         object-fit: contain;
         margin-bottom: 16px;
-        animation: float 3s ease-in-out infinite;
+        
         filter: drop-shadow(0 4px 12px rgba(33, 150, 243, 0.2));
     }
 

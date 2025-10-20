@@ -18,6 +18,7 @@ declare let $: any;
 export class AppComponent implements OnInit {
     location: any;
     routerSubscription: any;
+    showNavbarFooter: boolean = true;
 
     constructor(private router: Router) {
     }
@@ -39,6 +40,10 @@ export class AppComponent implements OnInit {
             $.getScript('../assets/js/main.js');
             $('.preloader').fadeOut('slow');
             this.location = this.router.url;
+            
+            // Ocultar navbar y footer en páginas de login y register
+            this.showNavbarFooter = !(this.location === '/login' || this.location === '/register');
+            
             if (!(event instanceof NavigationEnd)) {
                 return;
             }

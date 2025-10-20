@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -60,6 +61,7 @@ import { ProductsGalleryComponent } from './components/pages/products-landing/pr
 import { OtherProductsComponent } from './components/pages/products-landing/other-products/other-products.component';
 import { RegisterComponent } from './components/pages/register/register.component';
 import { LoginComponent } from './components/pages/login/login.component';
+import { RecorridoComponent } from './components/pages/recorrido/recorrido.component';
 
 @NgModule({
   declarations: [
@@ -119,12 +121,14 @@ import { LoginComponent } from './components/pages/login/login.component';
     ProductsGalleryComponent,
     OtherProductsComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    RecorridoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    GoogleMapsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
