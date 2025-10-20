@@ -7,6 +7,7 @@ import { ProductsLandingComponent } from './components/pages/products-landing/pr
 import { RegisterComponent } from './components/pages/register/register.component';
 import { LoginComponent } from './components/pages/login/login.component';
 import { RecorridoComponent } from './components/pages/recorrido/recorrido.component';
+import { EventosComponent } from './components/pages/eventos/eventos.component';
 
 const routes: Routes = [
     {path: '', component: AppLandingComponent},
@@ -15,7 +16,8 @@ const routes: Routes = [
     {path: 'products-landing', component: ProductsLandingComponent},
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
-    {path: 'recorrido', component: RecorridoComponent}
+    {path: 'amenazas', component: RecorridoComponent},
+    {path: 'accionesComunidades', component: EventosComponent}
 ];
 
 @NgModule({

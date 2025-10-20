@@ -1,0 +1,154 @@
+<section class="eventos-section">
+  <div class="container">
+    
+    <!-- Header de la Sección -->
+    <div class="section-header text-center mb-5">
+      <div class="icon-wrapper">
+        <i class="bi bi-calendar-event"></i>
+      </div>
+      <h2 class="section-title">Próximos Eventos</h2>
+      <p class="section-subtitle">Únete a nuestras actividades de conservación y protección del cangrejo azul</p>
+    </div>
+
+    <!-- Filtros de Eventos -->
+    <div class="filtros-container mb-4">
+      <div class="filtros-wrapper">
+        <button 
+          class="filtro-btn" 
+          [class.active]="filtroActivo === 'todos'"
+          (click)="cambiarFiltro('todos')">
+          <i class="bi bi-grid-3x3-gap"></i>
+          Todos
+        </button>
+        <button 
+          class="filtro-btn tipo-limpieza" 
+          [class.active]="filtroActivo === 'limpieza'"
+          (click)="cambiarFiltro('limpieza')">
+          <i class="bi bi-trash3"></i>
+          Limpieza
+        </button>
+        <button 
+          class="filtro-btn tipo-monitoreo" 
+          [class.active]="filtroActivo === 'monitoreo'"
+          (click)="cambiarFiltro('monitoreo')">
+          <i class="bi bi-binoculars"></i>
+          Monitoreo
+        </button>
+        <button 
+          class="filtro-btn tipo-educativo" 
+          [class.active]="filtroActivo === 'educativo'"
+          (click)="cambiarFiltro('educativo')">
+          <i class="bi bi-book"></i>
+          Educativo
+        </button>
+        <button 
+          class="filtro-btn tipo-voluntariado" 
+          [class.active]="filtroActivo === 'voluntariado'"
+          (click)="cambiarFiltro('voluntariado')">
+          <i class="bi bi-hand-thumbs-up"></i>
+          Voluntariado
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Eventos -->
+    <div class="row g-4">
+      <div class="col-lg-6 col-md-12" *ngFor="let evento of eventosFiltrados">
+        <div class="evento-card" [ngClass]="getTipoClase(evento.tipo)">
+          
+          <!-- Badge de Tipo -->
+          <div class="evento-badge">
+            <i class="bi" [ngClass]="getTipoIcono(evento.tipo)"></i>
+            <span>{{ evento.tipo | titlecase }}</span>
+          </div>
+
+          <!-- Imagen del Evento -->
+          <!-- <div class="evento-imagen">
+            <img [src]="evento.imagen" [alt]="evento.titulo" 
+                 onerror="this.src='assets/img/cangrejo/cangrejo_icon.png'">
+            <div class="overlay"></div>
+          </div> -->
+
+          <!-- Contenido del Evento -->
+          <div class="evento-content">
+            
+            <!-- Título y Descripción -->
+            <div class="evento-header">
+              <h3 class="evento-titulo">{{ evento.titulo }}</h3>
+              <p class="evento-descripcion">{{ evento.descripcion }}</p>
+            </div>
+
+            <!-- Detalles del Evento -->
+            <div class="evento-detalles">
+              <div class="detalle-item">
+                <i class="bi bi-calendar3"></i>
+                <span>{{ formatearFecha(evento.fecha) }}</span>
+              </div>
+              <div class="detalle-item">
+                <i class="bi bi-clock"></i>
+                <span>{{ evento.hora }}</span>
+              </div>
+              <div class="detalle-item">
+                <i class="bi bi-geo-alt"></i>
+                <span>{{ evento.ubicacion }}</span>
+              </div>
+              <div class="detalle-item">
+                <i class="bi bi-person-badge"></i>
+                <span>{{ evento.organizador }}</span>
+              </div>
+            </div>
+
+            <!-- Barra de Capacidad -->
+            <div class="capacidad-container">
+              <div class="capacidad-header">
+                <span class="capacidad-texto">
+                  <i class="bi bi-people"></i>
+                  {{ evento.inscritos }} / {{ evento.capacidad }} participantes
+                </span>
+                <span class="capacidad-porcentaje">{{ calcularPorcentaje(evento) | number:'1.0-0' }}%</span>
+              </div>
+              <div class="capacidad-barra">
+                <div class="capacidad-progreso" 
+                     [style.width.%]="calcularPorcentaje(evento)"
+                     [class.completo]="estaLleno(evento)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Requisitos (Expandible) -->
+            <details class="evento-requisitos">
+              <summary>
+                <i class="bi bi-list-check"></i>
+                Ver requisitos
+              </summary>
+              <ul class="requisitos-lista">
+                <li *ngFor="let requisito of evento.requisitos">
+                  <i class="bi bi-check-circle-fill"></i>
+                  {{ requisito }}
+                </li>
+              </ul>
+            </details>
+
+            <!-- Botón de Unirse -->
+            <button 
+              class="btn-unirse" 
+              [disabled]="estaLleno(evento)"
+              (click)="unirseEvento(evento)">
+              <i class="bi" [ngClass]="estaLleno(evento) ? 'bi-x-circle' : 'bi-check-circle'"></i>
+              <span *ngIf="!estaLleno(evento)">Unirse al Evento</span>
+              <span *ngIf="estaLleno(evento)">Evento Lleno</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje si no hay eventos -->
+    <div class="no-eventos" *ngIf="eventosFiltrados.length === 0">
+      <i class="bi bi-calendar-x"></i>
+      <h3>No hay eventos disponibles</h3>
+      <p>No se encontraron eventos para esta categoría. Revisa pronto para nuevas actividades.</p>
+    </div>
+
+  </div>
+</section>

@@ -62,6 +62,7 @@ import { OtherProductsComponent } from './components/pages/products-landing/othe
 import { RegisterComponent } from './components/pages/register/register.component';
 import { LoginComponent } from './components/pages/login/login.component';
 import { RecorridoComponent } from './components/pages/recorrido/recorrido.component';
+import { EventosComponent } from './components/pages/eventos/eventos.component';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,8 @@ import { RecorridoComponent } from './components/pages/recorrido/recorrido.compo
     OtherProductsComponent,
     RegisterComponent,
     LoginComponent,
-    RecorridoComponent
+    RecorridoComponent,
+    EventosComponent
   ],
   imports: [
     BrowserModule,

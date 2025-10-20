@@ -51,29 +51,22 @@ export class NavbarComponent implements OnInit {
     }
     
     appLandingNavItem = [
+        
         {
-            id: 'inicio',
-            title: 'Inicio',
+            id: 'amenazas',
+            title: 'Amenazas',
         },
         {
-            id: 'educativo',
-            title: 'Educativo',
+            id: 'Sobre la Especie',
+            title: 'Sobre la Especie',
         },
         {
-            id: 'datos',
-            title: 'Datos',
+            id: 'accionesComunidades',
+            title: 'Acciones y Comunidades',
         },
         {
-            id: 'mapas',
-            title: 'Mapas',
-        },
-        {
-            id: 'participa',
-            title: 'Participa',
-        },
-        {
-            id: 'ayuda',
-            title: 'Ayuda',
+            id: 'Recursos',
+            title: 'Recursos',
         }
     ];
     bookLandingNavItem = [
