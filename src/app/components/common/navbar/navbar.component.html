@@ -9,36 +9,10 @@
         </button>
     
         <div class="collapse navbar-collapse" id="navbarSupportedContent" [class.show]="!isCollapsed">
-            <ul class="navbar-nav ms-auto align-items-lg-center" *ngIf="!location || location == '/'">
-                <li class="nav-item" *ngFor="let navItem of appLandingNavItem">
-                    <a href="{{navItem.id}}" class="nav-link" (click)="closeNavbar()">{{navItem.title}}</a>
-                </li>
-                <li class="nav-item cta-item">
-                    <button (click)="goLogin(); closeNavbar()" class="btn btn-main cta-btn">Únete al movimiento</button>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav ms-auto align-items-lg-center" *ngIf="location == '/book-landing'">
-                <li class="nav-item" *ngFor="let navItem of bookLandingNavItem">
-                    <a href="#{{navItem.id}}" class="nav-link" (click)="closeNavbar()">{{navItem.title}}</a>
-                </li>
-                <li class="nav-item cta-item">
-                    <button (click)="goLogin(); closeNavbar()" class="btn btn-main cta-btn">Únete al movimiento</button>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav ms-auto align-items-lg-center" *ngIf="location == '/saas-landing'">
-                <li class="nav-item" *ngFor="let navItem of saasLandingNavItem">
-                    <a href="#{{navItem.id}}" class="nav-link" (click)="closeNavbar()">{{navItem.title}}</a>
-                </li>
-                <li class="nav-item cta-item">
-                    <button (click)="goLogin(); closeNavbar()" class="btn btn-main cta-btn">Únete al movimiento</button>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav ms-auto align-items-lg-center" *ngIf="location == '/products-landing'">
-                <li class="nav-item" *ngFor="let navItem of productsLandingNavItem">
-                    <a href="#{{navItem.id}}" class="nav-link" (click)="closeNavbar()">{{navItem.title}}</a>
+            <!-- Navbar único para toda la aplicación -->
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item" *ngFor="let navItem of navItems">
+                    <a [routerLink]="[navItem.route]" class="nav-link" (click)="closeNavbar()">{{navItem.title}}</a>
                 </li>
                 <li class="nav-item cta-item">
                     <button (click)="goLogin(); closeNavbar()" class="btn btn-main cta-btn">Únete al movimiento</button>

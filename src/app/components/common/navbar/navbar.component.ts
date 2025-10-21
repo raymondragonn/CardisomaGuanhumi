@@ -50,113 +50,23 @@ export class NavbarComponent implements OnInit {
         });
     }
     
-    appLandingNavItem = [
-        
+    // Navbar único para toda la aplicación
+    navItems = [
         {
-            id: 'amenazas',
             title: 'Amenazas',
+            route: 'amenazas'
         },
         {
-            id: 'Sobre la Especie',
             title: 'Sobre la Especie',
+            route: 'sobre-la-especie'
         },
         {
-            id: 'accionesComunidades',
-            title: 'Acciones y Comunidades',
+            title: 'Comunidad y Acciones',
+            route: 'comunidad-y-acciones'
         },
         {
-            id: 'Recursos',
             title: 'Recursos',
-        }
-    ];
-    bookLandingNavItem = [
-        {
-            id: 'home',
-            title: 'Home',
-        },
-        {
-            id: 'features',
-            title: 'Features',
-        },
-        {
-            id: 'about',
-            title: 'About',
-        },
-        {
-            id: 'feedback',
-            title: 'Feedback',
-        },
-        {
-            id: 'pricing',
-            title: 'Pricing',
-        },
-        {
-            id: 'author',
-            title: 'Author',
-        },
-        {
-            id: 'contact',
-            title: 'Contact',
-        }
-    ];
-    saasLandingNavItem = [
-        {
-            id: 'home',
-            title: 'Home',
-        },
-        {
-            id: 'about',
-            title: 'About',
-        },
-        {
-            id: 'features',
-            title: 'Features',
-        },
-        {
-            id: 'pricing',
-            title: 'Pricing',
-        },
-        {
-            id: 'team',
-            title: 'Team',
-        },
-        {
-            id: 'feedback',
-            title: 'Feedback',
-        },
-        {
-            id: 'contact',
-            title: 'Contact',
-        }
-    ];
-    productsLandingNavItem = [
-        {
-            id: 'home',
-            title: 'Home',
-        },
-        {
-            id: 'about',
-            title: 'About',
-        },
-        {
-            id: 'features',
-            title: 'Features',
-        },
-        {
-            id: 'spec',
-            title: 'Spec',
-        },
-        {
-            id: 'products',
-            title: 'Products',
-        },
-        {
-            id: 'faq',
-            title: 'FAQ',
-        },
-        {
-            id: 'contact',
-            title: 'Contact',
+            route: 'recursos'
         }
     ];
 

@@ -1,0 +1,197 @@
+<section class="sobre-especie-section">
+  <div class="container">
+    
+    <!-- Header de la Sección -->
+    <div class="row">
+      <div class="col-12">
+        <div class="section-header text-center mb-5">
+          <h1 class="title">Cardisoma Guanhumi</h1>
+          <p class="subtitle">Conoce al Cangrejo Azul: Guardián de los Manglares</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Imagen Hero y Descripción Principal -->
+    <div class="row mb-5 align-items-center">
+      <div class="col-lg-6 mb-4">
+        <div class="hero-image-wrapper">
+          <img src="assets/img/cangrejo/CangrejoAzul2.jpg" alt="Cardisoma Guanhumi" class="hero-image">
+        </div>
+      </div>
+      <div class="col-lg-6 mb-4">
+        <div class="descripcion-principal">
+          <h2>Una Especie Única</h2>
+          <p class="lead">
+            El <strong>Cardisoma guanhumi</strong>, conocido como el cangrejo azul o juey azul, es uno de los 
+            crustáceos terrestres más grandes de América. Su característico color azul violáceo lo hace 
+            inconfundible en los ecosistemas de manglar del Caribe y la costa atlántica tropical.
+          </p>
+          <p>
+            Este cangrejo desempeña un papel crucial como <strong>ingeniero del ecosistema</strong>, 
+            excavando madrigueras que airean el suelo y facilitan el flujo de agua en los manglares, 
+            ecosistemas vitales para la salud costera.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Características Principales -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="section-title text-center mb-4">
+          <i class="bi bi-info-circle"></i> Características Principales
+        </h2>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let caracteristica of caracteristicas">
+        <div class="caracteristica-card">
+          <div class="caracteristica-icon">
+            <i class="bi {{caracteristica.icono}}"></i>
+          </div>
+          <h3>{{caracteristica.titulo}}</h3>
+          <p>{{caracteristica.descripcion}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ciclo de Vida -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="section-title text-center mb-4">
+          <i class="bi bi-arrow-repeat"></i> Ciclo de Vida
+        </h2>
+      </div>
+      <div class="col-12">
+        <div class="timeline">
+          <div class="timeline-item" *ngFor="let etapa of cicloVida; let i = index" [class.timeline-item-right]="i % 2 !== 0">
+            <div class="timeline-content">
+              <div class="timeline-icon">
+                <i class="bi {{etapa.icono}}"></i>
+              </div>
+              <div class="timeline-body">
+                <h3>{{etapa.etapa}}</h3>
+                <span class="timeline-duracion">{{etapa.duracion}}</span>
+                <p>{{etapa.descripcion}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado de Conservación -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="section-title text-center mb-4">
+          <i class="bi bi-shield-exclamation"></i> Estado de Conservación
+        </h2>
+      </div>
+      <div class="col-12">
+        <div class="conservacion-card">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 mb-3">
+              <div class="conservacion-item estado-vulnerable">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <h4>Estado</h4>
+                <p class="conservacion-valor">{{conservacion.estado}}</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+              <div class="conservacion-item tendencia-negativa">
+                <i class="bi bi-graph-down-arrow"></i>
+                <h4>Tendencia</h4>
+                <p class="conservacion-valor">{{conservacion.tendencia}}</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+              <div class="conservacion-item">
+                <i class="bi bi-people-fill"></i>
+                <h4>Población</h4>
+                <p class="conservacion-descripcion">{{conservacion.poblacion}}</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+              <div class="conservacion-item proteccion">
+                <i class="bi bi-shield-check"></i>
+                <h4>Protección</h4>
+                <p class="conservacion-descripcion">{{conservacion.proteccion}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ecología y Rol en el Ecosistema -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="section-title text-center mb-4">
+          <i class="bi bi-tree-fill"></i> Ecología y Rol en el Ecosistema
+        </h2>
+      </div>
+      <div class="col-lg-6 col-md-6 mb-4" *ngFor="let dato of ecologia">
+        <div class="ecologia-card" [class.importancia-alta]="dato.importancia === 'Alta'">
+          <div class="ecologia-header">
+            <h3>{{dato.aspecto}}</h3>
+            <span class="badge importancia-badge" 
+                  [class.badge-danger]="dato.importancia === 'Alta'"
+                  [class.badge-warning]="dato.importancia === 'Media'">
+              {{dato.importancia}}
+            </span>
+          </div>
+          <p>{{dato.detalle}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Datos Curiosos -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="section-title text-center mb-4">
+          <i class="bi bi-lightbulb"></i> ¿Sabías que...?
+        </h2>
+      </div>
+      <div class="col-12">
+        <div class="curiosidades-container">
+          <div class="curiosidad-item">
+            <i class="bi bi-droplet-fill"></i>
+            <p>Pueden sobrevivir fuera del agua, pero necesitan mantener sus branquias húmedas</p>
+          </div>
+          <div class="curiosidad-item">
+            <i class="bi bi-moon-fill"></i>
+            <p>Son principalmente nocturnos y evitan la luz directa del sol</p>
+          </div>
+          <div class="curiosidad-item">
+            <i class="bi bi-house-door-fill"></i>
+            <p>Sus madrigueras pueden alcanzar hasta 1.5 metros de profundidad</p>
+          </div>
+          <div class="curiosidad-item">
+            <i class="bi bi-palette-fill"></i>
+            <p>Su color azul se intensifica con la edad y puede variar entre individuos</p>
+          </div>
+          <div class="curiosidad-item">
+            <i class="bi bi-heart-pulse-fill"></i>
+            <p>Pueden regenerar sus pinzas si las pierden en combate o para escapar</p>
+          </div>
+          <div class="curiosidad-item">
+            <i class="bi bi-tsunami"></i>
+            <p>Las hembras pueden liberar hasta 700,000 huevos en una sola puesta</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row">
+      <div class="col-12">
+        <div class="cta-box text-center">
+          <h2>Ayuda a Proteger al Cangrejo Azul</h2>
+          <p>Tu participación es fundamental para la conservación de esta especie única</p>
+          <button class="btn btn-primary btn-lg" routerLink="/comunidad-y-acciones">
+            <i class="bi bi-hand-thumbs-up"></i> Únete a las Acciones de Conservación
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

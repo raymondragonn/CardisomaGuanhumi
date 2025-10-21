@@ -63,6 +63,7 @@ import { RegisterComponent } from './components/pages/register/register.componen
 import { LoginComponent } from './components/pages/login/login.component';
 import { RecorridoComponent } from './components/pages/recorrido/recorrido.component';
 import { EventosComponent } from './components/pages/eventos/eventos.component';
+import { SobreEspecieComponent } from './components/pages/sobre-especie/sobre-especie.component';
 
 @NgModule({
   declarations: [
@@ -124,7 +125,8 @@ import { EventosComponent } from './components/pages/eventos/eventos.component';
     RegisterComponent,
     LoginComponent,
     RecorridoComponent,
-    EventosComponent
+    EventosComponent,
+    SobreEspecieComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 .recorrido-section {
+  margin-top: 4rem;
   padding: 60px 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
   min-height: 80vh;
 
   .section-header {
@@ -49,7 +50,7 @@
     }
 
     .info-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
       padding: 20px;
       display: flex;
       align-items: center;
@@ -77,7 +78,7 @@
   .stat-highlight {
     text-align: center;
     padding: 20px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
     border-radius: 10px;
     margin-bottom: 15px;
 
@@ -229,7 +230,7 @@
 
     i {
       font-size: 1.5rem;
-      color: #667eea;
+      color: #1976d2;
       margin-top: 3px;
     }
 
@@ -265,7 +266,7 @@
       font-weight: 600;
 
       i {
-        color: #667eea;
+        color: #1976d2;
         margin-right: 8px;
       }
     }
