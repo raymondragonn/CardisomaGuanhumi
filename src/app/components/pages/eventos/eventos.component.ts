@@ -8,8 +8,7 @@ interface Evento {
   fecha: Date;
   hora: string;
   ubicacion: string;
-  tipo: 'limpieza' | 'monitoreo' | 'educativo' | 'voluntariado';
-  capacidad: number;
+  tipo: 'limpieza' | 'voluntariado';
   inscritos: number;
   imagen: string;
   organizador: string;
@@ -33,7 +32,6 @@ export class EventosComponent implements OnInit {
       hora: '8:00 AM - 12:00 PM',
       ubicacion: 'Playa Mocambo, Boca del Río, Veracruz',
       tipo: 'limpieza',
-      capacidad: 50,
       inscritos: 32,
       imagen: 'assets/img/eventos/limpieza.jpg',
       organizador: 'Proyecto Cangrejo Azul',
@@ -46,8 +44,7 @@ export class EventosComponent implements OnInit {
       fecha: new Date('2025-11-22'),
       hora: '7:00 PM - 11:00 PM',
       ubicacion: 'Zona de Manglares, Alvarado',
-      tipo: 'monitoreo',
-      capacidad: 20,
+      tipo: 'voluntariado',
       inscritos: 15,
       imagen: 'assets/img/eventos/monitoreo.jpg',
       organizador: 'Universidad Veracruzana',
@@ -60,8 +57,7 @@ export class EventosComponent implements OnInit {
       fecha: new Date('2025-11-29'),
       hora: '10:00 AM - 2:00 PM',
       ubicacion: 'Centro Comunitario La Boticaria',
-      tipo: 'educativo',
-      capacidad: 40,
+      tipo: 'voluntariado',
       inscritos: 28,
       imagen: 'assets/img/eventos/taller.jpg',
       organizador: 'Asociación de Conservación',
@@ -75,7 +71,6 @@ export class EventosComponent implements OnInit {
       hora: '7:00 AM - 1:00 PM',
       ubicacion: 'Laguna de Alvarado',
       tipo: 'voluntariado',
-      capacidad: 30,
       inscritos: 18,
       imagen: 'assets/img/eventos/voluntariado.jpg',
       organizador: 'Conanp',
@@ -106,22 +101,8 @@ export class EventosComponent implements OnInit {
 
   // Método para unirse a un evento
   unirseEvento(evento: Evento): void {
-    if (evento.inscritos < evento.capacidad) {
-      evento.inscritos++;
-      alert(`¡Te has registrado exitosamente para "${evento.titulo}"!\n\nRecibirás un correo de confirmación con los detalles.`);
-    } else {
-      alert('Lo sentimos, este evento ya alcanzó su capacidad máxima.');
-    }
-  }
-
-  // Calcular porcentaje de ocupación
-  calcularPorcentaje(evento: Evento): number {
-    return (evento.inscritos / evento.capacidad) * 100;
-  }
-
-  // Verificar si el evento está lleno
-  estaLleno(evento: Evento): boolean {
-    return evento.inscritos >= evento.capacidad;
+    evento.inscritos++;
+    alert(`¡Te has registrado exitosamente para "${evento.titulo}"!\n\nRecibirás un correo de confirmación con los detalles.`);
   }
 
   // Obtener clase CSS según el tipo de evento
