@@ -1,5 +1,5 @@
 .pricing-area {
-    background-color: #fafafa;
+    background-color: var(--whiteColor);
 }
 .single-pricing-box {
     margin-bottom: 30px;
@@ -61,10 +61,10 @@
         margin-top: 30px;
     }
     &:hover {
-        box-shadow: 0 0 40px 3px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 0 40px 3px rgba(255, 255, 255, 0.05);
         transform: translateY(-5px);
-        background-color: var(--whiteColor);
-        border-color: var(--whiteColor);
+        background-color: var(--blackColor);
+        border-color: var(--blackColor);
     }
 }
 

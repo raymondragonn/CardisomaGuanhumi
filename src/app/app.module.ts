@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -132,7 +133,8 @@ import { SobreEspecieComponent } from './components/pages/sobre-especie/sobre-es
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    GoogleMapsModule
+    GoogleMapsModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

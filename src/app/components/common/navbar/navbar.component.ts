@@ -61,8 +61,12 @@ export class NavbarComponent implements OnInit {
             route: 'sobre-la-especie'
         },
         {
-            title: 'Comunidad y Acciones',
-            route: 'comunidad-y-acciones'
+            title: 'Comunidad',
+            route: 'comunidad'
+        },
+        {
+            title: 'Acciones',
+            route: 'acciones'
         },
         {
             title: 'Recursos',

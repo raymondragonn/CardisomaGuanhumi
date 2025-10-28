@@ -1,11 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
 :root {
-    --mainFontFamily: 'Poppins', sans-serif;
-    --headingFontFamily: 'Balsamiq Sans', cursive;
+    --mainFontFamily: 'Oswald', sans-serif;
+    --headingFontFamily: 'Oswald', sans-serif;
     --mainColor: #500ade;
-    --optionalColor: #6b6b84;
-    --whiteColor: #ffffff;
-    --blackColor: #031521;
+    --optionalColor: #b8b8c4;
+    --whiteColor: #1f1d1b;
+    --blackColor: #ffffff;
     --fontSize: 15px;
     --transition: .5s;
 }

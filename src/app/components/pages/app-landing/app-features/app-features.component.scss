@@ -4,14 +4,14 @@
     z-index: 1;
     text-align: left;
     padding: 30px;
-    background-color: #fafafa;
+    background-color: var(--whiteColor);
     border-radius: 5px;
 
     .icon {
         height: 75px;
         width: 75px;
         line-height: 75px;
-        background-color: #f3f3f3;
+        background-color: var(--blackColor);
         color: var(--mainColor);
         font-size: 45px;
         border-radius: 50%;
@@ -44,7 +44,7 @@
             width: 100%;
         }
         .icon {
-            background-color: var(--whiteColor);
+            background-color: var(--blackColor);
             color: var(--mainColor);
         }
         h3 {
