@@ -9,6 +9,9 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { RecorridoComponent } from './components/pages/recorrido/recorrido.component';
 import { EventosComponent } from './components/pages/eventos/eventos.component';
 import { SobreEspecieComponent } from './components/pages/sobre-especie/sobre-especie.component';
+import { ComunidadComponent } from './components/pages/comunidad/comunidad.component';
+import { RecursosComponent } from './components/pages/recursos/recursos.component';
+import { EncuestaComponent } from './components/pages/encuesta/encuesta.component';
 
 const routes: Routes = [
     {path: '', component: AppLandingComponent},
@@ -18,8 +21,11 @@ const routes: Routes = [
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
     {path: 'amenazas', component: RecorridoComponent},
-    {path: 'comunidad-y-acciones', component: EventosComponent},
-    {path: 'sobre-la-especie', component: SobreEspecieComponent}
+    {path: 'especie', component: SobreEspecieComponent},
+    {path: 'comunidad', component: ComunidadComponent},
+    {path: 'encuesta', component: EncuestaComponent},
+    {path: 'eventos', component: EventosComponent},
+    {path: 'recursos', component: RecursosComponent}
 ];
 
 @NgModule({

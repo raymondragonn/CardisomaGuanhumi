@@ -18,7 +18,8 @@ declare let $: any;
 export class AppComponent implements OnInit {
     location: any;
     routerSubscription: any;
-    showNavbarFooter: boolean = true;
+    showNavbar: boolean = true;
+    showFooter: boolean = true;
 
     constructor(private router: Router) {
     }
@@ -31,18 +32,18 @@ export class AppComponent implements OnInit {
         this.router.events
         .subscribe((event) => {
             if ( event instanceof NavigationStart ) {
-                $('.preloader').fadeIn('slow');
             }
         });
         this.routerSubscription = this.router.events
         .pipe(filter(event => event instanceof NavigationEnd || event instanceof NavigationCancel))
         .subscribe(event => {
             $.getScript('../assets/js/main.js');
-            $('.preloader').fadeOut('slow');
             this.location = this.router.url;
             
             // Ocultar navbar y footer en páginas de login y register
-            this.showNavbarFooter = !(this.location === '/login' || this.location === '/register');
+            this.showNavbar = !(this.location === '/login' || this.location === '/register');
+            // Ocultar footer en páginas de login, register y app-landing (ruta raíz)
+            this.showFooter = !(this.location === '/login' || this.location === '/register' || this.location === '/');
             
             if (!(event instanceof NavigationEnd)) {
                 return;

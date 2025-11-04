@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/common/navbar/navbar.component';
 import { AppLandingComponent } from './components/pages/app-landing/app-landing.component';
-import { PreloaderComponent } from './components/common/preloader/preloader.component';
 import { BookLandingComponent } from './components/pages/book-landing/book-landing.component';
 import { AppBannerComponent } from './components/pages/app-landing/app-banner/app-banner.component';
 import { AppFeaturesComponent } from './components/pages/app-landing/app-features/app-features.component';
@@ -65,13 +64,15 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { RecorridoComponent } from './components/pages/recorrido/recorrido.component';
 import { EventosComponent } from './components/pages/eventos/eventos.component';
 import { SobreEspecieComponent } from './components/pages/sobre-especie/sobre-especie.component';
+import { ComunidadComponent } from './components/pages/comunidad/comunidad.component';
+import { EncuestaComponent } from './components/pages/encuesta/encuesta.component';
+import { RecursosComponent } from './components/pages/recursos/recursos.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     AppLandingComponent,
-    PreloaderComponent,
     BookLandingComponent,
     AppBannerComponent,
     AppFeaturesComponent,
@@ -127,7 +128,10 @@ import { SobreEspecieComponent } from './components/pages/sobre-especie/sobre-es
     LoginComponent,
     RecorridoComponent,
     EventosComponent,
-    SobreEspecieComponent
+    SobreEspecieComponent,
+    ComunidadComponent,
+    EncuestaComponent,
+    RecursosComponent
   ],
   imports: [
     BrowserModule,

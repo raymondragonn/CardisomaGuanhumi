@@ -34,6 +34,218 @@ a {
 :focus {
     outline: 0 !important;
 }
+/* Eliminar bordes café/marrones que aparecen en componentes */
+app-navbar,
+.navbar,
+.navbar-light,
+router-outlet,
+router-outlet ~ * {
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border: none !important;
+    
+    &::before,
+    &::after {
+        display: none !important;
+        content: none !important;
+    }
+}
+
+/* Eliminar línea que aparece después del navbar */
+app-navbar + *,
+.navbar + *,
+app-navbar ~ section:first-of-type,
+app-navbar ~ div:first-of-type,
+app-navbar ~ router-outlet,
+router-outlet + * {
+    border-top: none !important;
+    border: none !important;
+    margin-top: 0 !important;
+    
+    &::before,
+    &::after {
+        display: none !important;
+        content: none !important;
+    }
+}
+
+/* Eliminar cualquier borde café/marrón en secciones */
+section,
+.container,
+.container-fluid,
+.sobre-especie-section,
+.eventos-section,
+.comunidad-section,
+.recorrido-section {
+    border-top: none !important;
+    border: none !important;
+    
+    &::before {
+        display: none !important;
+        content: none !important;
+    }
+}
+
+/* Eliminar borde del body que pueda crear la línea */
+body,
+html,
+app-root {
+    border-top: none !important;
+    border: none !important;
+    
+    &::before,
+    &::after {
+        display: none !important;
+        content: none !important;
+    }
+}
+
+/* Asegurar que no haya líneas horizontales visibles */
+hr,
+.hr,
+[role="separator"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+/* Regla específica para eliminar cualquier línea visible entre navbar y contenido */
+app-navbar ~ *,
+.navbar ~ *,
+app-navbar + router-outlet,
+router-outlet,
+router-outlet > *:first-child {
+    border-top: 0 !important;
+    border: none !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    
+    &::before {
+        display: none !important;
+        content: none !important;
+        height: 0 !important;
+        width: 0 !important;
+        border: none !important;
+        background: transparent !important;
+    }
+}
+
+/* Eliminar cualquier línea que pueda ser creada por Bootstrap navbar */
+.navbar::after,
+.navbar-light::after,
+.navbar::before,
+.navbar-light::before {
+    display: none !important;
+    content: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Eliminar línea de cualquier elemento que pueda estar creándola */
+* {
+    &[style*="border-top"]:not(.navbar):not(.navbar-light):not(app-navbar) {
+        border-top: none !important;
+    }
+}
+
+/* Regla universal para ocultar cualquier línea horizontal visible después del navbar */
+app-navbar ~ *:first-of-type::before,
+app-navbar + *::before,
+.navbar ~ *:first-of-type::before,
+.navbar + *::before {
+    display: none !important;
+    content: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Ocultar cualquier div o elemento que pueda estar creando la línea */
+div[style*="height"][style*="border"],
+div[style*="border-top"],
+div[class*="separator"],
+div[class*="divider"],
+div[class*="line"] {
+    &:first-of-type {
+        display: none !important;
+    }
+}
+
+/* Regla final agresiva: ocultar cualquier elemento de 1-5px de altura después del navbar */
+app-navbar + * > *:first-child,
+app-navbar ~ * > *:first-child,
+router-outlet > *:first-child > *:first-child {
+    &[style*="height"][style*="1"],
+    &[style*="height"][style*="2"],
+    &[style*="height"][style*="3"],
+    &[style*="height"][style*="4"],
+    &[style*="height"][style*="5"] {
+        display: none !important;
+    }
+}
+
+/* Eliminar cualquier línea que pueda ser creada por box-shadow */
+app-navbar,
+.navbar,
+.navbar-light,
+app-navbar ~ *,
+.navbar ~ * {
+    box-shadow: none !important;
+}
+
+/* Regla universal final: ocultar cualquier elemento que tenga características de línea después del navbar */
+app-navbar ~ *,
+.navbar ~ * {
+    > *:first-child {
+        &[style*="height: 1px"],
+        &[style*="height: 2px"],
+        &[style*="height: 3px"],
+        &[style*="height: 4px"],
+        &[style*="height: 5px"],
+        &[style*="height:1px"],
+        &[style*="height:2px"],
+        &[style*="height:3px"],
+        &[style*="height:4px"],
+        &[style*="height:5px"] {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            background: transparent !important;
+        }
+    }
+}
+/* Eliminar líneas horizontales (hr) y elementos con fondo café */
+hr,
+.hr,
+.border-cafe,
+.border-brown,
+[class*="border-cafe"],
+[class*="border-brown"] {
+    display: none !important;
+}
+/* Eliminar cualquier elemento con color café/marrón que pueda aparecer como línea */
+*[style*="border-color"][style*="#8B"],
+*[style*="border-color"][style*="#A52"],
+*[style*="border-color"][style*="#654"],
+*[style*="background"][style*="#8B"],
+*[style*="background"][style*="#A52"],
+*[style*="background"][style*="#654"] {
+    border: none !important;
+    background: transparent !important;
+}
 p {
     color: var(--optionalColor);
     line-height: 1.8;

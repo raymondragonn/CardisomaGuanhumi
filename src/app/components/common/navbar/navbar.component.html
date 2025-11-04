@@ -1,7 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-glass">
+<nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-        <div class="navbar-content">
-        <a class="navbar-brand" href="#inicio">
+        <a class="navbar-brand" (click)="goHome($event)" style="cursor: pointer;">
             <img src="assets/img/CangrejoSinFondo.png" alt="Cangrejo Azul - Movimiento de Conservación" class="brand-logo">
         </a>
 
@@ -10,16 +9,12 @@
         </button>
     
         <div class="collapse navbar-collapse" id="navbarSupportedContent" [class.show]="!isCollapsed">
-            <!-- Navbar único para toda la aplicación -->
-            <ul class="navbar-nav ms-auto align-items-lg-center">
+            <ul class="navbar-nav">
                 <li class="nav-item" *ngFor="let navItem of navItems">
-                    <a [routerLink]="[navItem.route]" class="nav-link" (click)="closeNavbar()">{{navItem.title}}</a>
-                </li>
-                <li class="nav-item cta-item">
-                    <button (click)="goLogin(); closeNavbar()" class="btn btn-main cta-btn">Únete al movimiento</button>
+                    <a *ngIf="navItem.title === 'Inicio'" (click)="goHome($event)" class="nav-link" style="cursor: pointer;">{{navItem.title}}</a>
+                    <a *ngIf="navItem.title !== 'Inicio'" [routerLink]="[navItem.route]" class="nav-link">{{navItem.title}}</a>
                 </li>
             </ul>
-        </div>
         </div>
     </div>
 </nav>

@@ -1,8 +1,15 @@
 .eventos-section {
-  margin-top: 5rem;
+  margin-top: 0 !important;
   padding: 80px 0;
   background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
   min-height: 100vh;
+  border-top: none !important;
+  border: none !important;
+  
+  &::before {
+    display: none !important;
+    content: none !important;
+  }
 
   // Header de la Sección
   .section-header {
