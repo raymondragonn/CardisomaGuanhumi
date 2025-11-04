@@ -1,14 +1,30 @@
 .sobre-especie-section {
   margin-top: 0 !important;
   padding: 80px 0;
-  background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+  background-image: url('../../../../assets/img/cangrejo/especie-background.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
   border-top: none !important;
   border: none !important;
+  position: relative;
   
   &::before {
-    display: none !important;
-    content: none !important;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(13, 71, 161, 0.6);
+    z-index: 0;
+  }
+  
+  .container {
+    position: relative;
+    z-index: 1;
   }
 
   .section-header {
