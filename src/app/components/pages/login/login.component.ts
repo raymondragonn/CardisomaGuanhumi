@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+// Declaración para el objeto global de Google
+declare global {
+  interface Window {
+    handleCredentialResponse: any;
+  }
+}
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -20,6 +27,58 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    // Inicializar Google Sign-In
+    this.initializeGoogleSignIn();
+  }
+
+  initializeGoogleSignIn(): void {
+    // Definir la función de callback globalmente
+    window.handleCredentialResponse = (response: any) => {
+      this.handleGoogleLogin(response);
+    };
+
+    // Verificar si el script de Google se cargó correctamente
+    const checkGoogleLoaded = setInterval(() => {
+      if ((window as any).google) {
+        clearInterval(checkGoogleLoaded);
+        console.log('✅ Google Identity Services cargado correctamente');
+      }
+    }, 100);
+
+    // Timeout después de 5 segundos
+    setTimeout(() => {
+      clearInterval(checkGoogleLoaded);
+      if (!(window as any).google) {
+        console.error('❌ Error: Google Identity Services no se cargó. Verifica la conexión a internet y los orígenes autorizados.');
+      }
+    }, 5000);
+  }
+
+  handleGoogleLogin(response: any): void {
+    console.log('Google credential:', response.credential);
+    
+    // Aquí deberías enviar el token JWT a tu backend
+    // El token viene en response.credential
+    
+    // Simulación de login con Google
+    this.isSubmitting = true;
+    
+    // Decodificar el JWT para obtener información del usuario (solo para desarrollo)
+    try {
+      const payload = JSON.parse(atob(response.credential.split('.')[1]));
+      console.log('Usuario de Google:', payload);
+      
+      // Aquí harías la petición a tu API
+      setTimeout(() => {
+        this.isSubmitting = false;
+        alert(`¡Bienvenido ${payload.name}!`);
+        this.router.navigate(['/']);
+      }, 1500);
+    } catch (error) {
+      console.error('Error al procesar el login de Google:', error);
+      this.isSubmitting = false;
+      alert('Error al iniciar sesión con Google');
+    }
   }
 
   togglePasswordVisibility() {
