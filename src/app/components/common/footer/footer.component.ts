@@ -14,7 +14,7 @@ export class FooterComponent implements OnInit {
 
     copyrightText: Text[] = [
         {
-            text: 'bykodeo.com'
+            text: 'Cangrejo Azul - Movimiento de Conservación'
         }
     ]
 

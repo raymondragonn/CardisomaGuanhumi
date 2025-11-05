@@ -1,0 +1,13 @@
+.route-container {
+    position: relative;
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+}
+
+::ng-deep router-outlet + * {
+    position: relative;
+    width: 100%;
+    display: block;
+}
+
