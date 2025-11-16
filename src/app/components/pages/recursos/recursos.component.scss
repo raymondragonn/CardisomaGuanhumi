@@ -11,6 +11,16 @@
   border: none !important;
   position: relative;
   
+  @media (max-width: 768px) {
+    padding: 50px 0;
+    background-attachment: scroll;
+  }
+
+  @media (max-width: 576px) {
+    padding: 40px 0;
+    min-height: auto;
+  }
+  
   &::before {
     content: '';
     position: absolute;
@@ -25,6 +35,28 @@
   .container {
     position: relative;
     z-index: 1;
+
+    @media (max-width: 576px) {
+      padding: 0 15px;
+    }
+  }
+
+  // Estilos para el contenido
+  p {
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 20px;
+
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+      padding: 15px;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 1rem;
+      padding: 10px;
+    }
   }
 }
 
