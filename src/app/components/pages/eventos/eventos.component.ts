@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CrearEventoService } from '../../../services/crear-evento.service';
 
 // Interface para los eventos
 interface Evento {
@@ -23,68 +24,87 @@ interface Evento {
 export class EventosComponent implements OnInit {
 
   // Array de eventos
-  eventos: Evento[] = [
-    {
-      id: 1,
-      titulo: 'Jornada de Limpieza Costera',
-      descripcion: 'Únete a nosotros para limpiar las playas y zonas costeras que son hábitat del cangrejo azul. Ayudaremos a mantener limpio el ecosistema.',
-      fecha: new Date('2025-11-15'),
-      hora: '8:00 AM - 12:00 PM',
-      ubicacion: 'Playa Mocambo, Boca del Río, Veracruz',
-      tipo: 'limpieza',
-      inscritos: 32,
-      imagen: 'assets/img/eventos/limpieza.jpg',
-      organizador: 'Proyecto Cangrejo Azul',
-      requisitos: ['Ropa cómoda', 'Protector solar', 'Botella de agua', 'Guantes (opcional)']
-    },
-    {
-      id: 2,
-      titulo: 'Monitoreo Nocturno de Migración',
-      descripcion: 'Acompaña a nuestros biólogos en una noche de monitoreo de la migración reproductiva del cangrejo azul. Experiencia educativa única.',
-      fecha: new Date('2025-11-22'),
-      hora: '7:00 PM - 11:00 PM',
-      ubicacion: 'Zona de Manglares, Alvarado',
-      tipo: 'voluntariado',
-      inscritos: 15,
-      imagen: 'assets/img/eventos/monitoreo.jpg',
-      organizador: 'Universidad Veracruzana',
-      requisitos: ['Linterna', 'Repelente de mosquitos', 'Ropa oscura', 'Calzado cerrado']
-    },
-    {
-      id: 3,
-      titulo: 'Taller de Conservación Marina',
-      descripcion: 'Aprende sobre la importancia ecológica del cangrejo azul y cómo podemos contribuir a su conservación. Incluye actividades prácticas.',
-      fecha: new Date('2025-11-29'),
-      hora: '10:00 AM - 2:00 PM',
-      ubicacion: 'Centro Comunitario La Boticaria',
-      tipo: 'voluntariado',
-      inscritos: 28,
-      imagen: 'assets/img/eventos/taller.jpg',
-      organizador: 'Asociación de Conservación',
-      requisitos: ['Cuaderno', 'Pluma', 'Actitud de aprendizaje']
-    },
-    {
-      id: 4,
-      titulo: 'Voluntariado: Reforestación de Manglar',
-      descripcion: 'Participa en la siembra de mangles para restaurar el hábitat natural del cangrejo azul. Contribuye directamente a la conservación.',
-      fecha: new Date('2025-12-06'),
-      hora: '7:00 AM - 1:00 PM',
-      ubicacion: 'Laguna de Alvarado',
-      tipo: 'voluntariado',
-      inscritos: 18,
-      imagen: 'assets/img/eventos/voluntariado.jpg',
-      organizador: 'Conanp',
-      requisitos: ['Ropa que se pueda ensuciar', 'Botas de hule', 'Sombrero', 'Agua']
-    }
-  ];
+  eventos: Evento[] = [];
+
+  // Estado de carga
+  isLoading: boolean = true;
+  errorMessage: string = '';
 
   // Filtro de eventos
   filtroActivo: string = 'todos';
 
-  constructor() { }
+  constructor(private eventoService: CrearEventoService) { }
 
   ngOnInit(): void {
+    this.cargarEventos();
   }
+
+  // Método para cargar eventos desde el backend
+  cargarEventos(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.eventoService.getEventos()
+      .subscribe({
+        next: (response) => {
+          console.log('Eventos cargados desde backend:', response);
+          
+          // Mapear los eventos del backend al formato del componente
+          this.eventos = response.map((evento: any) => {
+            console.log('Mapeando evento:', evento);
+            
+            const eventoMapeado = {
+              id: evento.id || 0,
+              titulo: evento.titulo || 'Sin título',
+              descripcion: evento.descripcion || 'Sin descripción',
+              fecha: new Date(evento.fecha || new Date()),
+              hora: evento.hora || 'Por confirmar',
+              ubicacion: evento.lugar || 'Por confirmar',
+              tipo: (evento.tipo || 'voluntariado').toLowerCase(),
+              inscritos: evento.total_inscritos || 0,
+              imagen: evento.imagen || 'assets/img/cangrejo/CangrejoAzul1.jpg',
+              organizador: evento.creado_por?.full_name || evento.creado_por?.username || 'Proyecto Cangrejo Azul',
+              requisitos: (() => {
+                // Si es un string, dividirlo por comas o puntos
+                const requisitosTexto = evento.requisitos || '';
+                
+                if (typeof requisitosTexto === 'string' && requisitosTexto.trim().length > 0) {
+                  // Intentar dividir por comas, puntos y coma, o saltos de línea
+                  const separadores = /[,;.\n]+/;
+                  return requisitosTexto
+                    .split(separadores)
+                    .map((r: string) => r.trim())
+                    .filter((r: string) => r.length > 0);
+                }
+                
+                return [];
+              })()
+            };
+            
+            console.log('Evento mapeado:', eventoMapeado);
+            return eventoMapeado;
+          });
+          
+          console.log('Total eventos cargados:', this.eventos.length);
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error al cargar eventos:', error);
+          this.isLoading = false;
+          
+          if (error.status === 401) {
+            this.errorMessage = 'No estás autenticado. Por favor inicia sesión.';
+          } else if (error.status === 0) {
+            this.errorMessage = 'No se pudo conectar con el servidor.';
+          } else {
+            this.errorMessage = 'Error al cargar eventos: ' + (error.error?.message || error.message || 'Error desconocido');
+          }
+          
+        }
+      });
+  }
+
+  
 
   // Método para obtener eventos filtrados
   get eventosFiltrados(): Evento[] {
@@ -101,8 +121,34 @@ export class EventosComponent implements OnInit {
 
   // Método para unirse a un evento
   unirseEvento(evento: Evento): void {
-    evento.inscritos++;
-    alert(`¡Te has registrado exitosamente para "${evento.titulo}"!\n\nRecibirás un correo de confirmación con los detalles.`);
+    // Verificar si el usuario está autenticado
+    if (!this.eventoService.isAuthenticated()) {
+      alert('⚠️ Debes iniciar sesión para unirte a un evento.');
+      return;
+    }
+
+    // Llamar al servicio para inscribirse
+    this.eventoService.inscribirEvento(evento.id)
+      .subscribe({
+        next: (response) => {
+          console.log('Inscripción exitosa:', response);
+          evento.inscritos++;
+          alert(`✅ ¡Te has registrado exitosamente para "${evento.titulo}"!\n\nRecibirás un correo de confirmación con los detalles.`);
+        },
+        error: (error) => {
+          console.error('Error al inscribirse:', error);
+          
+          if (error.status === 401) {
+            alert('⚠️ Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
+          } else if (error.status === 409) {
+            alert('⚠️ Ya estás inscrito en este evento.');
+          } else if (error.status === 404) {
+            alert('⚠️ El evento no existe o ha sido cancelado.');
+          } else {
+            alert(`❌ Error al inscribirse: ${error.error?.message || error.message || 'Error desconocido'}`);
+          }
+        }
+      });
   }
 
   // Obtener clase CSS según el tipo de evento

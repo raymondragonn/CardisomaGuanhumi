@@ -35,6 +35,22 @@
                         required>
                 </div>
 
+                <!-- Nombre de usuario -->
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        <i class="las la-user-circle"></i>
+                        Nombre de Usuario
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        class="form-control"
+                        [(ngModel)]="registerForm.username"
+                        name="username"
+                        placeholder="Elige un nombre de usuario"
+                        required>
+                </div>
+
                 <!-- Correo electrónico -->
                 <div class="form-group">
                     <label for="email" class="form-label">
@@ -64,7 +80,7 @@
                             class="form-control"
                             [(ngModel)]="registerForm.password"
                             name="password"
-                            placeholder="Mínimo 6 caracteres"
+                            placeholder="Mínimo 8 caracteres"
                             required>
                         <button 
                             type="button" 

@@ -6,7 +6,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  min-height: 80vh;
+  min-height: 100vh;
   border-top: none !important;
   border: none !important;
   position: relative;
@@ -32,13 +32,10 @@
     z-index: 0;
   }
   
-  .container {
+  .container-fluid {
     position: relative;
     z-index: 1;
-
-    @media (max-width: 576px) {
-      padding: 0 15px;
-    }
+    max-width: 1400px;
   }
 
   .section-header {
@@ -89,31 +86,61 @@
     }
   }
 
+  // Información Compacta
+  .info-compact {
+    background: white !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    h4 {
+      color: #1976d2;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+
+    .badge {
+      font-size: 0.85rem;
+      padding: 8px 12px;
+      font-weight: 600;
+    }
+  }
+
+  // Información Compacta
+  .info-compact {
+    background: white !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    h4 {
+      color: #1976d2;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+
+    .badge {
+      font-size: 0.85rem;
+      padding: 8px 12px;
+      font-weight: 600;
+    }
+  }
+
   .map-wrapper {
     border-radius: 15px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     background: white;
-    height: 700px;
-    position: relative;
-    width: 100%;
-    overflow: hidden;
+    height: 750px; // Aumentado para mejor visualización
     
-    @media (max-width: 992px) {
-      height: 500px;
-      margin-top: 20px;
-    }
-
-    @media (max-width: 768px) {
-      height: 400px;
-      border-radius: 10px;
-    }
-
-    @media (max-width: 576px) {
-      height: 300px;
-      border-radius: 8px;
-    }
-    
-    google-map {
+    google-map, gmp-map {
       display: block;
       width: 100%;
       height: 100%;
@@ -138,6 +165,170 @@
           border: none;
           border-radius: inherit;
         }
+      }
+    }
+  }
+
+  // Panel de Control de Simulación
+  .simulation-control {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    h5 {
+      color: #333;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+
+      i {
+        color: #1976d2;
+        margin-right: 8px;
+      }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+      border: none;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(25, 118, 210, 0.4);
+      }
+
+      &:disabled {
+        background: linear-gradient(135deg, #90caf9 0%, #64b5f6 100%);
+        cursor: not-allowed;
+      }
+
+      i {
+        margin-right: 8px;
+      }
+    }
+
+    // Estadísticas de cangrejos
+    .stat-badge {
+      padding: 10px 15px;
+      border-radius: 8px;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+
+    .progress {
+      background: #e0e0e0;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      .progress-bar {
+        font-size: 1rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: width 0.3s ease;
+      }
+    }
+  }
+
+  // Panel de Control de Simulación
+  .simulation-control {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    h5 {
+      color: #333;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+
+      i {
+        color: #1976d2;
+        margin-right: 8px;
+      }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+      border: none;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(25, 118, 210, 0.4);
+      }
+
+      &:disabled {
+        background: linear-gradient(135deg, #90caf9 0%, #64b5f6 100%);
+        cursor: not-allowed;
+      }
+
+      i {
+        margin-right: 8px;
+      }
+    }
+
+    // Estadísticas de cangrejos
+    .stat-badge {
+      padding: 10px 15px;
+      border-radius: 8px;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+
+    .progress {
+      background: #e0e0e0;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      .progress-bar {
+        font-size: 1rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: width 0.3s ease;
       }
     }
   }
@@ -547,8 +738,17 @@
       .legend-line {
         width: 30px;
         height: 4px;
-        background: linear-gradient(90deg, #1e88e5, #0d47a1);
+        background: linear-gradient(90deg, #00E5FF, #00B8D4);
         border-radius: 2px;
+      }
+
+      .legend-danger-zone {
+        width: 30px;
+        height: 20px;
+        background: #FF1744;
+        opacity: 0.5;
+        border: 2px solid #D50000;
+        border-radius: 3px;
       }
     }
   }
@@ -608,3 +808,78 @@
   }
 }
 
+// Responsive
+@media (max-width: 768px) {
+  .recorrido-section {
+    padding: 40px 0;
+
+    .section-header {
+      .title {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    .info-compact {
+      h4 {
+        font-size: 1.3rem;
+      }
+
+      .badge {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+      }
+    }
+
+    .map-wrapper {
+      height: 450px;
+      margin-top: 20px;
+    }
+
+    .simulation-control {
+      .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+      }
+
+      .btn-primary {
+        width: 100%;
+        margin-top: 15px;
+      }
+
+      .stat-badge {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+      }
+    }
+
+    .map-legend {
+      .legend-items {
+        flex-direction: column;
+      }
+
+      .legend-item {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .recorrido-section {
+    .map-wrapper {
+      height: 550px;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .recorrido-section {
+    .map-wrapper {
+      height: 850px; // Más alto en pantallas grandes
+    }
+  }
+}

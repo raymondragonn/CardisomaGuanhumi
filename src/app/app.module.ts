@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { RouterModule } from '@angular/router';
 
@@ -68,6 +69,7 @@ import { SobreEspecieComponent } from './components/pages/sobre-especie/sobre-es
 import { ComunidadComponent } from './components/pages/comunidad/comunidad.component';
 import { EncuestaComponent } from './components/pages/encuesta/encuesta.component';
 import { RecursosComponent } from './components/pages/recursos/recursos.component';
+import { FormComponent } from './components/pages/formulario/form/form.component';
 
 @NgModule({
   declarations: [
@@ -132,17 +134,22 @@ import { RecursosComponent } from './components/pages/recursos/recursos.componen
     SobreEspecieComponent,
     ComunidadComponent,
     EncuestaComponent,
-    RecursosComponent
+    RecursosComponent,
+    FormComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    HttpClientJsonpModule,
     GoogleMapsModule,
     RouterModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

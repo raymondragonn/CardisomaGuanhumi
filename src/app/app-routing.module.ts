@@ -12,6 +12,7 @@ import { SobreEspecieComponent } from './components/pages/sobre-especie/sobre-es
 import { ComunidadComponent } from './components/pages/comunidad/comunidad.component';
 import { RecursosComponent } from './components/pages/recursos/recursos.component';
 import { EncuestaComponent } from './components/pages/encuesta/encuesta.component';
+import { FormComponent } from './components/pages/formulario/form/form.component';
 
 const routes: Routes = [
     {path: '', component: AppLandingComponent},
@@ -25,7 +26,8 @@ const routes: Routes = [
     {path: 'comunidad', component: ComunidadComponent},
     {path: 'encuesta', component: EncuestaComponent},
     {path: 'eventos', component: EventosComponent},
-    {path: 'recursos', component: RecursosComponent}
+    {path: 'recursos', component: RecursosComponent},
+    {path: 'formulario', component: FormComponent}
 ];
 
 @NgModule({

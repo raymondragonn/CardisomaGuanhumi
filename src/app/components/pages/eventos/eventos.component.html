@@ -35,8 +35,24 @@
       </div>
     </div>
 
+    <!-- Indicador de Carga -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Cargando eventos...</span>
+      </div>
+      <p class="mt-3 text-muted">Cargando eventos...</p>
+    </div>
+
+    <!-- Mensaje de Error -->
+    <div *ngIf="!isLoading && errorMessage" class="alert alert-warning text-center" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      {{ errorMessage }}
+      <br>
+      <small class="text-muted">Mostrando eventos de ejemplo</small>
+    </div>
+
     <!-- Grid de Eventos -->
-    <div class="row g-4">
+    <div class="row g-4" *ngIf="!isLoading">
       <div class="col-lg-6 col-md-12" *ngFor="let evento of eventosFiltrados">
         <div class="evento-card" [ngClass]="getTipoClase(evento.tipo)">
           
@@ -64,19 +80,19 @@
 
             <!-- Detalles del Evento -->
             <div class="evento-detalles">
-              <div class="detalle-item">
+              <div class="detalle-item" *ngIf="evento.fecha">
                 <i class="bi bi-calendar3"></i>
                 <span>{{ formatearFecha(evento.fecha) }}</span>
               </div>
-              <div class="detalle-item">
+              <div class="detalle-item" *ngIf="evento.hora">
                 <i class="bi bi-clock"></i>
                 <span>{{ evento.hora }}</span>
               </div>
-              <div class="detalle-item">
+              <div class="detalle-item" *ngIf="evento.ubicacion">
                 <i class="bi bi-geo-alt"></i>
                 <span>{{ evento.ubicacion }}</span>
               </div>
-              <div class="detalle-item">
+              <div class="detalle-item" *ngIf="evento.organizador">
                 <i class="bi bi-person-badge"></i>
                 <span>{{ evento.organizador }}</span>
               </div>
@@ -86,16 +102,16 @@
             <div class="inscritos-container">
               <div class="inscritos-header">
                 <i class="bi bi-people-fill"></i>
-                <span class="inscritos-numero">{{ evento.inscritos }}</span>
+                <span class="inscritos-numero">{{ evento.inscritos || 0 }}</span>
                 <span class="inscritos-texto">personas inscritas</span>
               </div>
             </div>
 
             <!-- Requisitos (Expandible) -->
-            <details class="evento-requisitos">
+            <details class="evento-requisitos" *ngIf="evento.requisitos && evento.requisitos.length > 0">
               <summary>
                 <i class="bi bi-list-check"></i>
-                Ver requisitos
+                Ver requisitos ({{ evento.requisitos.length }})
               </summary>
               <ul class="requisitos-lista">
                 <li *ngFor="let requisito of evento.requisitos">

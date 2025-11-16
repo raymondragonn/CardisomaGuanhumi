@@ -19,21 +19,21 @@
 
             <!-- Formulario -->
             <form class="login-form" (ngSubmit)="onSubmit()">
-                <!-- Correo electrónico -->
+                <!-- Username -->
                 <div class="form-group">
                     <label for="email" class="form-label">
-                        <i class="las la-envelope"></i>
-                        Correo Electrónico
+                        <i class="las la-user"></i>
+                        Nombre de Usuario
                     </label>
                     <input 
-                        type="email" 
+                        type="text" 
                         id="email" 
                         class="form-control"
                         [(ngModel)]="loginForm.email"
                         name="email"
-                        placeholder="ejemplo@correo.com"
+                        placeholder="Ingresa tu nombre de usuario"
                         required
-                        autocomplete="email">
+                        autocomplete="username">
                 </div>
 
                 <!-- Contraseña -->

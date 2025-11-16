@@ -1,0 +1,420 @@
+<div class="formulario-observacion">
+  <div class="container">
+    <div class="form-header text-center mb-5">
+      <h1 class="display-4 mb-3">Formulario de Observación de Cangrejo Azul</h1>
+      <p class="lead">Ayúdanos a conservar el cangrejo azul compartiendo tus observaciones</p>
+    </div>
+
+    <form [formGroup]="observacionForm" (ngSubmit)="onSubmit()" class="observation-form">
+      
+      <!-- Sección 1: Datos generales del observador -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <span class="section-number">1</span>
+          Datos Generales del Observador
+        </h2>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="nombre" class="form-label">Nombre (opcional)</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="nombre" 
+              formControlName="nombre"
+              placeholder="Ingrese su nombre">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="edad" class="form-label">Edad</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              id="edad" 
+              formControlName="edad"
+              placeholder="Ingrese su edad"
+              min="1">
+            <div *ngIf="observacionForm.get('edad')?.invalid && observacionForm.get('edad')?.touched" class="text-danger">
+              Por favor, ingrese una edad válida.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="comunidad" class="form-label">Comunidad o localidad donde vive <span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="comunidad" 
+              formControlName="comunidad"
+              placeholder="Ej: Playa del Carmen"
+              required>
+            <div *ngIf="observacionForm.get('comunidad')?.invalid && observacionForm.get('comunidad')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="frecuenciaObservacion" class="form-label">¿Con qué frecuencia observa cangrejos azules? <span class="text-danger">*</span></label>
+            <select class="form-select" id="frecuenciaObservacion" formControlName="frecuenciaObservacion" required>
+              <option value="">Seleccione una opción</option>
+              <option value="nunca">Nunca</option>
+              <option value="rara-vez">Rara vez (1–2 veces al año)</option>
+              <option value="a-veces">A veces (cada temporada)</option>
+              <option value="frecuentemente">Frecuentemente (varias veces al mes)</option>
+              <option value="muy-frecuentemente">Muy frecuentemente (casi todos los días)</option>
+            </select>
+            <div *ngIf="observacionForm.get('frecuenciaObservacion')?.invalid && observacionForm.get('frecuenciaObservacion')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 2: Observación del cangrejo -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <span class="section-number">2</span>
+          Observación del Cangrejo
+        </h2>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="fechaObservacion" class="form-label">Fecha de la observación <span class="text-danger">*</span></label>
+            <input 
+              type="date" 
+              class="form-control" 
+              id="fechaObservacion" 
+              formControlName="fechaObservacion"
+              required>
+            <div *ngIf="observacionForm.get('fechaObservacion')?.invalid && observacionForm.get('fechaObservacion')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="horaObservacion" class="form-label">Hora de la observación <span class="text-danger">*</span></label>
+            <input 
+              type="time" 
+              class="form-control" 
+              id="horaObservacion" 
+              formControlName="horaObservacion"
+              required>
+            <div *ngIf="observacionForm.get('horaObservacion')?.invalid && observacionForm.get('horaObservacion')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <label for="lugarObservacion" class="form-label">Lugar de observación <span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="lugarObservacion" 
+              formControlName="lugarObservacion"
+              placeholder="Indique colonia, playa, carretera, manglar, etc."
+              required>
+            <div *ngIf="observacionForm.get('lugarObservacion')?.invalid && observacionForm.get('lugarObservacion')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="tipoHabitat" class="form-label">Tipo de hábitat donde lo vio <span class="text-danger">*</span></label>
+            <select class="form-select" id="tipoHabitat" formControlName="tipoHabitat" required>
+              <option value="">Seleccione una opción</option>
+              <option value="manglar">Manglar</option>
+              <option value="humedal">Humedal / laguna</option>
+              <option value="playa">Playa / costa</option>
+              <option value="carretera">Carretera</option>
+              <option value="zona-urbana">Zona urbana</option>
+              <option value="otro">Otro (especificar)</option>
+            </select>
+            <div *ngIf="observacionForm.get('tipoHabitat')?.invalid && observacionForm.get('tipoHabitat')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3" *ngIf="observacionForm.get('tipoHabitat')?.value === 'otro'">
+            <label for="otroHabitat" class="form-label">Especifique otro hábitat</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="otroHabitat" 
+              formControlName="otroHabitat"
+              placeholder="Describa el tipo de hábitat">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="numeroCangrejos" class="form-label">Número aproximado de cangrejos <span class="text-danger">*</span></label>
+            <select class="form-select" id="numeroCangrejos" formControlName="numeroCangrejos" required>
+              <option value="">Seleccione una opción</option>
+              <option value="1-5">1–5</option>
+              <option value="6-20">6–20</option>
+              <option value="21-50">21–50</option>
+              <option value="mas-50">Más de 50</option>
+            </select>
+            <div *ngIf="observacionForm.get('numeroCangrejos')?.invalid && observacionForm.get('numeroCangrejos')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 3: Identificación -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <span class="section-number">3</span>
+          Identificación
+        </h2>
+        
+        <div class="row">
+          <div class="col-12 mb-3">
+            <label class="form-label d-block">Sexo de los cangrejos observados (puede seleccionar más de una opción)</label>
+            <div formGroupName="sexoCangrejos" class="checkbox-group">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="machos" formControlName="machos">
+                <label class="form-check-label" for="machos">Machos</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="hembras" formControlName="hembras">
+                <label class="form-check-label" for="hembras">Hembras</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="hembrasOvigeras" formControlName="hembrasOvigeras">
+                <label class="form-check-label" for="hembrasOvigeras">Hembras con huevos (ovígeras)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="noIdentifica" formControlName="noIdentifica">
+                <label class="form-check-label" for="noIdentifica">No sé identificarlo</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="tamanoCangrejos" class="form-label">Tamaño aproximado de los cangrejos <span class="text-danger">*</span></label>
+            <select class="form-select" id="tamanoCangrejos" formControlName="tamanoCangrejos" required>
+              <option value="">Seleccione una opción</option>
+              <option value="pequenos">Pequeños (<5 cm ancho de caparazón)</option>
+              <option value="medianos">Medianos (5–10 cm)</option>
+              <option value="grandes">Grandes (>10 cm)</option>
+              <option value="mezcla">Mezcla de tamaños</option>
+            </select>
+            <div *ngIf="observacionForm.get('tamanoCangrejos')?.invalid && observacionForm.get('tamanoCangrejos')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 4: Comportamientos observados -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <span class="section-number">4</span>
+          Comportamientos Observados
+        </h2>
+        
+        <div class="row">
+          <div class="col-12 mb-3">
+            <label class="form-label d-block">¿Qué estaban haciendo los cangrejos? (puede seleccionar varias opciones)</label>
+            <div formGroupName="comportamientos" class="checkbox-group">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="migrando" formControlName="migrando">
+                <label class="form-check-label" for="migrando">Migrando (movimiento en grupo hacia agua)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="alimentandose" formControlName="alimentandose">
+                <label class="form-check-label" for="alimentandose">Alimentándose</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="escondiendose" formControlName="escondiendose">
+                <label class="form-check-label" for="escondiendose">Escondiéndose en vegetación</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="cruzandoCarretera" formControlName="cruzandoCarretera">
+                <label class="form-check-label" for="cruzandoCarretera">Cruzando carretera</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="enMadrigueras" formControlName="enMadrigueras">
+                <label class="form-check-label" for="enMadrigueras">Dentro o cerca de madrigueras</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="otroComportamiento" formControlName="otro">
+                <label class="form-check-label" for="otroComportamiento">Otro (especificar)</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3" *ngIf="observacionForm.get('comportamientos.otro')?.value">
+            <label for="otroComportamientoText" class="form-label">Especifique otro comportamiento</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="otroComportamientoText" 
+              formControlName="otroComportamiento"
+              placeholder="Describa el comportamiento observado">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="mortalidadAtropellamiento" class="form-label">¿Observó mortalidad por atropellamiento? <span class="text-danger">*</span></label>
+            <select class="form-select" id="mortalidadAtropellamiento" formControlName="mortalidadAtropellamiento" required>
+              <option value="">Seleccione una opción</option>
+              <option value="si-muchos">Sí, muchos (>10)</option>
+              <option value="si-pocos">Sí, pocos (1–10)</option>
+              <option value="no">No</option>
+            </select>
+            <div *ngIf="observacionForm.get('mortalidadAtropellamiento')?.invalid && observacionForm.get('mortalidadAtropellamiento')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 5: Percepción local -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <span class="section-number">5</span>
+          Percepción Local
+        </h2>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="comparacionCantidad" class="form-label">En comparación con hace 5 años, la cantidad de cangrejos es: <span class="text-danger">*</span></label>
+            <select class="form-select" id="comparacionCantidad" formControlName="comparacionCantidad" required>
+              <option value="">Seleccione una opción</option>
+              <option value="mucho-menor">Mucho menor</option>
+              <option value="menor">Menor</option>
+              <option value="igual">Igual</option>
+              <option value="mayor">Mayor</option>
+              <option value="no-se">No sé</option>
+            </select>
+            <div *ngIf="observacionForm.get('comparacionCantidad')?.invalid && observacionForm.get('comparacionCantidad')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <label class="form-label d-block">Principales amenazas que percibe para los cangrejos</label>
+            <div formGroupName="amenazas" class="checkbox-group">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="perdidaHabitat" formControlName="perdidaHabitat">
+                <label class="form-check-label" for="perdidaHabitat">Pérdida de manglar/hábitat</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="capturaExcesiva" formControlName="capturaExcesiva">
+                <label class="form-check-label" for="capturaExcesiva">Captura excesiva</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="carreteras" formControlName="carreteras">
+                <label class="form-check-label" for="carreteras">Carreteras y atropellamiento</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="contaminacion" formControlName="contaminacion">
+                <label class="form-check-label" for="contaminacion">Contaminación</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="cambioclimatico" formControlName="cambioclimatico">
+                <label class="form-check-label" for="cambioclimatico">Cambio climático (sequías, inundaciones)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="otraAmenaza" formControlName="otro">
+                <label class="form-check-label" for="otraAmenaza">Otro (especificar)</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3" *ngIf="observacionForm.get('amenazas.otro')?.value">
+            <label for="otraAmenazaText" class="form-label">Especifique otra amenaza</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="otraAmenazaText" 
+              formControlName="otraAmenaza"
+              placeholder="Describa la amenaza">
+          </div>
+
+          <div class="col-12 mb-3">
+            <label for="importanciaConservacion" class="form-label">
+              ¿Qué tan importante considera conservar al cangrejo azul para su comunidad? <span class="text-danger">*</span>
+            </label>
+            <div class="importance-scale">
+              <div class="scale-labels">
+                <span>Nada importante</span>
+                <span>Muy importante</span>
+              </div>
+              <input 
+                type="range" 
+                class="form-range" 
+                id="importanciaConservacion" 
+                formControlName="importanciaConservacion"
+                min="1" 
+                max="5" 
+                step="1">
+              <div class="scale-value text-center">
+                <strong>Nivel: {{ observacionForm.get('importanciaConservacion')?.value }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <label for="accionesProteccion" class="form-label">¿Qué acciones cree necesarias para protegerlos? <span class="text-danger">*</span></label>
+            <textarea 
+              class="form-control" 
+              id="accionesProteccion" 
+              formControlName="accionesProteccion"
+              rows="5"
+              placeholder="Describa las acciones que considera necesarias para proteger a los cangrejos azules..."
+              required></textarea>
+            <div *ngIf="observacionForm.get('accionesProteccion')?.invalid && observacionForm.get('accionesProteccion')?.touched" class="text-danger">
+              Este campo es requerido.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 6: Evidencia -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <span class="section-number">6</span>
+          Evidencia
+        </h2>
+        
+        <div class="row">
+          <div class="col-12 mb-3">
+            <label for="archivo" class="form-label">¿Desea subir una foto o video de los cangrejos?</label>
+            <input 
+              type="file" 
+              class="form-control" 
+              id="archivo" 
+              (change)="onFileSelected($event)"
+              accept="image/*,video/*">
+            <small class="form-text text-muted">Formatos aceptados: JPG, PNG, MP4, MOV</small>
+            <div *ngIf="selectedFile" class="mt-2">
+              <span class="badge bg-success">Archivo seleccionado: {{ selectedFile.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="form-actions text-center mt-5">
+        <button type="button" class="btn btn-secondary me-3" (click)="resetForm()" [disabled]="isSubmitting">
+          <i class="fas fa-redo"></i> Limpiar Formulario
+        </button>
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="observacionForm.invalid || isSubmitting">
+          <span *ngIf="!isSubmitting">
+            <i class="fas fa-paper-plane"></i> Enviar Observación
+          </span>
+          <span *ngIf="isSubmitting">
+            <i class="fas fa-spinner fa-spin"></i> Enviando...
+          </span>
+        </button>
+      </div>
+
+      <div class="form-footer text-center mt-4">
+        <p class="text-muted">
+          <small>* Campos requeridos | Sus datos serán utilizados únicamente con fines de conservación</small>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
