@@ -19,26 +19,21 @@
 
             <!-- Formulario -->
             <form class="login-form" (ngSubmit)="onSubmit()">
-                <!-- Correo electrónico -->
+                <!-- Username -->
                 <div class="form-group">
-
-
-                   
-
-
                     <label for="email" class="form-label">
-                        <i class="las la-envelope"></i>
-                        Correo Electrónico
+                        <i class="las la-user"></i>
+                        Nombre de Usuario
                     </label>
                     <input 
-                        type="email" 
+                        type="text" 
                         id="email" 
                         class="form-control"
                         [(ngModel)]="loginForm.email"
                         name="email"
-                        placeholder="ejemplo@correo.com"
+                        placeholder="Ingresa tu nombre de usuario"
                         required
-                        autocomplete="email">
+                        autocomplete="username">
                 </div>
 
                 <!-- Contraseña -->
@@ -99,24 +94,6 @@
                         Iniciando sesión...
                     </span>
                 </button>
-
-                <!-- Google Sign-In -->
-                <div id="g_id_onload"
-                    data-client_id="58097675279-phjnm8pk8a8u3vt6auo5q1ehs75q0cau.apps.googleusercontent.com"
-                    data-context="signin"
-                    data-callback="handleCredentialResponse"
-                    data-auto_prompt="false">
-                </div>
-                
-                <div class="g_id_signin" 
-                    data-type="standard"
-                    data-shape="rectangular"
-                    data-theme="outline"
-                    data-text="signin_with"
-                    data-size="large"
-                    data-logo_alignment="left"
-                    data-width="350">
-                </div>
 
                 <!-- Separador -->
                 <div class="divider">

@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-// Declaración para el objeto global de Google
-declare global {
-  interface Window {
-    handleCredentialResponse: any;
-  }
-}
+import { CrearEventoService } from '../../../services/crear-evento.service';
 
 @Component({
   selector: 'app-login',
@@ -24,60 +18,19 @@ export class LoginComponent implements OnInit {
   showPassword = false;
   isSubmitting = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: CrearEventoService
+  ) { }
 
   ngOnInit(): void {
-    // Inicializar Google Sign-In
-    this.initializeGoogleSignIn();
-  }
-
-  initializeGoogleSignIn(): void {
-    // Definir la función de callback globalmente
-    window.handleCredentialResponse = (response: any) => {
-      this.handleGoogleLogin(response);
-    };
-
-    // Verificar si el script de Google se cargó correctamente
-    const checkGoogleLoaded = setInterval(() => {
-      if ((window as any).google) {
-        clearInterval(checkGoogleLoaded);
-        console.log('✅ Google Identity Services cargado correctamente');
-      }
-    }, 100);
-
-    // Timeout después de 5 segundos
-    setTimeout(() => {
-      clearInterval(checkGoogleLoaded);
-      if (!(window as any).google) {
-        console.error('❌ Error: Google Identity Services no se cargó. Verifica la conexión a internet y los orígenes autorizados.');
-      }
-    }, 5000);
-  }
-
-  handleGoogleLogin(response: any): void {
-    console.log('Google credential:', response.credential);
+    // Componente de login inicializado
     
-    // Aquí deberías enviar el token JWT a tu backend
-    // El token viene en response.credential
-    
-    // Simulación de login con Google
-    this.isSubmitting = true;
-    
-    // Decodificar el JWT para obtener información del usuario (solo para desarrollo)
-    try {
-      const payload = JSON.parse(atob(response.credential.split('.')[1]));
-      console.log('Usuario de Google:', payload);
-      
-      // Aquí harías la petición a tu API
-      setTimeout(() => {
-        this.isSubmitting = false;
-        alert(`¡Bienvenido ${payload.name}!`);
-        this.router.navigate(['/']);
-      }, 1500);
-    } catch (error) {
-      console.error('Error al procesar el login de Google:', error);
-      this.isSubmitting = false;
-      alert('Error al iniciar sesión con Google');
+    // Cargar username guardado si existe
+    const rememberedUsername = localStorage.getItem('remembered_username');
+    if (rememberedUsername) {
+      this.loginForm.email = rememberedUsername;
+      this.loginForm.rememberMe = true;
     }
   }
 
@@ -89,15 +42,47 @@ export class LoginComponent implements OnInit {
     if (this.validateForm()) {
       this.isSubmitting = true;
       
-      // Aquí iría la lógica para autenticar al usuario
-      console.log('Formulario de login enviado:', this.loginForm);
-      
-      // Simulación de login
-      setTimeout(() => {
-        this.isSubmitting = false;
-        alert('¡Bienvenido de vuelta al movimiento del Cangrejo Azul!');
-        this.router.navigate(['/']);
-      }, 1500);
+      // Llamar al servicio de autenticación
+      this.authService.login(this.loginForm.email, this.loginForm.password)
+        .subscribe({
+          next: (response) => {
+            console.log('Login exitoso:', response);
+            this.isSubmitting = false;
+            
+            // Guardar access_token y token_type en localStorage
+            if (response.access_token) {
+              localStorage.setItem('access_token', response.access_token);
+              console.log('Token guardado en localStorage');
+            }
+            
+            if (response.token_type) {
+              localStorage.setItem('token_type', response.token_type);
+            }
+            
+            // Guardar el username del usuario si "Recordarme" está activado
+            if (this.loginForm.rememberMe) {
+              localStorage.setItem('remembered_username', this.loginForm.email);
+            } else {
+              localStorage.removeItem('remembered_username');
+            }
+            
+            alert('¡Bienvenido de vuelta al movimiento del Cangrejo Azul!');
+            this.router.navigate(['/']);
+          },
+          error: (error) => {
+            console.error('Error en el login:', error);
+            this.isSubmitting = false;
+            
+            // Mostrar mensaje de error específico
+            if (error.status === 401) {
+              alert('Usuario o contraseña incorrectos');
+            } else if (error.status === 0) {
+              alert('No se pudo conectar con el servidor. Verifica que el backend esté ejecutándose.');
+            } else {
+              alert('Error al iniciar sesión: ' + (error.error?.message || 'Error desconocido'));
+            }
+          }
+        });
     }
   }
 
@@ -107,10 +92,9 @@ export class LoginComponent implements OnInit {
       return false;
     }
 
-    // Validación básica de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(this.loginForm.email)) {
-      alert('Por favor ingresa un correo electrónico válido');
+    // Validar que el username no esté vacío
+    if (this.loginForm.email.trim().length === 0) {
+      alert('Por favor ingresa un nombre de usuario válido');
       return false;
     }
 
