@@ -76,7 +76,7 @@
             font-size: 40px;
             margin-bottom: 0;
             line-height: 1;
-            font-family: var(--mainFontFamily);
+            font-family: var(--headingFontFamily);
             
             a {
                 display: inline-block;
@@ -187,7 +187,7 @@
                 font: {
                     size: 20px;
                     weight: 500;
-                    family: var(--mainFontFamily);
+                    family: var(--headingFontFamily);
                 };
                 margin: {
                     left: 2px;

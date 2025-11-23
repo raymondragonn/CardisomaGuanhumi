@@ -146,4 +146,34 @@ export class CrearEventoService {
 
     return this.http.post(url, observacionData, { headers });
   }
+
+  // Método para obtener todas las observaciones
+  getObservaciones(): Observable<any> {
+    const url = `${this.apiUrl}/observaciones/`;
+    
+    // Obtener el header de autorización
+    const authHeader = this.getAuthorizationHeader();
+    
+    // Headers con autorización
+    const headers = new HttpHeaders({
+      'Authorization': authHeader || ''
+    });
+
+    return this.http.get(url, { headers });
+  }
+
+  // Método para obtener una observación específica por ID
+  getObservacionById(id: number): Observable<any> {
+    const url = `${this.apiUrl}/observaciones/${id}/`;
+    
+    // Obtener el header de autorización
+    const authHeader = this.getAuthorizationHeader();
+    
+    // Headers con autorización
+    const headers = new HttpHeaders({
+      'Authorization': authHeader || ''
+    });
+
+    return this.http.get(url, { headers });
+  }
 }

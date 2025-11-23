@@ -1,5 +1,258 @@
 <section class="comunidad-section">
   <div class="container">
-    <p>comunidad works!</p>
+    <!-- Encabezado de la sección -->
+    <div class="section-header text-center mb-5">
+      <h1 class="title">Comunidad de Observadores</h1>
+      <p class="subtitle">Descubre las observaciones compartidas por nuestra comunidad</p>
+    </div>
+
+    <!-- Estado de carga -->
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border text-light" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="text-light mt-3">Cargando observaciones...</p>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="error && !cargando" class="alert alert-warning text-center" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+    </div>
+
+    <!-- Mensaje cuando no hay observaciones -->
+    <div *ngIf="!cargando && !error && observaciones.length === 0" class="text-center py-5">
+      <i class="fas fa-inbox fa-3x text-light mb-3"></i>
+      <p class="text-light">Aún no hay observaciones compartidas. ¡Sé el primero en compartir!</p>
+    </div>
+
+    <!-- Botón para crear nueva observación -->
+    <div class="text-center mb-4" *ngIf="!cargando && !error">
+      <button class="btn-nueva-observacion" (click)="irAFormulario()">
+        <i class="fas fa-plus-circle"></i>
+        Registrar Nueva Observación
+      </button>
+    </div>
+
+    <!-- Grid de cards con observaciones -->
+    <div *ngIf="!cargando && !error && observaciones.length > 0" class="observaciones-grid">
+      <div class="row g-4">
+        <div *ngFor="let observacion of observaciones" class="col-md-6 col-lg-4">
+          <div class="observacion-card" (click)="verDetalle(observacion)">
+            <div class="card-header">
+              <div class="card-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="card-user-info">
+                <h3 class="card-nombre">
+                  {{ observacion.nombre_observador || 'Observador anónimo' }}
+                </h3>
+                <p class="card-comunidad">
+                  <i class="fas fa-map-marker-alt"></i>
+                  {{ observacion.comunidad || 'Comunidad no especificada' }}
+                </p>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <div class="card-info-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>{{ formatearFecha(observacion.fecha_observacion) }}</span>
+              </div>
+              <div class="card-info-item">
+                <i class="fas fa-clock"></i>
+                <span>{{ formatearHora(observacion.hora_observacion) }}</span>
+              </div>
+              <div class="card-info-item">
+                <i class="fas fa-map-pin"></i>
+                <span>{{ observacion.lugar_observacion || 'Lugar no especificado' }}</span>
+              </div>
+              <div class="card-info-item">
+                <i class="fas fa-crab"></i>
+                <span>{{ observacion.cantidad_cangrejos || 'Cantidad no especificada' }} cangrejos</span>
+              </div>
+              <div class="card-info-item" *ngIf="observacion.tipo_habitat">
+                <i class="fas fa-tree"></i>
+                <span>{{ observacion.tipo_habitat }}</span>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button class="btn-ver-detalle">
+                Ver detalles <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para ver detalles completos -->
+  <div class="modal-overlay" *ngIf="mostrarModal && observacionSeleccionada" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fas fa-eye"></i>
+          Detalles de la Observación
+        </h2>
+        <button class="btn-close-modal" (click)="cerrarModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detalle-section" *ngIf="observacionSeleccionada">
+          <!-- Información del Observador -->
+          <div class="detalle-group">
+            <h3 class="detalle-group-title">
+              <i class="fas fa-user"></i>
+              Información del Observador
+            </h3>
+            <div class="detalle-grid">
+              <div class="detalle-item">
+                <label>Nombre:</label>
+                <span>{{ observacionSeleccionada.nombre_observador || 'No especificado' }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.edad">
+                <label>Edad:</label>
+                <span>{{ observacionSeleccionada.edad }} años</span>
+              </div>
+              <div class="detalle-item">
+                <label>Comunidad:</label>
+                <span>{{ observacionSeleccionada.comunidad || 'No especificada' }}</span>
+              </div>
+              <div class="detalle-item">
+                <label>Frecuencia de observación:</label>
+                <span>{{ observacionSeleccionada.frecuencia_observacion || 'No especificada' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detalles de la Observación -->
+          <div class="detalle-group">
+            <h3 class="detalle-group-title">
+              <i class="fas fa-binoculars"></i>
+              Detalles de la Observación
+            </h3>
+            <div class="detalle-grid">
+              <div class="detalle-item">
+                <label>Fecha:</label>
+                <span>{{ formatearFecha(observacionSeleccionada.fecha_observacion) }}</span>
+              </div>
+              <div class="detalle-item">
+                <label>Hora:</label>
+                <span>{{ formatearHora(observacionSeleccionada.hora_observacion) }}</span>
+              </div>
+              <div class="detalle-item">
+                <label>Lugar:</label>
+                <span>{{ observacionSeleccionada.lugar_observacion || 'No especificado' }}</span>
+              </div>
+              <div class="detalle-item">
+                <label>Tipo de hábitat:</label>
+                <span>
+                  {{ observacionSeleccionada.tipo_habitat || 'No especificado' }}
+                  <span *ngIf="observacionSeleccionada.tipo_habitat_otro">
+                    - {{ observacionSeleccionada.tipo_habitat_otro }}
+                  </span>
+                </span>
+              </div>
+              <div class="detalle-item">
+                <label>Cantidad de cangrejos:</label>
+                <span>{{ observacionSeleccionada.cantidad_cangrejos || 'No especificada' }}</span>
+              </div>
+              <div class="detalle-item">
+                <label>Tamaño de los cangrejos:</label>
+                <span>{{ observacionSeleccionada.tamano_cangrejos || 'No especificado' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Identificación -->
+          <div class="detalle-group" *ngIf="observacionSeleccionada.sexo_cangrejos && observacionSeleccionada.sexo_cangrejos.length > 0">
+            <h3 class="detalle-group-title">
+              <i class="fas fa-venus-mars"></i>
+              Identificación
+            </h3>
+            <div class="detalle-item">
+              <label>Sexo de los cangrejos:</label>
+              <div class="tags-list">
+                <span class="tag" *ngFor="let sexo of observacionSeleccionada.sexo_cangrejos">
+                  {{ sexo }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comportamientos -->
+          <div class="detalle-group" *ngIf="observacionSeleccionada.comportamientos && observacionSeleccionada.comportamientos.length > 0">
+            <h3 class="detalle-group-title">
+              <i class="fas fa-running"></i>
+              Comportamientos Observados
+            </h3>
+            <div class="detalle-item">
+              <label>Actividades:</label>
+              <div class="tags-list">
+                <span class="tag" *ngFor="let comportamiento of observacionSeleccionada.comportamientos">
+                  {{ comportamiento }}
+                </span>
+              </div>
+            </div>
+            <div class="detalle-item" *ngIf="observacionSeleccionada.comportamiento_otro">
+              <label>Otro comportamiento:</label>
+              <span>{{ observacionSeleccionada.comportamiento_otro }}</span>
+            </div>
+            <div class="detalle-item">
+              <label>Mortalidad por atropellamiento:</label>
+              <span>{{ observacionSeleccionada.mortalidad_atropellamiento || 'No especificado' }}</span>
+            </div>
+          </div>
+
+          <!-- Percepción Local -->
+          <div class="detalle-group">
+            <h3 class="detalle-group-title">
+              <i class="fas fa-chart-line"></i>
+              Percepción Local
+            </h3>
+            <div class="detalle-grid">
+              <div class="detalle-item">
+                <label>Cambio en la población (vs. hace 5 años):</label>
+                <span>{{ observacionSeleccionada.cambio_poblacion || 'No especificado' }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.amenazas_principales && observacionSeleccionada.amenazas_principales.length > 0">
+                <label>Principales amenazas:</label>
+                <div class="tags-list">
+                  <span class="tag tag-warning" *ngFor="let amenaza of observacionSeleccionada.amenazas_principales">
+                    {{ amenaza }}
+                  </span>
+                </div>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.amenaza_otra">
+                <label>Otra amenaza:</label>
+                <span>{{ observacionSeleccionada.amenaza_otra }}</span>
+              </div>
+              <div class="detalle-item">
+                <label>Importancia de conservación:</label>
+                <div class="importance-display">
+                  <span class="importance-value">{{ observacionSeleccionada.importancia_conservacion || 'N/A' }}</span>
+                  <span class="importance-label">/ 5</span>
+                </div>
+              </div>
+              <div class="detalle-item detalle-item-full">
+                <label>Acciones de protección sugeridas:</label>
+                <p class="detalle-texto">{{ observacionSeleccionada.acciones_proteccion || 'No especificado' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-close" (click)="cerrarModal()">
+          <i class="fas fa-times"></i>
+          Cerrar
+        </button>
+      </div>
+    </div>
   </div>
 </section>
