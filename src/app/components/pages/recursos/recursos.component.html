@@ -1,244 +1,136 @@
 <section class="recursos-section">
-  <!-- Línea Guía de Navegación -->
-  <div class="navigation-guide">
-    <div class="guide-line"></div>
-    <div class="guide-markers">
-      <a href="#articulos-web" class="guide-marker" [class.active]="activeSection === 'articulos-web'" (click)="scrollToSection('articulos-web', $event)">
-        <span class="marker-dot"></span>
-        <span class="marker-label">Artículos</span>
-      </a>
-      <a href="#investigaciones" class="guide-marker" [class.active]="activeSection === 'investigaciones'" (click)="scrollToSection('investigaciones', $event)">
-        <span class="marker-dot"></span>
-        <span class="marker-label">Investigaciones</span>
-      </a>
-      <a href="#reels-videos" class="guide-marker" [class.active]="activeSection === 'reels-videos'" (click)="scrollToSection('reels-videos', $event)">
-        <span class="marker-dot"></span>
-        <span class="marker-label">Videos</span>
-      </a>
-      <a href="#posts-redes" class="guide-marker" [class.active]="activeSection === 'posts-redes'" (click)="scrollToSection('posts-redes', $event)">
-        <span class="marker-dot"></span>
-        <span class="marker-label">Redes Sociales</span>
-      </a>
-    </div>
-  </div>
-
   <div class="container">
     
     <!-- Header de la Sección -->
     <div class="row">
       <div class="col-12">
-        <div class="section-header text-center mb-5">
-          <h1 class="title">Recursos y Contenido</h1>
+        <div class="section-header text-center mb-4">
+          <h1 class="title">Recursos <span class="highlight">Cardisoma Guanhumi</span></h1>
           <p class="subtitle">Explora artículos, investigaciones, videos y contenido sobre el Cangrejo Azul</p>
         </div>
       </div>
     </div>
 
-    <!-- 1. Artículos Web -->
-    <div id="articulos-web" class="row mb-5 section-anchor">
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <h2 class="section-title">
-              <i class="bi bi-file-text"></i> Artículos Web
-            </h2>
-            <p class="section-description">Artículos y publicaciones sobre el Cardisoma guanhumi y su conservación</p>
+    <!-- Buscador y Filtros -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="search-filter-container">
+          <!-- Buscador -->
+          <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input 
+              type="text" 
+              [(ngModel)]="searchTerm" 
+              (input)="onSearchChange()"
+              placeholder="Buscar por tipo de contenido, título, descripción, autor..."
+              class="search-input"
+            >
+            <button *ngIf="searchTerm" class="clear-search" (click)="limpiarFiltros()">
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
-        </div>
-      </div>
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <div class="recursos-carousel owl-carousel owl-theme" id="articulos-carousel">
-              <div class="item" *ngFor="let articulo of articulosWeb">
-                <div class="recurso-card">
-                  <div class="recurso-image-wrapper">
-                    <img [src]="articulo.imagen" [alt]="articulo.titulo" class="recurso-image">
-                    <div class="recurso-categoria">{{articulo.categoria}}</div>
-                  </div>
-                  <div class="recurso-content">
-                    <h3>{{articulo.titulo}}</h3>
-                    <p class="recurso-descripcion">{{articulo.descripcion}}</p>
-                    <div class="recurso-meta">
-                      <div class="recurso-autor">
-                        <i class="bi bi-person"></i>
-                        <span>{{articulo.autor}}</span>
-                      </div>
-                      <div class="recurso-fecha">
-                        <i class="bi bi-calendar"></i>
-                        <span>{{articulo.fecha}}</span>
-                      </div>
-                    </div>
-                    <div class="recurso-fuente">
-                      <i class="bi bi-book"></i>
-                      <span>{{articulo.fuente}}</span>
-                    </div>
-                    <a [href]="articulo.enlace" target="_blank" class="recurso-link">
-                      <i class="bi bi-box-arrow-up-right"></i> Leer más
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
+          
+          <!-- Filtros por tipo -->
+          <div class="filter-tabs">
+            <button 
+              *ngFor="let categoria of categorias"
+              class="filter-tab"
+              [class.active]="filtroActivo === categoria.id"
+              (click)="cambiarFiltro(categoria.id)"
+            >
+              <i class="bi" [ngClass]="categoria.icono"></i>
+              <span class="tab-label">{{categoria.nombre}}</span>
+              <span class="tab-count">{{contarPorTipo(categoria.id)}}</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 2. Investigaciones -->
-    <div id="investigaciones" class="row mb-5 section-anchor">
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <h2 class="section-title">
-              <i class="bi bi-journal-text"></i> Investigaciones Científicas
-            </h2>
-            <p class="section-description">Estudios científicos y publicaciones académicas sobre el cangrejo azul</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <div class="recursos-carousel owl-carousel owl-theme" id="investigaciones-carousel">
-              <div class="item" *ngFor="let investigacion of investigaciones">
-                <div class="recurso-card investigacion-card">
-                  <div class="recurso-image-wrapper">
-                    <img [src]="investigacion.imagen" [alt]="investigacion.titulo" class="recurso-image">
-                    <div class="recurso-categoria investigacion-badge">{{investigacion.categoria}}</div>
-                  </div>
-                  <div class="recurso-content">
-                    <h3>{{investigacion.titulo}}</h3>
-                    <p class="recurso-descripcion">{{investigacion.descripcion}}</p>
-                    <div class="recurso-meta">
-                      <div class="recurso-autor">
-                        <i class="bi bi-building"></i>
-                        <span>{{investigacion.autor}}</span>
-                      </div>
-                      <div class="recurso-fecha">
-                        <i class="bi bi-calendar"></i>
-                        <span>{{investigacion.fecha}}</span>
-                      </div>
-                    </div>
-                    <div class="recurso-tipo">
-                      <i class="bi bi-tag"></i>
-                      <span>{{investigacion.tipo}}</span>
-                    </div>
-                    <a [href]="investigacion.enlace" target="_blank" class="recurso-link">
-                      <i class="bi bi-file-earmark-pdf"></i> Ver investigación
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- Contador de resultados -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="results-info">
+          <span class="results-count">
+            <i class="bi bi-collection"></i>
+            {{recursosFiltrados.length}} recurso{{recursosFiltrados.length !== 1 ? 's' : ''}} encontrado{{recursosFiltrados.length !== 1 ? 's' : ''}}
+          </span>
+          <button *ngIf="filtroActivo !== 'todos' || searchTerm" class="clear-filters-btn" (click)="limpiarFiltros()">
+            <i class="bi bi-x-circle"></i> Limpiar filtros
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- 3. Reels y Videos -->
-    <div id="reels-videos" class="row mb-5 section-anchor">
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <h2 class="section-title">
-              <i class="bi bi-play-circle"></i> Reels y Videos
-            </h2>
-            <p class="section-description">Contenido audiovisual educativo y de divulgación</p>
+    <!-- Grid de Recursos -->
+    <div class="row" id="recursos-grid">
+      <div 
+        class="col-lg-4 col-md-6 col-sm-12 mb-4" 
+        *ngFor="let recurso of recursosFiltrados; let i = index"
+      >
+        <a 
+          [href]="recurso.enlace" 
+          target="_blank"
+          class="recurso-card"
+          [ngClass]="'tipo-' + recurso.tipo"
+        >
+          <!-- Badge de tipo -->
+          <div class="tipo-badge-header" [style.background-color]="getColorPorTipo(recurso.tipo)">
+            <i class="bi" [ngClass]="getIconoPorTipo(recurso.tipo)"></i>
+            <span>{{getNombreTipo(recurso.tipo)}}</span>
+            <span class="categoria-badge-inline">{{recurso.categoria}}</span>
           </div>
-        </div>
-      </div>
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <div class="recursos-carousel owl-carousel owl-theme" id="videos-carousel">
-              <div class="item" *ngFor="let video of reelsVideos">
-                <div class="recurso-card video-card">
-                  <div class="recurso-image-wrapper">
-                    <img [src]="video.imagen" [alt]="video.titulo" class="recurso-image">
-                    <div class="play-overlay">
-                      <i class="bi bi-play-circle-fill"></i>
-                    </div>
-                    <div class="recurso-categoria video-badge">{{video.categoria}}</div>
-                    <div class="video-duracion">
-                      <i class="bi bi-clock"></i>
-                      <span>{{video.duracion}}</span>
-                    </div>
-                  </div>
-                  <div class="recurso-content">
-                    <h3>{{video.titulo}}</h3>
-                    <p class="recurso-descripcion">{{video.descripcion}}</p>
-                    <div class="recurso-meta">
-                      <div class="recurso-plataforma">
-                        <i class="bi" [ngClass]="{'bi-youtube': video.plataforma === 'YouTube', 'bi-instagram': video.plataforma === 'Instagram', 'bi-tiktok': video.plataforma === 'TikTok'}"></i>
-                        <span>{{video.plataforma}}</span>
-                      </div>
-                      <div class="recurso-fecha">
-                        <i class="bi bi-calendar"></i>
-                        <span>{{video.fecha}}</span>
-                      </div>
-                    </div>
-                    <a [href]="video.enlace" target="_blank" class="recurso-link">
-                      <i class="bi bi-play-fill"></i> Ver video
-                    </a>
-                  </div>
-                </div>
+          
+          <!-- Contenido -->
+          <div class="recurso-content">
+            <h3 class="recurso-titulo">{{recurso.titulo}}</h3>
+            <p class="recurso-descripcion">{{recurso.descripcion}}</p>
+            
+            <div class="recurso-meta">
+              <!-- Autor/Fuente (solo uno, el más relevante) -->
+              <div class="meta-item" *ngIf="recurso.autor && recurso.autor.trim()">
+                <i class="bi bi-person-fill"></i>
+                <span>{{recurso.autor}}</span>
+              </div>
+              <div class="meta-item" *ngIf="!recurso.autor && recurso.fuente && recurso.fuente.trim()">
+                <i class="bi bi-link-45deg"></i>
+                <span>{{recurso.fuente}}</span>
+              </div>
+              <!-- Plataforma -->
+              <div class="meta-item" *ngIf="recurso.plataforma && recurso.plataforma.trim()">
+                <i class="bi" [ngClass]="{
+                  'bi-instagram': recurso.plataforma === 'Instagram',
+                  'bi-youtube': recurso.plataforma === 'YouTube',
+                  'bi-facebook': recurso.plataforma === 'Facebook',
+                  'bi-tiktok': recurso.plataforma === 'TikTok'
+                }"></i>
+                <span>{{recurso.plataforma}}</span>
+              </div>
+              <!-- Fecha -->
+              <div class="meta-item" *ngIf="recurso.fecha && recurso.fecha.trim()">
+                <i class="bi bi-calendar3"></i>
+                <span>{{recurso.fecha}}</span>
               </div>
             </div>
           </div>
+        </a>
+      </div>
+
+      <!-- Sin resultados -->
+      <div class="col-12" *ngIf="recursosFiltrados.length === 0">
+        <div class="no-results">
+          <i class="bi bi-search"></i>
+          <h3>No se encontraron recursos</h3>
+          <p>Intenta con otros términos de búsqueda o cambia los filtros</p>
+          <button class="btn-reset" (click)="limpiarFiltros()">
+            <i class="bi bi-arrow-counterclockwise"></i> Ver todos los recursos
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- 4. Posts de Redes Sociales -->
-    <div id="posts-redes" class="row mb-5 section-anchor">
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <h2 class="section-title">
-              <i class="bi bi-share"></i> Posts de Redes Sociales
-            </h2>
-            <p class="section-description">Contenido compartido en nuestras redes sociales</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <div class="recursos-carousel owl-carousel owl-theme" id="posts-carousel">
-              <div class="item" *ngFor="let post of postsRedes">
-                <div class="recurso-card post-card">
-                  <div class="recurso-image-wrapper">
-                    <img [src]="post.imagen" [alt]="post.titulo" class="recurso-image">
-                    <div class="recurso-categoria post-badge">{{post.categoria}}</div>
-                  </div>
-                  <div class="recurso-content">
-                    <h3>{{post.titulo}}</h3>
-                    <p class="recurso-descripcion">{{post.descripcion}}</p>
-                    <div class="recurso-meta">
-                      <div class="recurso-plataforma">
-                        <i class="bi" [ngClass]="{'bi-facebook': post.plataforma === 'Facebook', 'bi-instagram': post.plataforma === 'Instagram', 'bi-twitter': post.plataforma === 'Twitter'}"></i>
-                        <span>{{post.plataforma}}</span>
-                      </div>
-                      <div class="recurso-fecha">
-                        <i class="bi bi-calendar"></i>
-                        <span>{{post.fecha}}</span>
-                      </div>
-                    </div>
-                    <a [href]="post.enlace" target="_blank" class="recurso-link">
-                      <i class="bi bi-box-arrow-up-right"></i> Ver post
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. Call to Action -->
-    <div class="row">
+    <!-- Call to Action -->
+    <div class="row mt-5">
       <div class="col-12">
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-10">
@@ -255,4 +147,5 @@
     </div>
 
   </div>
+
 </section>

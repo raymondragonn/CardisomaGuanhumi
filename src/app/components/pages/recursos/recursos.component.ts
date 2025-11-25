@@ -1,181 +1,61 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 
+interface Recurso {
+  id: number;
+  titulo: string;
+  descripcion: string;
+  autor?: string;
+  fecha: string;
+  fuente?: string;
+  enlace: string;
+  imagen?: string;
+  imagenRelacionada?: boolean;
+  categoria: string;
+  tipo: 'articulo' | 'investigacion' | 'video' | 'noticia' | 'publicacion';
+  plataforma?: string;
+  duracion?: string;
+  tipoDocumento?: string;
+  embedUrl?: string;
+  previewType?: 'image' | 'pdf' | 'video' | 'instagram' | 'embed';
+}
+
 @Component({
   selector: 'app-recursos',
   templateUrl: './recursos.component.html',
   styleUrls: ['./recursos.component.scss']
 })
 export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
-  activeSection: string = 'articulos-web';
+  activeSection: string = 'todos';
   private observer?: IntersectionObserver;
   private sections: Element[] = [];
   private scrollTimeout?: any;
+  
+  // Filtros
+  searchTerm: string = '';
+  filtroActivo: string = 'todos';
+
+  // Todos los recursos combinados
+  todosLosRecursos: Recurso[] = [];
+  recursosFiltrados: Recurso[] = [];
+
+  // Categorías de filtro
+  categorias = [
+    { id: 'todos', nombre: 'Todos', icono: 'bi-grid-3x3-gap' },
+    { id: 'articulo', nombre: 'Artículos', icono: 'bi-file-text' },
+    { id: 'investigacion', nombre: 'Investigaciones', icono: 'bi-journal-text' },
+    { id: 'video', nombre: 'Videos', icono: 'bi-play-circle' },
+    { id: 'noticia', nombre: 'Noticias', icono: 'bi-newspaper' },
+    { id: 'publicacion', nombre: 'Publicaciones', icono: 'bi-share' }
+  ];
 
   ngOnInit() {
-    this.activeSection = 'articulos-web';
+    this.inicializarRecursos();
+    this.aplicarFiltros();
   }
 
   ngAfterViewInit() {
     this.setupIntersectionObserver();
     this.setupScrollListener();
-    this.initCarousels();
-  }
-
-  initCarousels() {
-    // Esperar a que Angular renderice completamente
-    setTimeout(() => {
-      if (typeof window !== 'undefined' && (window as any).jQuery) {
-        const $ = (window as any).jQuery;
-        
-        // Inicializar carrusel de artículos
-        $('#articulos-carousel').owlCarousel({
-          loop: true,
-          nav: true,
-          dots: true,
-          autoplayHoverPause: true,
-          autoplay: false,
-          smartSpeed: 1000,
-          margin: 15,
-          navText: [
-            "<i class='bi bi-chevron-left'></i>",
-            "<i class='bi bi-chevron-right'></i>"
-          ],
-          responsive: {
-            0: {
-              items: 1,
-              margin: 10
-            },
-            576: {
-              items: 1,
-              margin: 15
-            },
-            768: {
-              items: 2,
-              margin: 15
-            },
-            992: {
-              items: 2,
-              margin: 15
-            },
-            1200: {
-              items: 3,
-              margin: 15
-            }
-          }
-        });
-
-        // Inicializar carrusel de investigaciones
-        $('#investigaciones-carousel').owlCarousel({
-          loop: true,
-          nav: true,
-          dots: true,
-          autoplayHoverPause: true,
-          autoplay: false,
-          smartSpeed: 1000,
-          margin: 15,
-          navText: [
-            "<i class='bi bi-chevron-left'></i>",
-            "<i class='bi bi-chevron-right'></i>"
-          ],
-          responsive: {
-            0: {
-              items: 1,
-              margin: 10
-            },
-            576: {
-              items: 1,
-              margin: 15
-            },
-            768: {
-              items: 2,
-              margin: 15
-            },
-            992: {
-              items: 2,
-              margin: 15
-            },
-            1200: {
-              items: 3,
-              margin: 15
-            }
-          }
-        });
-
-        // Inicializar carrusel de videos
-        $('#videos-carousel').owlCarousel({
-          loop: true,
-          nav: true,
-          dots: true,
-          autoplayHoverPause: true,
-          autoplay: false,
-          smartSpeed: 1000,
-          margin: 15,
-          navText: [
-            "<i class='bi bi-chevron-left'></i>",
-            "<i class='bi bi-chevron-right'></i>"
-          ],
-          responsive: {
-            0: {
-              items: 1,
-              margin: 10
-            },
-            576: {
-              items: 1,
-              margin: 15
-            },
-            768: {
-              items: 2,
-              margin: 15
-            },
-            992: {
-              items: 2,
-              margin: 15
-            },
-            1200: {
-              items: 3,
-              margin: 15
-            }
-          }
-        });
-
-        // Inicializar carrusel de posts
-        $('#posts-carousel').owlCarousel({
-          loop: true,
-          nav: true,
-          dots: true,
-          autoplayHoverPause: true,
-          autoplay: false,
-          smartSpeed: 1000,
-          margin: 15,
-          navText: [
-            "<i class='bi bi-chevron-left'></i>",
-            "<i class='bi bi-chevron-right'></i>"
-          ],
-          responsive: {
-            0: {
-              items: 1,
-              margin: 10
-            },
-            576: {
-              items: 1,
-              margin: 15
-            },
-            768: {
-              items: 2,
-              margin: 15
-            },
-            992: {
-              items: 2,
-              margin: 15
-            },
-            1200: {
-              items: 3,
-              margin: 15
-            }
-          }
-        });
-      }
-    }, 100);
   }
 
   ngOnDestroy() {
@@ -186,6 +66,334 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
       clearTimeout(this.scrollTimeout);
     }
     window.removeEventListener('scroll', this.onScroll);
+  }
+
+  inicializarRecursos() {
+    this.todosLosRecursos = [
+      // Artículos
+      {
+        id: 1,
+        titulo: 'Salvamos al Cangrejo Azul de la Riviera Veracruzana',
+        descripcion: 'Campaña de activismo y conservación para proteger al cangrejo azul (Cardisoma guanhumi) en la Riviera Veracruzana. Una iniciativa que busca generar conciencia sobre la importancia de preservar esta especie endémica.',
+        autor: 'Actívate México',
+        fecha: '2024',
+        fuente: 'Actívate.org.mx',
+        enlace: 'https://activate.org.mx/activacion/salvamos-al-cangrejo-azul-de-la-riviera-veracruzana-68994bd8c1391',
+        categoria: 'Activismo',
+        tipo: 'articulo',
+        previewType: 'embed'
+      },
+
+      // Investigaciones
+      {
+        id: 2,
+        titulo: 'Estudio de Cardisoma guanhumi en la Zona de Poza Rica',
+        descripcion: 'Tesis de maestría que analiza las características poblacionales y el estado de conservación del cangrejo azul en la región de Poza Rica, Veracruz.',
+        autor: 'Gloria Isabel Aquino Díaz',
+        fecha: '2019',
+        fuente: 'Universidad Veracruzana - MCA',
+        enlace: 'https://www.uv.mx/pozarica/mca/files/2019/05/G03_GLORIA-ISABEL-AQUINO-DIAZ.pdf',
+        categoria: 'Tesis',
+        tipo: 'investigacion',
+        tipoDocumento: 'PDF',
+        previewType: 'pdf'
+      },
+      {
+        id: 3,
+        titulo: 'Biología y Ecología del Cardisoma guanhumi',
+        descripcion: 'Investigación doctoral sobre la biología, ecología y comportamiento del cangrejo azul en ecosistemas de manglar mexicanos.',
+        autor: 'UNAM',
+        fecha: '2013',
+        fuente: 'UNAM - Tesis',
+        enlace: 'https://tesiunamdocumentos.dgb.unam.mx/ptd2013/Presenciales/0696227/0696227.pdf',
+        categoria: 'Tesis Doctoral',
+        tipo: 'investigacion',
+        tipoDocumento: 'PDF',
+        previewType: 'pdf'
+      },
+      {
+        id: 4,
+        titulo: 'Population Dynamics of Cardisoma guanhumi',
+        descripcion: 'Artículo científico publicado en SciELO sobre la dinámica poblacional del cangrejo azul, incluyendo análisis de densidad y distribución espacial.',
+        autor: 'SciELO Chile',
+        fecha: '2021',
+        fuente: 'Latin American Journal of Aquatic Research',
+        enlace: 'https://www.scielo.cl/scielo.php?pid=S0718-560X2021000100136&script=sci_arttext&tlng=en',
+        categoria: 'Artículo Científico',
+        tipo: 'investigacion',
+        tipoDocumento: 'Artículo',
+        previewType: 'embed'
+      },
+      {
+        id: 5,
+        titulo: 'Cardisoma guanhumi en Alvarado - Estudio Integral',
+        descripcion: 'Libro científico que documenta aspectos biológicos, ecológicos y de conservación del cangrejo azul en la región de Alvarado, Veracruz.',
+        autor: 'Google Books',
+        fecha: '2015',
+        fuente: 'Publicación Académica',
+        enlace: 'https://books.google.com.mx/books?hl=es&lr=&id=mRnM8zubAI0C&oi=fnd&pg=PA9&dq=cardisoma+guanhumi+alvarado&ots=qyAAOPtmof&sig=BZPsee3Y56rhCwBihRYBaOMdqSQ&redir_esc=y#v=onepage&q=cardisoma%20guanhumi%20alvarado&f=false',
+        categoria: 'Libro',
+        tipo: 'investigacion',
+        tipoDocumento: 'Libro',
+        previewType: 'embed'
+      },
+
+      // Videos
+      {
+        id: 6,
+        titulo: 'El Cangrejo Azul en su Hábitat Natural',
+        descripcion: 'Video de Instagram mostrando el comportamiento del cangrejo azul en su ambiente natural, capturando momentos únicos de esta especie.',
+        plataforma: 'Instagram',
+        fecha: '2024',
+        enlace: 'https://www.instagram.com/p/DNHK6EDtk79/',
+        imagen: 'https://www.instagram.com/p/DNHK6EDtk79/media/?size=l',
+        imagenRelacionada: true,
+        categoria: 'Documental',
+        tipo: 'video',
+        duracion: '0:30',
+        previewType: 'instagram'
+      },
+      {
+        id: 7,
+        titulo: 'Conservación del Cardisoma guanhumi',
+        descripcion: 'Reel educativo sobre las acciones de conservación que se están realizando para proteger al cangrejo azul en Veracruz.',
+        plataforma: 'Instagram',
+        fecha: '2024',
+        enlace: 'https://www.instagram.com/p/DLP2OsZu6gj/',
+        imagen: 'https://www.instagram.com/p/DLP2OsZu6gj/media/?size=l',
+        imagenRelacionada: true,
+        categoria: 'Educativo',
+        tipo: 'video',
+        duracion: '0:45',
+        previewType: 'instagram'
+      },
+      {
+        id: 8,
+        titulo: 'Vida del Cangrejo Azul',
+        descripcion: 'Reel que muestra aspectos fascinantes de la vida cotidiana del cangrejo azul, incluyendo alimentación y comportamiento social.',
+        plataforma: 'Instagram',
+        fecha: '2024',
+        enlace: 'https://www.instagram.com/reel/C9SAlisud5Y/',
+        imagen: 'https://www.instagram.com/reel/C9SAlisud5Y/media/?size=l',
+        imagenRelacionada: true,
+        categoria: 'Naturaleza',
+        tipo: 'video',
+        duracion: '0:35',
+        previewType: 'instagram'
+      },
+
+      // Noticias
+      {
+        id: 9,
+        titulo: 'Sobreexplotación desdibuja al cangrejo azul en Alvarado',
+        descripcion: 'Reportaje sobre la alerta de posible extinción del cangrejo azul debido a la sobreexplotación en la zona de Alvarado, Veracruz.',
+        autor: 'Excélsior',
+        fecha: '2025',
+        fuente: 'Excélsior',
+        enlace: 'https://www.excelsior.com.mx/nacional/sobreexplotacion-desdibuja-al-cangrejo-azul-en-alvarado-alertan-de-su-posible-extincion',
+        categoria: 'Alerta Ambiental',
+        tipo: 'noticia',
+        previewType: 'embed'
+      },
+      {
+        id: 10,
+        titulo: 'Desarrollos inmobiliarios hunden al cangrejo azul',
+        descripcion: 'Earth Mission denuncia que los desarrollos inmobiliarios en Veracruz están destruyendo el hábitat del cangrejo azul.',
+        autor: 'Aristegui Noticias',
+        fecha: '2025',
+        fuente: 'Aristegui Noticias',
+        enlace: 'https://aristeguinoticias.com/1208/naturaleza/earth-mission-denuncia-desarrollos-inmobiliarios-hunden-al-cangrejo-azul-en-veracruz/',
+        categoria: 'Denuncia',
+        tipo: 'noticia',
+        previewType: 'embed'
+      },
+      {
+        id: 11,
+        titulo: 'Cangrejo azul: No se detiene urbanización en Alvarado',
+        descripcion: 'La alcaldesa de Alvarado afirma que la urbanización no se detendrá a pesar de las preocupaciones sobre el cangrejo azul.',
+        autor: 'e-Veracruz',
+        fecha: '2025-09-11',
+        fuente: 'e-Veracruz',
+        enlace: 'https://e-veracruz.mx/nota/2025-09-11/ecologia/cangrejo-azul-no-detiene-urbanizacion-en-alvarado-afirma-alcaldesa',
+        categoria: 'Política',
+        tipo: 'noticia',
+        previewType: 'embed'
+      },
+      {
+        id: 12,
+        titulo: 'Riviera Veracruzana: El desarrollo que devasta ecosistema del cangrejo azul',
+        descripcion: 'Reportaje especial sobre cómo el desarrollo inmobiliario de la Riviera Veracruzana está afectando al ecosistema del cangrejo azul.',
+        autor: 'La Silla Rota',
+        fecha: '2025-08-13',
+        fuente: 'La Silla Rota Veracruz',
+        enlace: 'https://lasillarota.com/veracruz/reportajes/2025/8/13/riviera-veracruzana-el-desarrollo-inmobiliario-que-devasta-ecosistema-del-cangrejo-azul-550252.html',
+        categoria: 'Reportaje',
+        tipo: 'noticia',
+        previewType: 'embed'
+      },
+      {
+        id: 13,
+        titulo: 'Lanzan campaña para salvar al cangrejo azul',
+        descripcion: 'Organizaciones lanzan una campaña de conservación para proteger al cangrejo azul en la Riviera Veracruzana.',
+        autor: 'Riviera Veracruz Now',
+        fecha: '2025-08-15',
+        fuente: 'Riviera Veracruz Now',
+        enlace: 'https://rivieraveracruznow.com/2025/08/15/lanzan-campana-para-salvar-al-cangrejo-azul-en-la-riviera-veracruzana/',
+        categoria: 'Conservación',
+        tipo: 'noticia',
+        previewType: 'embed'
+      },
+      {
+        id: 14,
+        titulo: 'Cangrejos azules en Veracruz - CNN en Español',
+        descripcion: 'Cobertura de CNN sobre la situación de los cangrejos azules en Veracruz y el llamado a la conservación.',
+        autor: 'CNN en Español',
+        fecha: '2025-09-25',
+        fuente: 'CNN en Español',
+        enlace: 'https://cnnespanol.cnn.com/2025/09/25/video/video/cnne-cangrejos-azules-veracruz-cte-llamado-tierra',
+        categoria: 'Internacional',
+        tipo: 'noticia',
+        previewType: 'video'
+      },
+
+      // Publicaciones de redes sociales
+      {
+        id: 15,
+        titulo: 'Información sobre el Cangrejo Azul',
+        descripcion: 'Publicación informativa sobre las características y la importancia ecológica del cangrejo azul en los ecosistemas costeros.',
+        plataforma: 'Instagram',
+        fecha: '2024',
+        enlace: 'https://www.instagram.com/p/DLQe4bJSJSl/?img_index=1',
+        imagen: 'https://www.instagram.com/p/DLQe4bJSJSl/media/?size=l',
+        imagenRelacionada: true,
+        categoria: 'Educativo',
+        tipo: 'publicacion',
+        previewType: 'instagram'
+      },
+      {
+        id: 16,
+        titulo: 'Conservemos al Cardisoma guanhumi',
+        descripcion: 'Post de concientización sobre la necesidad de proteger al cangrejo azul y su hábitat natural en Veracruz.',
+        plataforma: 'Instagram',
+        fecha: '2024',
+        enlace: 'https://www.instagram.com/p/DNMWmmltFM_/?img_index=1',
+        imagen: 'https://www.instagram.com/p/DNMWmmltFM_/media/?size=l',
+        imagenRelacionada: true,
+        categoria: 'Conservación',
+        tipo: 'publicacion',
+        previewType: 'instagram'
+      },
+      {
+        id: 17,
+        titulo: 'Datos curiosos del Cangrejo Azul',
+        descripcion: 'Publicación con datos interesantes y curiosidades sobre el cangrejo azul que pocos conocen.',
+        plataforma: 'Instagram',
+        fecha: '2024',
+        enlace: 'https://www.instagram.com/p/DN9ZY8KDcG2/?img_index=1',
+        imagen: 'https://www.instagram.com/p/DN9ZY8KDcG2/media/?size=l',
+        imagenRelacionada: true,
+        categoria: 'Curiosidades',
+        tipo: 'publicacion',
+        previewType: 'instagram'
+      },
+      {
+        id: 18,
+        titulo: 'Protege al Cangrejo Azul',
+        descripcion: 'Llamado a la acción para unirse a los esfuerzos de conservación del cangrejo azul en la costa veracruzana.',
+        plataforma: 'Instagram',
+        fecha: '2024',
+        enlace: 'https://www.instagram.com/p/DNlrzaBBsBk/?img_index=1',
+        imagen: 'https://www.instagram.com/p/DNlrzaBBsBk/media/?size=l',
+        imagenRelacionada: true,
+        categoria: 'Activismo',
+        tipo: 'publicacion',
+        previewType: 'instagram'
+      }
+    ];
+
+    this.recursosFiltrados = [...this.todosLosRecursos];
+  }
+
+  aplicarFiltros() {
+    let recursos = [...this.todosLosRecursos];
+
+    // Filtrar por tipo
+    if (this.filtroActivo !== 'todos') {
+      recursos = recursos.filter(r => r.tipo === this.filtroActivo);
+    }
+
+    // Filtrar por término de búsqueda
+    if (this.searchTerm.trim()) {
+      const termino = this.searchTerm.toLowerCase().trim();
+      recursos = recursos.filter(r => 
+        r.titulo.toLowerCase().includes(termino) ||
+        r.descripcion.toLowerCase().includes(termino) ||
+        r.categoria.toLowerCase().includes(termino) ||
+        (r.autor && r.autor.toLowerCase().includes(termino)) ||
+        (r.fuente && r.fuente.toLowerCase().includes(termino)) ||
+        this.getNombreTipo(r.tipo).toLowerCase().includes(termino) ||
+        r.tipo.toLowerCase().includes(termino)
+      );
+    }
+
+    this.recursosFiltrados = recursos;
+  }
+
+  cambiarFiltro(filtro: string) {
+    this.filtroActivo = filtro;
+    this.aplicarFiltros();
+  }
+
+  onSearchChange() {
+    this.aplicarFiltros();
+  }
+
+  limpiarFiltros() {
+    this.searchTerm = '';
+    this.filtroActivo = 'todos';
+    this.aplicarFiltros();
+  }
+
+
+  getIconoPorTipo(tipo: string): string {
+    const iconos: { [key: string]: string } = {
+      'articulo': 'bi-file-text',
+      'investigacion': 'bi-journal-text',
+      'video': 'bi-play-circle',
+      'noticia': 'bi-newspaper',
+      'publicacion': 'bi-share'
+    };
+    return iconos[tipo] || 'bi-file';
+  }
+
+  getColorPorTipo(tipo: string): string {
+    const colores: { [key: string]: string } = {
+      'articulo': '#3498db',
+      'investigacion': '#e74c3c',
+      'video': '#9b59b6',
+      'noticia': '#f39c12',
+      'publicacion': '#27ae60'
+    };
+    return colores[tipo] || '#95a5a6';
+  }
+
+  getNombreTipo(tipo: string): string {
+    const nombres: { [key: string]: string } = {
+      'articulo': 'Artículo',
+      'investigacion': 'Investigación',
+      'video': 'Video',
+      'noticia': 'Noticia',
+      'publicacion': 'Publicación'
+    };
+    return nombres[tipo] || 'Recurso';
+  }
+
+
+  contarPorTipo(tipo: string): number {
+    if (tipo === 'todos') {
+      return this.todosLosRecursos.length;
+    }
+    return this.todosLosRecursos.filter(r => r.tipo === tipo).length;
   }
 
   setupIntersectionObserver() {
@@ -283,134 +491,4 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   }
-
-  // Datos de recursos
-  articulosWeb = [
-    {
-      titulo: 'Conservación del Cangrejo Azul en el Caribe',
-      descripcion: 'Artículo sobre las estrategias de conservación implementadas en diferentes países del Caribe para proteger al Cardisoma guanhumi.',
-      autor: 'María González',
-      fecha: '2024-01-15',
-      fuente: 'Revista de Conservación Marina',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/photo_cardisoma.jpeg',
-      categoria: 'Conservación'
-    },
-    {
-      titulo: 'El Papel Ecológico del Cangrejo Azul en los Manglares',
-      descripcion: 'Investigación sobre cómo el Cardisoma guanhumi contribuye al mantenimiento y salud de los ecosistemas de manglar.',
-      autor: 'Dr. Carlos Rodríguez',
-      fecha: '2023-11-20',
-      fuente: 'Ecología Tropical',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/text_cardisoma.jpeg',
-      categoria: 'Ecología'
-    },
-    {
-      titulo: 'Migraciones Reproductivas del Cangrejo Azul',
-      descripcion: 'Estudio detallado sobre los patrones migratorios del cangrejo azul durante la época de reproducción.',
-      autor: 'Ana Martínez',
-      fecha: '2023-09-10',
-      fuente: 'Biología Marina',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/map_cardisoma.jpg',
-      categoria: 'Biología'
-    }
-  ];
-
-  investigaciones = [
-    {
-      titulo: 'Estado Poblacional del Cardisoma guanhumi en la Costa Caribe',
-      descripcion: 'Investigación sobre el estado actual de las poblaciones de cangrejo azul y las tendencias de declive observadas.',
-      autor: 'Instituto de Ciencias Marinas',
-      fecha: '2024-02-01',
-      tipo: 'Estudio Científico',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/map_ubicaction_cardisoma.jpeg',
-      categoria: 'Investigación'
-    },
-    {
-      titulo: 'Impacto del Cambio Climático en el Hábitat del Cangrejo Azul',
-      descripcion: 'Análisis de cómo el cambio climático afecta los manglares y el hábitat del Cardisoma guanhumi.',
-      autor: 'Universidad del Caribe',
-      fecha: '2023-12-15',
-      tipo: 'Investigación',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/photo_cardisoma.jpeg',
-      categoria: 'Cambio Climático'
-    },
-    {
-      titulo: 'Genética Poblacional del Cardisoma guanhumi',
-      descripcion: 'Estudio genético para entender la diversidad y conectividad entre poblaciones del cangrejo azul.',
-      autor: 'Laboratorio de Genética Marina',
-      fecha: '2023-10-05',
-      tipo: 'Genética',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/hembra_macho_cardisoma.png',
-      categoria: 'Genética'
-    }
-  ];
-
-  reelsVideos = [
-    {
-      titulo: 'Ciclo de Vida del Cangrejo Azul',
-      descripcion: 'Video educativo que muestra las diferentes etapas del ciclo de vida del Cardisoma guanhumi.',
-      plataforma: 'YouTube',
-      duracion: '5:30',
-      fecha: '2024-01-20',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/ciclo_vida_cardisoma.png',
-      categoria: 'Educativo'
-    },
-    {
-      titulo: 'Conservación en Acción: Protegiendo los Manglares',
-      descripcion: 'Reel de Instagram mostrando las actividades de conservación realizadas en los manglares.',
-      plataforma: 'Instagram',
-      duracion: '0:45',
-      fecha: '2024-02-10',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/photo_cardisoma.jpeg',
-      categoria: 'Conservación'
-    },
-    {
-      titulo: 'Diferencias entre Macho y Hembra',
-      descripcion: 'Video corto explicando las diferencias físicas entre machos y hembras del cangrejo azul.',
-      plataforma: 'TikTok',
-      duracion: '1:15',
-      fecha: '2024-01-25',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/hembra_macho_cardisoma.png',
-      categoria: 'Educativo'
-    }
-  ];
-
-  postsRedes = [
-    {
-      titulo: 'Día Mundial de los Manglares',
-      descripcion: 'Post sobre la importancia de los manglares y el papel del cangrejo azul en estos ecosistemas.',
-      plataforma: 'Facebook',
-      fecha: '2024-07-26',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/photo_cardisoma.jpeg',
-      categoria: 'Awareness'
-    },
-    {
-      titulo: 'Curiosidades del Cangrejo Azul',
-      descripcion: 'Post con datos curiosos e interesantes sobre el Cardisoma guanhumi.',
-      plataforma: 'Instagram',
-      fecha: '2024-02-15',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/text_cardisoma.jpeg',
-      categoria: 'Educativo'
-    },
-    {
-      titulo: 'Llamado a la Acción: Protejamos al Cangrejo Azul',
-      descripcion: 'Post invitando a la comunidad a participar en actividades de conservación.',
-      plataforma: 'Twitter',
-      fecha: '2024-02-20',
-      enlace: '#',
-      imagen: 'assets/img/cangrejo/map_cardisoma.jpg',
-      categoria: 'Conservación'
-    }
-  ];
 }
