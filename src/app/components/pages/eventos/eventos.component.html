@@ -4,102 +4,128 @@
     <!-- Header de la Sección -->
     <div class="row">
       <div class="col-12">
-        <div class="section-header text-center mb-5">
-          <h1 class="title">Próximos Eventos</h1>
+        <div class="section-header text-center mb-4">
+          <h1 class="title">Próximos <span class="highlight">Eventos</span></h1>
           <p class="subtitle">Únete a nuestras actividades de conservación y protección del cangrejo azul</p>
         </div>
       </div>
     </div>
 
-    <!-- Contenido principal con ancho limitado -->
-    <div class="row justify-content-center">
+    <!-- Buscador y Filtros -->
+    <div class="row justify-content-center mb-4">
       <div class="col-lg-10 col-md-10">
-        <!-- Filtros de Eventos -->
-        <div class="filtros-container mb-4">
-          <div class="filtros-wrapper">
-            <button 
-              class="filtro-btn" 
-              [class.active]="filtroActivo === 'todos'"
-              (click)="cambiarFiltro('todos')">
-              <i class="bi bi-grid-3x3-gap"></i>
-              Todos
+        <div class="search-filter-container">
+          <!-- Buscador -->
+          <div class="search-box">
+            <input 
+              type="text" 
+              [(ngModel)]="searchTerm" 
+              (input)="onSearchChange()"
+              placeholder="Buscar por título, descripción, ubicación, organizador..."
+              class="search-input"
+            >
+            <span class="search-icon" *ngIf="!searchTerm">
+              <i class="bi bi-search"></i>
+            </span>
+            <button *ngIf="searchTerm" class="clear-search" (click)="limpiarFiltros()">
+              <i class="bi bi-x-lg"></i>
             </button>
-            <button 
-              class="filtro-btn tipo-limpieza" 
-              [class.active]="filtroActivo === 'limpieza'"
-              (click)="cambiarFiltro('limpieza')">
-              <i class="bi bi-trash3"></i>
-              Limpieza
-            </button>
-            
-            <button 
-              class="filtro-btn tipo-voluntariado" 
-              [class.active]="filtroActivo === 'voluntariado'"
-              (click)="cambiarFiltro('voluntariado')">
-              <i class="bi bi-hand-thumbs-up"></i>
-              Voluntariado
+          </div>
+          
+          <!-- Filtro por tipo -->
+          <div class="filtro-box">
+            <label for="tipo-select">
+              <i class="bi bi-funnel"></i> Filtrar por tipo:
+            </label>
+            <select id="tipo-select" [(ngModel)]="filtroActivo" (change)="cambiarFiltro(filtroActivo)" class="form-select">
+              <option *ngFor="let categoria of categorias" [value]="categoria.id">
+                {{categoria.nombre}} ({{contarPorTipo(categoria.id)}})
+              </option>
+            </select>
+          </div>
+
+          <!-- Botón limpiar filtros -->
+          <div class="filtro-actions" *ngIf="filtroActivo !== 'todos' || searchTerm">
+            <button class="clear-filters-btn" (click)="limpiarFiltros()">
+              <i class="bi bi-x-circle"></i> Limpiar filtros
             </button>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Indicador de Carga -->
-        <div *ngIf="isLoading" class="text-center py-5">
-          <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-            <span class="visually-hidden">Cargando eventos...</span>
-          </div>
-          <p class="mt-3 text-muted">Cargando eventos...</p>
+    <!-- Contador de resultados -->
+    <div class="row justify-content-center mb-3">
+      <div class="col-lg-10 col-md-10">
+        <div class="results-info">
+          <span class="results-count">
+            <i class="bi bi-collection"></i>
+            {{eventosFiltrados.length}} evento{{eventosFiltrados.length !== 1 ? 's' : ''}} encontrado{{eventosFiltrados.length !== 1 ? 's' : ''}}
+          </span>
+          <button *ngIf="filtroActivo !== 'todos' || searchTerm" class="clear-filters-btn" (click)="limpiarFiltros()">
+            <i class="bi bi-x-circle"></i> Limpiar filtros
+          </button>
         </div>
+      </div>
+    </div>
 
-        <!-- Mensaje de Error -->
-        <div *ngIf="!isLoading && errorMessage" class="alert alert-warning text-center" role="alert">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i>
-          {{ errorMessage }}
-          <br>
-          <small class="text-muted">Mostrando eventos de ejemplo</small>
-        </div>
+    <!-- Indicador de Carga -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Cargando eventos...</span>
+      </div>
+      <p class="mt-3 text-muted">Cargando eventos...</p>
+    </div>
 
-        <!-- Grid de Eventos -->
-        <div class="row g-4" *ngIf="!isLoading">
-          <div class="col-lg-6 col-md-12" *ngFor="let evento of eventosFiltrados">
-            <div class="evento-card" [ngClass]="getTipoClase(evento.tipo)">
-              
-              <!-- Badge de Tipo -->
-              <div class="evento-badge">
+    <!-- Mensaje de Error -->
+    <div *ngIf="!isLoading && errorMessage" class="alert alert-warning text-center" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      {{ errorMessage }}
+      <br>
+      <small class="text-muted">Mostrando eventos de ejemplo</small>
+    </div>
+
+    <!-- Grid de Eventos -->
+    <div class="row justify-content-center" id="eventos-grid" *ngIf="!isLoading">
+      <div class="col-lg-10 col-md-10">
+        <div class="row">
+          <div 
+            class="col-lg-4 col-md-6 col-sm-12 mb-4"
+            *ngFor="let evento of eventosFiltrados; let i = index"
+          >
+            <div 
+              class="evento-card"
+              [ngClass]="'tipo-' + evento.tipo"
+            >
+              <!-- Badge de tipo -->
+              <div class="tipo-badge-header" [style.background-color]="getColorPorTipo(evento.tipo)">
                 <i class="bi" [ngClass]="getTipoIcono(evento.tipo)"></i>
-                <span>{{ evento.tipo | titlecase }}</span>
+                <span>{{getNombreTipo(evento.tipo)}}</span>
               </div>
-
-              <!-- Imagen del Evento -->
-              <!-- <div class="evento-imagen">
-                <img [src]="evento.imagen" [alt]="evento.titulo" 
-                     onerror="this.src='assets/img/cangrejo/cangrejo_icon.png'">
-                <div class="overlay"></div>
-              </div> -->
-
-              <!-- Contenido del Evento -->
+              
+              <!-- Contenido -->
               <div class="evento-content">
+                <h3 class="evento-titulo">{{evento.titulo}}</h3>
+                <p class="evento-descripcion">{{evento.descripcion}}</p>
                 
-                <!-- Título y Descripción -->
-                <div class="evento-header">
-                  <h3 class="evento-titulo">{{ evento.titulo }}</h3>
-                  <p class="evento-descripcion">{{ evento.descripcion }}</p>
-                </div>
-
-                <!-- Detalles del Evento -->
-                <div class="evento-detalles">
-                  <div class="detalle-item" *ngIf="evento.fecha">
+                <div class="evento-meta">
+                  <!-- Fecha -->
+                  <div class="meta-item" *ngIf="evento.fecha">
                     <i class="bi bi-calendar3"></i>
                     <span>{{ formatearFecha(evento.fecha) }}</span>
                   </div>
-                  <div class="detalle-item" *ngIf="evento.hora">
+                  <!-- Hora -->
+                  <div class="meta-item" *ngIf="evento.hora">
                     <i class="bi bi-clock"></i>
                     <span>{{ evento.hora }}</span>
                   </div>
-                  <div class="detalle-item" *ngIf="evento.ubicacion">
+                  <!-- Ubicación -->
+                  <div class="meta-item" *ngIf="evento.ubicacion">
                     <i class="bi bi-geo-alt"></i>
                     <span>{{ evento.ubicacion }}</span>
                   </div>
-                  <div class="detalle-item" *ngIf="evento.organizador">
+                  <!-- Organizador -->
+                  <div class="meta-item" *ngIf="evento.organizador">
                     <i class="bi bi-person-badge"></i>
                     <span>{{ evento.organizador }}</span>
                   </div>
@@ -138,13 +164,32 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Mensaje si no hay eventos -->
-        <div class="no-eventos" *ngIf="eventosFiltrados.length === 0">
-          <i class="bi bi-calendar-x"></i>
-          <h3>No hay eventos disponibles</h3>
-          <p>No se encontraron eventos para esta categoría. Revisa pronto para nuevas actividades.</p>
+          <!-- Sin resultados -->
+          <div class="col-12" *ngIf="eventosFiltrados.length === 0 && !isLoading">
+            <div class="no-results-simple text-center py-5">
+              <i class="bi bi-search"></i>
+              <h3>No se encontraron eventos</h3>
+              <p>Intenta con otros términos de búsqueda o cambia los filtros</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-10">
+            <div class="cta-box text-center">
+              <h2>¿Quieres Organizar un Evento?</h2>
+              <p>Si tienes ideas para eventos de conservación o actividades relacionadas con el cangrejo azul, compártelas con nosotros</p>
+              <button class="btn btn-primary btn-lg" routerLink="/comunidad">
+                <i class="bi bi-people"></i> Únete a la Comunidad
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

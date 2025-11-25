@@ -30,8 +30,19 @@ export class EventosComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string = '';
 
-  // Filtro de eventos
+  // Filtros
+  searchTerm: string = '';
   filtroActivo: string = 'todos';
+
+  // Eventos filtrados
+  eventosFiltrados: Evento[] = [];
+
+  // Categorías de filtro
+  categorias = [
+    { id: 'todos', nombre: 'Todos', icono: 'bi-grid-3x3-gap' },
+    { id: 'limpieza', nombre: 'Limpieza', icono: 'bi-trash3' },
+    { id: 'voluntariado', nombre: 'Voluntariado', icono: 'bi-hand-thumbs-up' }
+  ];
 
   constructor(private eventoService: CrearEventoService) { }
 
@@ -87,14 +98,23 @@ export class EventosComponent implements OnInit {
           
           console.log('Total eventos cargados:', this.eventos.length);
           this.isLoading = false;
+          this.aplicarFiltros();
         },
         error: (error) => {
           console.error('Error al cargar eventos:', error);
           this.isLoading = false;
           
+          // Ignorar errores de autorización (401) al cargar eventos
+          // Los eventos deben ser visibles para todos
           if (error.status === 401) {
-            this.errorMessage = 'No estás autenticado. Por favor inicia sesión.';
-          } else if (error.status === 0) {
+            // Si hay error 401, simplemente no mostrar eventos pero no mostrar error
+            this.eventos = [];
+            this.eventosFiltrados = [];
+            this.errorMessage = '';
+            return;
+          }
+          
+          if (error.status === 0) {
             this.errorMessage = 'No se pudo conectar con el servidor.';
           } else {
             this.errorMessage = 'Error al cargar eventos: ' + (error.error?.message || error.message || 'Error desconocido');
@@ -106,17 +126,47 @@ export class EventosComponent implements OnInit {
 
   
 
-  // Método para obtener eventos filtrados
-  get eventosFiltrados(): Evento[] {
-    if (this.filtroActivo === 'todos') {
-      return this.eventos;
+  // Método para aplicar filtros
+  aplicarFiltros(): void {
+    let eventos = [...this.eventos];
+
+    // Filtrar por tipo
+    if (this.filtroActivo !== 'todos') {
+      eventos = eventos.filter(e => e.tipo === this.filtroActivo);
     }
-    return this.eventos.filter(evento => evento.tipo === this.filtroActivo);
+
+    // Filtrar por término de búsqueda
+    if (this.searchTerm.trim()) {
+      const termino = this.searchTerm.toLowerCase().trim();
+      eventos = eventos.filter(e => 
+        e.titulo.toLowerCase().includes(termino) ||
+        e.descripcion.toLowerCase().includes(termino) ||
+        (e.ubicacion && e.ubicacion.toLowerCase().includes(termino)) ||
+        (e.organizador && e.organizador.toLowerCase().includes(termino)) ||
+        this.getNombreTipo(e.tipo).toLowerCase().includes(termino) ||
+        e.tipo.toLowerCase().includes(termino)
+      );
+    }
+
+    this.eventosFiltrados = eventos;
   }
 
   // Método para cambiar el filtro
   cambiarFiltro(tipo: string): void {
     this.filtroActivo = tipo;
+    this.aplicarFiltros();
+  }
+
+  // Método para manejar cambios en la búsqueda
+  onSearchChange(): void {
+    this.aplicarFiltros();
+  }
+
+  // Método para limpiar filtros
+  limpiarFiltros(): void {
+    this.searchTerm = '';
+    this.filtroActivo = 'todos';
+    this.aplicarFiltros();
   }
 
   // Método para unirse a un evento
@@ -171,6 +221,36 @@ export class EventosComponent implements OnInit {
       'voluntariado': 'bi-hand-thumbs-up'
     };
     return iconos[tipo] || 'bi-calendar-event';
+  }
+
+  // Obtener color según el tipo de evento
+  getColorPorTipo(tipo: string): string {
+    const colores: { [key: string]: string } = {
+      'limpieza': '#11998e',
+      'monitoreo': '#4568dc',
+      'educativo': '#f093fb',
+      'voluntariado': '#fa709a'
+    };
+    return colores[tipo] || '#95a5a6';
+  }
+
+  // Obtener nombre del tipo de evento
+  getNombreTipo(tipo: string): string {
+    const nombres: { [key: string]: string } = {
+      'limpieza': 'Limpieza',
+      'monitoreo': 'Monitoreo',
+      'educativo': 'Educativo',
+      'voluntariado': 'Voluntariado'
+    };
+    return nombres[tipo] || 'Evento';
+  }
+
+  // Contar eventos por tipo
+  contarPorTipo(tipo: string): number {
+    if (tipo === 'todos') {
+      return this.eventos.length;
+    }
+    return this.eventos.filter(e => e.tipo === tipo).length;
   }
 
   // Formatear fecha

@@ -109,6 +109,12 @@ export class ComunidadComponent implements OnInit {
       }
     });
     this.municipiosUnicos = Array.from(municipios).sort();
+    
+    // Preseleccionar "Alvarado" si está disponible
+    if (this.municipiosUnicos.includes('Alvarado') && !this.municipioFiltro) {
+      this.municipioFiltro = 'Alvarado';
+      this.filtrarObservaciones();
+    }
   }
 
   filtrarObservaciones(): void {

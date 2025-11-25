@@ -46,17 +46,18 @@ export class CrearEventoService {
     return this.http.post(url, userData, { headers });
   }
 
-  // Método para obtener todos los eventos
+  // Método para obtener todos los eventos (público, no requiere autenticación)
   getEventos(): Observable<any> {
     const url = `${this.apiUrl}/eventos/`;
     
-    // Obtener el header de autorización
+    // No se requiere autenticación para ver eventos
+    // Si hay token, se envía opcionalmente, pero no es requerido
     const authHeader = this.getAuthorizationHeader();
     
-    // Headers con autorización
-    const headers = new HttpHeaders({
-      'Authorization': authHeader || ''
-    });
+    let headers = new HttpHeaders();
+    if (authHeader) {
+      headers = headers.set('Authorization', authHeader);
+    }
 
     return this.http.get(url, { headers });
   }
