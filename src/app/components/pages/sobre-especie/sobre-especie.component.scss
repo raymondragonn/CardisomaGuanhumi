@@ -28,7 +28,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(13, 71, 161, 0.6);
+    background: rgba(199, 237, 253, 0.6);
     z-index: 0;
   }
   
@@ -38,6 +38,36 @@
 
     @media (max-width: 576px) {
       padding: 0 15px;
+    }
+  }
+
+  // Estilos de texto globales (fuente Lato para todos los textos excepto títulos)
+  p:not(.section-title p):not(.subtitle),
+  span:not(.title):not(.subtitle),
+  li,
+  .text-content,
+  .description,
+  .descripcion,
+  .ecologia-card p,
+  .comparacion-item p,
+  .caracteristica-card p,
+  .etapa-descripcion,
+  .conservacion-descripcion,
+  .conservacion-valor,
+  .papel-ecologico-list li {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.8;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 0.95rem;
+      line-height: 1.5;
     }
   }
 
@@ -127,7 +157,7 @@
         color: #ffffff;
 
         .marker-dot {
-          background: #64b5f6;
+          background: rgb(199, 237, 253);
           transform: scale(1.4);
           border: none;
           width: 18px;
@@ -164,7 +194,7 @@
         transition: all 0.3s ease;
         position: absolute;
         left: 30px;
-        background: rgba(13, 71, 161, 0.9);
+        background: rgba(199, 237, 253, 0.9);
         padding: 4px 10px;
         border-radius: 4px;
         backdrop-filter: blur(10px);
@@ -239,7 +269,7 @@
 
     i {
       margin-right: 10px;
-      color: #64b5f6;
+      color: rgb(12, 74, 110);
     }
 
     @media (max-width: 992px) {
@@ -271,7 +301,7 @@
 
     i {
       margin-right: 10px;
-      color: #64b5f6;
+      color: rgb(12, 74, 110);
     }
 
     @media (max-width: 768px) {
@@ -359,35 +389,44 @@
     }
 
     .lead {
-      font-size: 1.2rem;
+      font-family: 'Lato', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 300;
       line-height: 1.8;
       color: #333;
       margin-bottom: 1rem;
 
       @media (max-width: 768px) {
-        font-size: 1.1rem;
+        font-size: 1rem;
         line-height: 1.6;
       }
 
       @media (max-width: 576px) {
-        font-size: 1rem;
+        font-size: 0.95rem;
         line-height: 1.5;
       }
     }
 
     p {
-      font-size: 1rem;
-      line-height: 1.6;
+      font-family: 'Lato', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.8;
       color: #333;
 
+      @media (max-width: 768px) {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
       @media (max-width: 576px) {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         line-height: 1.5;
       }
     }
 
     strong {
-      color: #1976d2;
+      color: rgb(12, 74, 110);
     }
 
     .hero-image-wrapper {
@@ -436,7 +475,7 @@
     &.macho {
       .comparacion-header {
         h3 {
-          color: #1976d2;
+          color: rgb(12, 74, 110);
         }
       }
     }
@@ -544,7 +583,7 @@
 
           i {
           font-size: 1.1rem;
-            color: #1976d2;
+            color: rgb(12, 74, 110);
           flex-shrink: 0;
 
           @media (max-width: 576px) {
@@ -635,7 +674,7 @@
 
       i {
         margin-right: 0.5rem;
-        color: #64b5f6;
+        color: rgb(12, 74, 110);
       }
     }
 
@@ -691,7 +730,7 @@
     .caracteristica-icon {
       width: 80px;
       height: 80px;
-      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+      background: rgb(199, 237, 253);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -700,7 +739,7 @@
 
       i {
         font-size: 2.5rem;
-        color: #ffffff;
+        color: #333;
       }
     }
 
@@ -722,12 +761,21 @@
     }
 
     p {
-      font-size: 1rem;
+      font-family: 'Lato', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.8;
       color: #555;
       margin: 0;
 
+      @media (max-width: 768px) {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
       @media (max-width: 576px) {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
         line-height: 1.5;
       }
     }
@@ -847,33 +895,33 @@
       }
 
       &:hover {
-        background: rgba(25, 118, 210, 0.1);
-        border-color: rgba(25, 118, 210, 0.3);
+        background: rgba(199, 237, 253, 0.1);
+        border-color: rgba(199, 237, 253, 0.3);
         transform: translateY(-5px);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
       }
 
       &.activa {
-        background: rgba(25, 118, 210, 0.15);
-        border-color: #1976d2;
+        background: rgba(199, 237, 253, 0.15);
+        border-color: rgb(12, 74, 110);
         border-width: 2px;
-        box-shadow: 0 4px 20px rgba(25, 118, 210, 0.4);
+        box-shadow: 0 4px 20px rgba(199, 237, 253, 0.4);
         transform: translateY(-5px);
 
         i {
-          color: #1976d2;
+          color: rgb(12, 74, 110);
           transform: scale(1.1);
         }
 
         span {
-          color: #1976d2;
+          color: rgb(12, 74, 110);
           font-weight: 700;
         }
       }
 
       i {
         font-size: 1.5rem;
-        color: #1976d2;
+        color: rgb(12, 74, 110);
         transition: all 0.3s ease;
 
         @media (max-width: 768px) {
@@ -930,8 +978,8 @@
     }
 
     &.sin-seleccion {
-      background: rgba(25, 118, 210, 0.05);
-      border: 2px dashed rgba(25, 118, 210, 0.3);
+      background: rgba(199, 237, 253, 0.05);
+      border: 2px dashed rgba(199, 237, 253, 0.3);
     }
   }
 
@@ -960,7 +1008,7 @@
 
       i {
         font-size: 2.5rem;
-        color: #1976d2;
+        color: rgb(12, 74, 110);
       }
 
       h3 {
@@ -1010,11 +1058,11 @@
           font-size: 0.95rem;
           color: #666;
           padding: 0.5rem 1rem;
-          background: rgba(25, 118, 210, 0.1);
+          background: rgba(199, 237, 253, 0.1);
           border-radius: 8px;
 
           i {
-            color: #1976d2;
+            color: rgb(12, 74, 110);
             font-size: 1.1rem;
           }
         }
@@ -1107,7 +1155,7 @@
           transform: translateY(-50%);
           width: 70px;
           height: 70px;
-          background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+          background: rgb(199, 237, 253);
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -1120,7 +1168,7 @@
 
           i {
             font-size: 2rem;
-            color: #ffffff;
+            color: #333;
           }
         }
 
@@ -1134,8 +1182,8 @@
 
           .timeline-duracion {
             display: inline-block;
-            background: #1976d2;
-            color: #ffffff;
+            background: rgb(199, 237, 253);
+            color: #333;
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.9rem;
@@ -1179,7 +1227,7 @@
       i {
         font-size: 2.5rem;
         margin-bottom: 1rem;
-        color: #1976d2;
+        color: rgb(12, 74, 110);
       }
 
       h4 {
@@ -1192,7 +1240,7 @@
       .conservacion-valor {
         font-size: 1.3rem;
         font-weight: 700;
-        color: #1976d2;
+        color: rgb(12, 74, 110);
         margin: 0;
       }
 
@@ -1281,10 +1329,22 @@
     }
 
     p {
-      font-size: 1rem;
+      font-family: 'Lato', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.8;
       color: #555;
       margin: 0;
-      line-height: 1.6;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 576px) {
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
     }
 
     .papel-ecologico-list {
@@ -1293,18 +1353,30 @@
       margin: 1rem 0 0 0;
 
       li {
-        font-size: 1rem;
-        color: #555;
+        font-family: 'Lato', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 300;
         line-height: 1.8;
+        color: #555;
         margin-bottom: 0.8rem;
         padding-left: 1.5rem;
+
+        @media (max-width: 768px) {
+          font-size: 1rem;
+          line-height: 1.6;
+        }
+
+        @media (max-width: 576px) {
+          font-size: 0.95rem;
+          line-height: 1.5;
+        }
         position: relative;
 
         &::before {
           content: '✓';
           position: absolute;
           left: 0;
-          color: #1976d2;
+          color: rgb(12, 74, 110);
           font-weight: bold;
           font-size: 1.2rem;
         }
@@ -1350,7 +1422,7 @@
 
       i {
         font-size: 2rem;
-        color: #1976d2;
+        color: rgb(12, 74, 110);
         flex-shrink: 0;
         margin-top: 0.2rem;
       }
@@ -1366,7 +1438,7 @@
 
   // Call to Action
   .cta-box {
-    background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+    background: rgb(199, 237, 253);
     padding: 3rem 2rem;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -1384,7 +1456,7 @@
     h2 {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #ffffff;
+      color: #333;
       margin-bottom: 1rem;
 
       @media (max-width: 992px) {
@@ -1403,7 +1475,7 @@
 
     p {
       font-size: 1.2rem;
-      color: rgba(255, 255, 255, 0.9);
+      color: #555;
       margin-bottom: 2rem;
 
       @media (max-width: 768px) {
@@ -1419,7 +1491,7 @@
 
     .btn-primary {
       background: #ffffff;
-      color: #0d47a1;
+      color: rgb(12, 74, 110);
       border: none;
       padding: 1rem 2.5rem;
       font-size: 1.1rem;

@@ -4,24 +4,63 @@
     <div class="row">
       <div class="col-12">
         <div class="section-header text-center mb-5">
-          <h1 class="title">Comunidad de Observadores</h1>
-          <p class="subtitle">Descubre las observaciones compartidas por nuestra comunidad</p>
+          <h1 class="title">Observaciones de Cardisoma guanhumi</h1>
+          <p class="subtitle">Datos de iNaturalist México - CONABIO (Veracruz)</p>
         </div>
       </div>
     </div>
 
-    <!-- CTA Box para registrar observación -->
-    <div class="row justify-content-center mb-5" *ngIf="!cargando && !error">
+    <!-- Estadísticas -->
+    <div class="row justify-content-center mb-4" *ngIf="estadisticas">
       <div class="col-lg-10 col-md-12">
-        <div class="cta-box text-center">
-          <div class="cta-icon">
+        <div class="stats-box">
+          <div class="stat-item">
             <i class="fas fa-binoculars"></i>
+            <span class="stat-number">{{ estadisticas.total_observaciones }}</span>
+            <span class="stat-label">Observaciones totales</span>
           </div>
-          <h2>Comparte tu Observación</h2>
-          <p>Ayuda a la comunidad científica registrando tus avistamientos del cangrejo azul</p>
-          <button class="btn btn-primary btn-lg" (click)="irAFormulario()">
-            <i class="fas fa-plus-circle"></i> Registrar Observación
-          </button>
+          <div class="stat-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span class="stat-number">{{ municipiosUnicos.length }}</span>
+            <span class="stat-label">Municipios</span>
+          </div>
+          <div class="stat-item" *ngIf="estadisticas.rango_fechas.fecha_minima">
+            <i class="fas fa-calendar"></i>
+            <span class="stat-number">{{ estadisticas.rango_fechas.fecha_minima?.substring(0,4) }} - {{ estadisticas.rango_fechas.fecha_maxima?.substring(0,4) }}</span>
+            <span class="stat-label">Período</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row justify-content-center mb-4" *ngIf="!cargando && !error && (municipiosUnicos.length > 0 || aniosUnicos.length > 0)">
+      <div class="col-lg-10 col-md-12">
+        <div class="filtros-container">
+          <!-- Filtro por municipio -->
+          <div class="filtro-box" *ngIf="municipiosUnicos.length > 0">
+            <label for="municipio-select">Filtrar por municipio:</label>
+            <select id="municipio-select" [(ngModel)]="municipioFiltro" (change)="filtrarPorMunicipio()" class="form-select">
+              <option value="">Todos los municipios</option>
+              <option *ngFor="let municipio of municipiosUnicos" [value]="municipio">{{ municipio }}</option>
+            </select>
+          </div>
+
+          <!-- Filtro por año -->
+          <div class="filtro-box" *ngIf="aniosUnicos.length > 0">
+            <label for="anio-select">Filtrar por año:</label>
+            <select id="anio-select" [(ngModel)]="anioFiltro" (change)="filtrarPorAnio()" class="form-select">
+              <option value="">Todos los años</option>
+              <option *ngFor="let anio of aniosUnicos" [value]="anio">{{ anio }}</option>
+            </select>
+          </div>
+
+          <!-- Botón limpiar filtros -->
+          <div class="filtro-box filtro-actions" *ngIf="municipioFiltro || anioFiltro">
+            <button class="btn-limpiar-filtros" (click)="limpiarFiltros()">
+              <i class="fas fa-times"></i> Limpiar filtros
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -35,7 +74,7 @@
               <span class="visually-hidden">Cargando...</span>
             </div>
           </div>
-          <p class="mt-3">Cargando observaciones de la comunidad...</p>
+          <p class="mt-3">Cargando observaciones...</p>
         </div>
       </div>
     </div>
@@ -49,6 +88,9 @@
           </div>
           <h3>¡Ups! Algo salió mal</h3>
           <p>{{ error }}</p>
+          <button class="btn btn-primary mt-3" (click)="cargarObservaciones()">
+            <i class="fas fa-redo"></i> Reintentar
+          </button>
         </div>
       </div>
     </div>
@@ -60,8 +102,8 @@
           <div class="empty-icon">
             <i class="fas fa-inbox"></i>
           </div>
-          <h3>Aún no hay observaciones</h3>
-          <p>¡Sé el primero en compartir tu avistamiento del cangrejo azul!</p>
+          <h3>No hay observaciones</h3>
+          <p>No se encontraron observaciones con los filtros seleccionados.</p>
         </div>
       </div>
     </div>
@@ -72,10 +114,10 @@
       <div class="row justify-content-center mb-4">
         <div class="col-lg-10 col-md-12">
           <h2 class="section-title">
-            <i class="fas fa-eye"></i> Observaciones de la Comunidad
+            <i class="fas fa-leaf"></i> Registros de iNaturalist
           </h2>
           <p class="section-description">
-            {{ observaciones.length }} {{ observaciones.length === 1 ? 'observación registrada' : 'observaciones registradas' }}
+            Mostrando {{ observaciones.length }} observaciones
           </p>
         </div>
       </div>
@@ -89,16 +131,16 @@
                 <!-- Icono decorativo superior -->
                 <div class="card-icon-wrapper">
                   <div class="card-icon">
-                    <i class="fas fa-crab"></i>
+                    <i class="fas fa-leaf"></i>
                   </div>
                 </div>
 
                 <!-- Información del observador -->
                 <div class="card-header">
-                  <h3 class="card-nombre">{{ observacion.nombre_observador || 'Anónimo' }}</h3>
+                  <h3 class="card-nombre">{{ observacion.colector || 'Observador anónimo' }}</h3>
                   <p class="card-comunidad">
                     <i class="fas fa-map-marker-alt"></i>
-                    {{ observacion.comunidad || 'Ubicación no especificada' }}
+                    {{ observacion.municipio || 'Sin ubicación' }}
                   </p>
                 </div>
                 
@@ -106,29 +148,25 @@
                 <div class="card-body">
                   <div class="card-stat">
                     <i class="fas fa-calendar-alt"></i>
-                    <span>{{ formatearFecha(observacion.fecha_observacion) }}</span>
+                    <span>{{ formatearFecha(observacion.fecha_colecta) }}</span>
                   </div>
                   <div class="card-stat">
-                    <i class="fas fa-clock"></i>
-                    <span>{{ formatearHora(observacion.hora_observacion) }}</span>
+                    <i class="fas fa-leaf"></i>
+                    <span>{{ observacion.especie_valida_busqueda }}</span>
                   </div>
-                  <div class="card-stat" *ngIf="observacion.cantidad_cangrejos">
-                    <i class="fas fa-hashtag"></i>
-                    <span>{{ observacion.cantidad_cangrejos }} cangrejos</span>
-                  </div>
-                  <div class="card-stat" *ngIf="observacion.tipo_habitat">
-                    <i class="fas fa-tree"></i>
-                    <span>{{ observacion.tipo_habitat }}</span>
+                  <div class="card-stat" *ngIf="observacion.localidad">
+                    <i class="fas fa-location-arrow"></i>
+                    <span class="truncate">{{ observacion.localidad | slice:0:40 }}{{ observacion.localidad.length > 40 ? '...' : '' }}</span>
                   </div>
                 </div>
 
                 <!-- Tags -->
-                <div class="card-tags" *ngIf="observacion.sexo_cangrejos?.length || observacion.comportamientos?.length">
-                  <span class="tag" *ngFor="let sexo of observacion.sexo_cangrejos?.slice(0, 2)">
-                    {{ sexo }}
+                <div class="card-tags">
+                  <span class="tag tag-source">
+                    <i class="fas fa-globe"></i> iNaturalist
                   </span>
-                  <span class="tag tag-behavior" *ngFor="let comportamiento of observacion.comportamientos?.slice(0, 1)">
-                    {{ comportamiento }}
+                  <span class="tag tag-location" *ngIf="observacion.estado">
+                    {{ observacion.estado | slice:0:15 }}
                   </span>
                 </div>
 
@@ -151,8 +189,8 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2 class="modal-title">
-          <i class="fas fa-eye"></i>
-          Detalles de la Observación
+          <i class="fas fa-leaf"></i>
+          {{ observacionSeleccionada.especie_valida_busqueda }}
         </h2>
         <button class="btn-close-modal" (click)="cerrarModal()">
           <i class="fas fa-times"></i>
@@ -161,144 +199,100 @@
 
       <div class="modal-body">
         <div class="detalle-section" *ngIf="observacionSeleccionada">
-          <!-- Información del Observador -->
+          <!-- Ubicación -->
           <div class="detalle-group">
             <h3 class="detalle-group-title">
-              <i class="fas fa-user"></i>
-              Información del Observador
+              <i class="fas fa-map-marker-alt"></i>
+              Ubicación
             </h3>
             <div class="detalle-grid">
               <div class="detalle-item">
-                <label>Nombre:</label>
-                <span>{{ observacionSeleccionada.nombre_observador || 'No especificado' }}</span>
-              </div>
-              <div class="detalle-item" *ngIf="observacionSeleccionada.edad">
-                <label>Edad:</label>
-                <span>{{ observacionSeleccionada.edad }} años</span>
+                <label>Localidad:</label>
+                <span>{{ observacionSeleccionada.localidad || 'No especificada' }}</span>
               </div>
               <div class="detalle-item">
-                <label>Comunidad:</label>
-                <span>{{ observacionSeleccionada.comunidad || 'No especificada' }}</span>
+                <label>Municipio:</label>
+                <span>{{ observacionSeleccionada.municipio || 'No especificado' }}</span>
               </div>
               <div class="detalle-item">
-                <label>Frecuencia de observación:</label>
-                <span>{{ observacionSeleccionada.frecuencia_observacion || 'No especificada' }}</span>
+                <label>Estado:</label>
+                <span>{{ observacionSeleccionada.estado || 'No especificado' }}</span>
+              </div>
+              <div class="detalle-item">
+                <label>País:</label>
+                <span>{{ observacionSeleccionada.pais || 'México' }}</span>
+              </div>
+              <div class="detalle-item">
+                <label>Coordenadas:</label>
+                <span>{{ observacionSeleccionada.latitud }}, {{ observacionSeleccionada.longitud }}</span>
               </div>
             </div>
           </div>
 
-          <!-- Detalles de la Observación -->
+          <!-- Información de la observación -->
           <div class="detalle-group">
             <h3 class="detalle-group-title">
               <i class="fas fa-binoculars"></i>
-              Detalles de la Observación
+              Información de la Observación
             </h3>
             <div class="detalle-grid">
               <div class="detalle-item">
-                <label>Fecha:</label>
-                <span>{{ formatearFecha(observacionSeleccionada.fecha_observacion) }}</span>
+                <label>Fecha de colecta:</label>
+                <span>{{ formatearFecha(observacionSeleccionada.fecha_colecta) }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.colector">
+                <label>Observador:</label>
+                <span>{{ observacionSeleccionada.colector }}</span>
               </div>
               <div class="detalle-item">
-                <label>Hora:</label>
-                <span>{{ formatearHora(observacionSeleccionada.hora_observacion) }}</span>
+                <label>Colección:</label>
+                <span>{{ observacionSeleccionada.coleccion || 'No especificada' }}</span>
               </div>
               <div class="detalle-item">
-                <label>Lugar:</label>
-                <span>{{ observacionSeleccionada.lugar_observacion || 'No especificado' }}</span>
+                <label>Proyecto:</label>
+                <span>{{ observacionSeleccionada.proyecto || 'No especificado' }}</span>
               </div>
               <div class="detalle-item">
-                <label>Tipo de hábitat:</label>
-                <span>
-                  {{ observacionSeleccionada.tipo_habitat || 'No especificado' }}
-                  <span *ngIf="observacionSeleccionada.tipo_habitat_otro">
-                    - {{ observacionSeleccionada.tipo_habitat_otro }}
-                  </span>
-                </span>
-              </div>
-              <div class="detalle-item">
-                <label>Cantidad de cangrejos:</label>
-                <span>{{ observacionSeleccionada.cantidad_cangrejos || 'No especificada' }}</span>
-              </div>
-              <div class="detalle-item">
-                <label>Tamaño de los cangrejos:</label>
-                <span>{{ observacionSeleccionada.tamano_cangrejos || 'No especificado' }}</span>
+                <label>Institución:</label>
+                <span>{{ observacionSeleccionada.institucion || 'No especificada' }}</span>
               </div>
             </div>
           </div>
 
-          <!-- Identificación -->
-          <div class="detalle-group" *ngIf="observacionSeleccionada.sexo_cangrejos && observacionSeleccionada.sexo_cangrejos.length > 0">
-            <h3 class="detalle-group-title">
-              <i class="fas fa-venus-mars"></i>
-              Identificación
-            </h3>
-            <div class="detalle-item">
-              <label>Sexo de los cangrejos:</label>
-              <div class="tags-list">
-                <span class="tag" *ngFor="let sexo of observacionSeleccionada.sexo_cangrejos">
-                  {{ sexo }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Comportamientos -->
-          <div class="detalle-group" *ngIf="observacionSeleccionada.comportamientos && observacionSeleccionada.comportamientos.length > 0">
-            <h3 class="detalle-group-title">
-              <i class="fas fa-running"></i>
-              Comportamientos Observados
-            </h3>
-            <div class="detalle-item">
-              <label>Actividades:</label>
-              <div class="tags-list">
-                <span class="tag" *ngFor="let comportamiento of observacionSeleccionada.comportamientos">
-                  {{ comportamiento }}
-                </span>
-              </div>
-            </div>
-            <div class="detalle-item" *ngIf="observacionSeleccionada.comportamiento_otro">
-              <label>Otro comportamiento:</label>
-              <span>{{ observacionSeleccionada.comportamiento_otro }}</span>
-            </div>
-            <div class="detalle-item">
-              <label>Mortalidad por atropellamiento:</label>
-              <span>{{ observacionSeleccionada.mortalidad_atropellamiento || 'No especificado' }}</span>
-            </div>
-          </div>
-
-          <!-- Percepción Local -->
+          <!-- Enlaces -->
           <div class="detalle-group">
             <h3 class="detalle-group-title">
-              <i class="fas fa-chart-line"></i>
-              Percepción Local
+              <i class="fas fa-link"></i>
+              Enlaces
+            </h3>
+            <div class="enlaces-container">
+              <button 
+                class="btn-enlace" 
+                *ngIf="observacionSeleccionada.url_origen"
+                (click)="abrirEnlaceOriginal(observacionSeleccionada.url_origen)">
+                <i class="fas fa-external-link-alt"></i>
+                Ver en iNaturalist
+              </button>
+              <button 
+                class="btn-enlace btn-enlace-secondary" 
+                *ngIf="observacionSeleccionada.url_ejemplar"
+                (click)="abrirEnlaceOriginal(observacionSeleccionada.url_ejemplar)">
+                <i class="fas fa-database"></i>
+                Ver en SNIB
+              </button>
+            </div>
+          </div>
+
+          <!-- ID del ejemplar -->
+          <div class="detalle-group">
+            <h3 class="detalle-group-title">
+              <i class="fas fa-fingerprint"></i>
+              Identificadores
             </h3>
             <div class="detalle-grid">
-              <div class="detalle-item">
-                <label>Cambio en la población (vs. hace 5 años):</label>
-                <span>{{ observacionSeleccionada.cambio_poblacion || 'No especificado' }}</span>
-              </div>
-              <div class="detalle-item" *ngIf="observacionSeleccionada.amenazas_principales && observacionSeleccionada.amenazas_principales.length > 0">
-                <label>Principales amenazas:</label>
-                <div class="tags-list">
-                  <span class="tag tag-warning" *ngFor="let amenaza of observacionSeleccionada.amenazas_principales">
-                    {{ amenaza }}
-                  </span>
-                </div>
-              </div>
-              <div class="detalle-item" *ngIf="observacionSeleccionada.amenaza_otra">
-                <label>Otra amenaza:</label>
-                <span>{{ observacionSeleccionada.amenaza_otra }}</span>
-              </div>
-              <div class="detalle-item">
-                <label>Importancia de conservación:</label>
-                <div class="importance-display">
-                  <span class="importance-value">{{ observacionSeleccionada.importancia_conservacion || 'N/A' }}</span>
-                  <span class="importance-label">/ 5</span>
-                </div>
-              </div>
               <div class="detalle-item detalle-item-full">
-                <label>Acciones de protección sugeridas:</label>
-                <p class="detalle-texto">{{ observacionSeleccionada.acciones_proteccion || 'No especificado' }}</p>
+                <label>ID Ejemplar:</label>
+                <span class="id-code">{{ observacionSeleccionada.id_ejemplar }}</span>
               </div>
             </div>
           </div>

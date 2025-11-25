@@ -2,30 +2,35 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CrearEventoService } from 'src/app/services/crear-evento.service';
 
-interface Observacion {
-  id?: number;
-  nombre_observador?: string | null;
-  edad?: number | null;
-  comunidad?: string;
-  frecuencia_observacion?: string;
-  fecha_observacion?: string;
-  hora_observacion?: string;
-  lugar_observacion?: string;
-  tipo_habitat?: string;
-  tipo_habitat_otro?: string | null;
-  cantidad_cangrejos?: string;
-  sexo_cangrejos?: string[];
-  tamano_cangrejos?: string;
-  comportamientos?: string[];
-  comportamiento_otro?: string | null;
-  mortalidad_atropellamiento?: string;
-  cambio_poblacion?: string;
-  amenazas_principales?: string[];
-  amenaza_otra?: string | null;
-  importancia_conservacion?: number;
-  acciones_proteccion?: string;
-  archivo?: string | null;
-  fecha_creacion?: string;
+interface ObservacionNaturalista {
+  id: number;
+  id_ejemplar: string;
+  especie_valida_busqueda: string;
+  latitud: number;
+  longitud: number;
+  localidad: string;
+  municipio: string;
+  estado: string;
+  pais: string;
+  fecha_colecta: string;
+  colector: string;
+  coleccion: string;
+  institucion: string;
+  proyecto: string;
+  url_origen: string;
+  url_ejemplar: string;
+  created_at: string;
+}
+
+interface Estadisticas {
+  total_observaciones: number;
+  por_estado: { [key: string]: number };
+  por_municipio: { [key: string]: number };
+  por_anio: { [key: string]: number };
+  rango_fechas: {
+    fecha_minima: string;
+    fecha_maxima: string;
+  };
 }
 
 @Component({
@@ -34,16 +39,21 @@ interface Observacion {
   styleUrls: ['./comunidad.component.scss']
 })
 export class ComunidadComponent implements OnInit {
-  observaciones: Observacion[] = [];
-  observacionSeleccionada: Observacion | null = null;
+  observaciones: ObservacionNaturalista[] = [];
+  observacionSeleccionada: ObservacionNaturalista | null = null;
   mostrarModal: boolean = false;
   cargando: boolean = false;
   error: string | null = null;
 
-  // Estadísticas comunitarias
+  // Estadísticas
+  estadisticas: Estadisticas | null = null;
   totalObservaciones: number = 0;
-  objetivoObservaciones: number = 100;
-  porcentajeCompletado: number = 0;
+  
+  // Filtros
+  municipioFiltro: string = '';
+  municipiosUnicos: string[] = [];
+  anioFiltro: string = '';
+  aniosUnicos: number[] = [];
 
   constructor(
     private crearEventoService: CrearEventoService,
@@ -51,214 +61,98 @@ export class ComunidadComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Usar datos de ejemplo para demostración
-    // Cambiar a this.cargarObservaciones() cuando el backend esté disponible
-    this.cargarObservacionesEjemplo();
-    // this.cargarObservaciones();
+    this.cargarObservaciones();
+    this.cargarEstadisticas();
   }
 
   cargarObservaciones(): void {
     this.cargando = true;
     this.error = null;
 
-    this.crearEventoService.getObservaciones().subscribe({
+    this.crearEventoService.getObservacionesNaturalista({ limit: 100 }).subscribe({
       next: (response) => {
-        // Si la respuesta es un array, usarlo directamente
-        // Si es un objeto con una propiedad, extraerla
-        if (Array.isArray(response)) {
           this.observaciones = response;
-        } else if (response.results) {
-          this.observaciones = response.results;
-        } else if (response.data) {
-          this.observaciones = response.data;
-        } else {
-          // Si no hay datos, usar ejemplos
-          this.observaciones = this.getObservacionesEjemplo();
-        }
-        this.calcularEstadisticas();
+        this.extraerMunicipios();
         this.cargando = false;
       },
       error: (error) => {
         console.error('Error al cargar observaciones:', error);
-        // En caso de error, usar datos de ejemplo para demostración
-        this.observaciones = this.getObservacionesEjemplo();
-        this.calcularEstadisticas();
+        this.error = 'No se pudieron cargar las observaciones. Verifica que el servidor esté activo.';
         this.cargando = false;
-        
-        // Si el error es 401, el usuario no está autenticado
-        if (error.status === 401) {
-          this.error = 'Debe iniciar sesión para ver las observaciones.';
-        }
       }
     });
   }
 
-  cargarObservacionesEjemplo(): void {
-    this.cargando = true;
-    // Simular carga asíncrona
-    setTimeout(() => {
-      this.observaciones = this.getObservacionesEjemplo();
-      this.calcularEstadisticas();
-      this.cargando = false;
-    }, 500);
-  }
-
-  getObservacionesEjemplo(): Observacion[] {
-    return [
-      {
-        id: 1,
-        nombre_observador: 'María González',
-        edad: 35,
-        comunidad: 'Playa del Carmen',
-        frecuencia_observacion: 'Frecuentemente (varias veces al mes)',
-        fecha_observacion: '2024-01-15',
-        hora_observacion: '18:30:00',
-        lugar_observacion: 'Carretera Cancún-Tulum, km 45',
-        tipo_habitat: 'Carretera',
-        tipo_habitat_otro: null,
-        cantidad_cangrejos: '21–50',
-        sexo_cangrejos: ['Machos', 'Hembras', 'Hembras con huevos (ovígeras)'],
-        tamano_cangrejos: 'Medianos (5–10 cm)',
-        comportamientos: ['Migrando (movimiento en grupo hacia agua)', 'Cruzando carretera'],
-        comportamiento_otro: null,
-        mortalidad_atropellamiento: 'Sí, pocos (1–10)',
-        cambio_poblacion: 'Menor',
-        amenazas_principales: ['Carreteras y atropellamiento', 'Pérdida de manglar/hábitat'],
-        amenaza_otra: null,
-        importancia_conservacion: 5,
-        acciones_proteccion: 'Es urgente construir pasos de fauna en las carreteras principales. También necesitamos proteger más áreas de manglar y crear corredores ecológicos que conecten los hábitats naturales.',
-        archivo: null,
-        fecha_creacion: '2024-01-15T20:00:00Z'
+  cargarEstadisticas(): void {
+    this.crearEventoService.getEstadisticasNaturalista().subscribe({
+      next: (response) => {
+        this.estadisticas = response;
+        this.totalObservaciones = response.total_observaciones;
+        // Extraer años de las estadísticas
+        if (response.por_anio) {
+          this.aniosUnicos = Object.keys(response.por_anio)
+            .map(key => parseInt(key))
+            .sort((a, b) => b - a); // Ordenar de más reciente a más antiguo
+        }
       },
-      {
-        id: 2,
-        nombre_observador: 'Carlos Ramírez',
-        edad: 42,
-        comunidad: 'Tulum',
-        frecuencia_observacion: 'A veces (cada temporada)',
-        fecha_observacion: '2024-01-20',
-        hora_observacion: '19:15:00',
-        lugar_observacion: 'Manglar de Sian Ka\'an',
-        tipo_habitat: 'Manglar',
-        tipo_habitat_otro: null,
-        cantidad_cangrejos: '6–20',
-        sexo_cangrejos: ['Machos', 'Hembras'],
-        tamano_cangrejos: 'Grandes (>10 cm)',
-        comportamientos: ['Alimentándose', 'Dentro o cerca de madrigueras'],
-        comportamiento_otro: null,
-        mortalidad_atropellamiento: 'No',
-        cambio_poblacion: 'Igual',
-        amenazas_principales: ['Pérdida de manglar/hábitat', 'Contaminación'],
-        amenaza_otra: null,
-        importancia_conservacion: 4,
-        acciones_proteccion: 'Debemos proteger los manglares existentes y evitar la construcción en estas zonas. También es importante educar a la comunidad sobre la importancia de no contaminar estos ecosistemas.',
-        archivo: null,
-        fecha_creacion: '2024-01-20T21:30:00Z'
-      },
-      {
-        id: 3,
-        nombre_observador: null,
-        edad: null,
-        comunidad: 'Cozumel',
-        frecuencia_observacion: 'Rara vez (1–2 veces al año)',
-        fecha_observacion: '2024-02-05',
-        hora_observacion: '20:00:00',
-        lugar_observacion: 'Playa San Martín',
-        tipo_habitat: 'Playa / costa',
-        tipo_habitat_otro: null,
-        cantidad_cangrejos: '1–5',
-        sexo_cangrejos: ['Hembras con huevos (ovígeras)'],
-        tamano_cangrejos: 'Mezcla de tamaños',
-        comportamientos: ['Migrando (movimiento en grupo hacia agua)'],
-        comportamiento_otro: null,
-        mortalidad_atropellamiento: 'No',
-        cambio_poblacion: 'Mucho menor',
-        amenazas_principales: ['Cambio climático (sequías, inundaciones)', 'Captura excesiva'],
-        amenaza_otra: 'Turismo masivo en playas de anidación',
-        importancia_conservacion: 5,
-        acciones_proteccion: 'Necesitamos regular el turismo en las playas durante la temporada de migración. También debemos implementar programas de monitoreo y protección de las áreas de anidación.',
-        archivo: null,
-        fecha_creacion: '2024-02-05T22:15:00Z'
-      },
-      {
-        id: 4,
-        nombre_observador: 'Ana Martínez',
-        edad: 28,
-        comunidad: 'Puerto Morelos',
-        frecuencia_observacion: 'Muy frecuentemente (casi todos los días)',
-        fecha_observacion: '2024-02-10',
-        hora_observacion: '17:45:00',
-        lugar_observacion: 'Zona urbana, colonia centro',
-        tipo_habitat: 'Zona urbana',
-        tipo_habitat_otro: null,
-        cantidad_cangrejos: 'Más de 50',
-        sexo_cangrejos: ['Machos', 'Hembras', 'Hembras con huevos (ovígeras)', 'No sé identificarlo'],
-        tamano_cangrejos: 'Mezcla de tamaños',
-        comportamientos: ['Cruzando carretera', 'Escondiéndose en vegetación'],
-        comportamiento_otro: 'Buscando refugio en jardines',
-        mortalidad_atropellamiento: 'Sí, muchos (>10)',
-        cambio_poblacion: 'Mayor',
-        amenazas_principales: ['Carreteras y atropellamiento', 'Pérdida de manglar/hábitat', 'Contaminación'],
-        amenaza_otra: null,
-        importancia_conservacion: 5,
-        acciones_proteccion: 'Urge implementar medidas de protección en las carreteras urbanas, como reductores de velocidad y señalización durante la temporada de migración. También debemos crear más espacios verdes que sirvan como refugio.',
-        archivo: null,
-        fecha_creacion: '2024-02-10T19:00:00Z'
-      },
-      {
-        id: 5,
-        nombre_observador: 'Roberto Sánchez',
-        edad: 55,
-        comunidad: 'Felipe Carrillo Puerto',
-        frecuencia_observacion: 'A veces (cada temporada)',
-        fecha_observacion: '2024-02-18',
-        hora_observacion: '18:20:00',
-        lugar_observacion: 'Humedal Laguna Chacmochuch',
-        tipo_habitat: 'Humedal / laguna',
-        tipo_habitat_otro: null,
-        cantidad_cangrejos: '6–20',
-        sexo_cangrejos: ['Machos', 'Hembras'],
-        tamano_cangrejos: 'Medianos (5–10 cm)',
-        comportamientos: ['Alimentándose', 'Dentro o cerca de madrigueras'],
-        comportamiento_otro: null,
-        mortalidad_atropellamiento: 'No',
-        cambio_poblacion: 'Menor',
-        amenazas_principales: ['Pérdida de manglar/hábitat', 'Cambio climático (sequías, inundaciones)'],
-        amenaza_otra: null,
-        importancia_conservacion: 4,
-        acciones_proteccion: 'Es fundamental proteger los humedales y evitar su desecación. Necesitamos programas de reforestación de manglar y control de la extracción de agua en la zona.',
-        archivo: null,
-        fecha_creacion: '2024-02-18T20:45:00Z'
-      },
-      {
-        id: 6,
-        nombre_observador: 'Laura Fernández',
-        edad: 31,
-        comunidad: 'Cancún',
-        frecuencia_observacion: 'Frecuentemente (varias veces al mes)',
-        fecha_observacion: '2024-02-25',
-        hora_observacion: '19:30:00',
-        lugar_observacion: 'Carretera 307, cerca del aeropuerto',
-        tipo_habitat: 'Carretera',
-        tipo_habitat_otro: null,
-        cantidad_cangrejos: '21–50',
-        sexo_cangrejos: ['Hembras con huevos (ovígeras)'],
-        tamano_cangrejos: 'Grandes (>10 cm)',
-        comportamientos: ['Migrando (movimiento en grupo hacia agua)', 'Cruzando carretera'],
-        comportamiento_otro: null,
-        mortalidad_atropellamiento: 'Sí, muchos (>10)',
-        cambio_poblacion: 'Menor',
-        amenazas_principales: ['Carreteras y atropellamiento', 'Pérdida de manglar/hábitat'],
-        amenaza_otra: null,
-        importancia_conservacion: 5,
-        acciones_proteccion: 'Necesitamos pasos de fauna urgentemente en esta carretera. También debemos crear barreras que dirijan a los cangrejos hacia los pasos seguros durante la migración.',
-        archivo: null,
-        fecha_creacion: '2024-02-25T21:00:00Z'
+      error: (error) => {
+        console.error('Error al cargar estadísticas:', error);
       }
-    ];
+    });
   }
 
-  verDetalle(observacion: Observacion): void {
+  extraerMunicipios(): void {
+    const municipios = new Set<string>();
+    this.observaciones.forEach(obs => {
+      if (obs.municipio) {
+        municipios.add(obs.municipio);
+      }
+    });
+    this.municipiosUnicos = Array.from(municipios).sort();
+  }
+
+  filtrarObservaciones(): void {
+    this.cargando = true;
+    
+    const params: any = { limit: 100 };
+    
+    if (this.municipioFiltro) {
+      params.municipio = this.municipioFiltro;
+    }
+    
+    if (this.anioFiltro) {
+      // Calcular fecha_inicio y fecha_fin para el año seleccionado
+      params.fecha_inicio = `${this.anioFiltro}-01-01`;
+      params.fecha_fin = `${this.anioFiltro}-12-31`;
+    }
+
+    this.crearEventoService.getObservacionesNaturalista(params).subscribe({
+      next: (response) => {
+        this.observaciones = response;
+        this.cargando = false;
+      },
+      error: (error) => {
+        console.error('Error al filtrar:', error);
+        this.cargando = false;
+      }
+    });
+  }
+
+  filtrarPorMunicipio(): void {
+    this.filtrarObservaciones();
+  }
+
+  filtrarPorAnio(): void {
+    this.filtrarObservaciones();
+  }
+
+  limpiarFiltros(): void {
+    this.municipioFiltro = '';
+    this.anioFiltro = '';
+    this.cargarObservaciones();
+  }
+
+  verDetalle(observacion: ObservacionNaturalista): void {
     this.observacionSeleccionada = observacion;
     this.mostrarModal = true;
   }
@@ -272,7 +166,7 @@ export class ComunidadComponent implements OnInit {
     if (!fecha) return 'Fecha no disponible';
     try {
       const date = new Date(fecha);
-      return date.toLocaleDateString('es-ES', {
+      return date.toLocaleDateString('es-MX', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -282,30 +176,13 @@ export class ComunidadComponent implements OnInit {
     }
   }
 
-  formatearHora(hora: string | undefined): string {
-    if (!hora) return 'Hora no disponible';
-    // Si la hora viene con segundos, removerlos
-    return hora.substring(0, 5);
+  abrirEnlaceOriginal(url: string): void {
+    if (url) {
+      window.open(url, '_blank');
+    }
   }
 
   irAFormulario(): void {
     this.router.navigate(['/formulario']);
-  }
-
-  solicitarTestimonio(): void {
-    // Redirigir a formulario o a una página específica de testimonio
-    // Por ahora redirige al formulario, pero puedes cambiar esto según tu necesidad
-    this.router.navigate(['/formulario']);
-  }
-
-  calcularEstadisticas(): void {
-    // Total de observaciones
-    this.totalObservaciones = this.observaciones.length;
-
-    // Calcular porcentaje completado (máximo 100%)
-    this.porcentajeCompletado = Math.min(
-      (this.totalObservaciones / this.objetivoObservaciones) * 100,
-      100
-    );
   }
 }

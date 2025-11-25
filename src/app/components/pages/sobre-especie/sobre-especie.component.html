@@ -77,13 +77,13 @@
       </div>
     </div>
 
-    <!-- 2. Características Físicas -->
-    <div id="caracteristicas-fisicas" class="row mb-5 section-anchor">
+    <!-- 3. Distribución y Hábitat -->
+    <div id="distribucion-habitat" class="row mb-5 section-anchor">
       <div class="col-12 mb-4">
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
             <h2 class="section-title">
-              <i class="bi bi-body-text"></i> Características Físicas
+              <i class="bi bi-geo-alt"></i> Distribución y Hábitat
             </h2>
           </div>
         </div>
@@ -91,46 +91,39 @@
       <div class="col-12 mb-4">
         <div class="row justify-content-center">
           <div class="col-lg-5 col-md-6 mb-4">
-            <div class="caracteristica-card">
-              <div class="caracteristica-icon">
-                <i class="bi bi-palette"></i>
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-globe"></i> Distribución</h3>
               </div>
-              <h3>Color</h3>
-              <p>{{caracteristicasFisicas.color}}</p>
+              <p>{{distribucionHabitat.distribucion}}</p>
             </div>
           </div>
           <div class="col-lg-5 col-md-6 mb-4">
-            <div class="caracteristica-card">
-              <div class="caracteristica-icon">
-                <i class="bi bi-rulers"></i>
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-tree"></i> Hábitat</h3>
               </div>
-              <h3>Tamaño</h3>
-              <p>{{caracteristicasFisicas.tamano}}</p>
-            </div>
-          </div>
-          <div class="col-lg-5 col-md-6 mb-4">
-            <div class="caracteristica-card">
-              <div class="caracteristica-icon">
-                <i class="bi bi-shield"></i>
-              </div>
-              <h3>Caparazón</h3>
-              <p>{{caracteristicasFisicas.caparazon}}</p>
-            </div>
-          </div>
-          <div class="col-lg-5 col-md-6 mb-4">
-            <div class="caracteristica-card">
-              <div class="caracteristica-icon">
-                <i class="bi bi-hand-index"></i>
-              </div>
-              <h3>Quelas (Pinzas)</h3>
-              <p>{{caracteristicasFisicas.quelas}}</p>
+              <p>{{distribucionHabitat.habitat}}</p>
+              <p class="mt-3"><strong>Altitud:</strong> {{distribucionHabitat.altitud}}</p>
+              <p><strong>Sustrato:</strong> {{distribucionHabitat.sustrato}}</p>
             </div>
           </div>
         </div>
       </div>
-
+    </div>
+    <!-- 2. Características Físicas -->
+    <div id="caracteristicas-fisicas" class="row mb-5 section-anchor">
       <!-- 2.1. Diferencias entre Machos y Hembras -->
       <div class="col-12 mb-4">
+        <div class="col-12 mb-4">
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12">
+              <h2 class="section-title">
+                <i class="bi bi-body-text"></i> Características Físicas
+              </h2>
+            </div>
+          </div>
+        </div>
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
             <h3 class="subsection-title">
@@ -211,40 +204,6 @@
       </div>
     </div>
 
-    <!-- 3. Distribución y Hábitat -->
-    <div id="distribucion-habitat" class="row mb-5 section-anchor">
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <h2 class="section-title">
-              <i class="bi bi-geo-alt"></i> Distribución y Hábitat
-            </h2>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-5 col-md-6 mb-4">
-            <div class="ecologia-card">
-              <div class="ecologia-header">
-                <h3><i class="bi bi-globe"></i> Distribución</h3>
-              </div>
-              <p>{{distribucionHabitat.distribucion}}</p>
-            </div>
-          </div>
-          <div class="col-lg-5 col-md-6 mb-4">
-            <div class="ecologia-card">
-              <div class="ecologia-header">
-                <h3><i class="bi bi-tree"></i> Hábitat</h3>
-              </div>
-              <p>{{distribucionHabitat.habitat}}</p>
-              <p class="mt-3"><strong>Altitud:</strong> {{distribucionHabitat.altitud}}</p>
-              <p><strong>Sustrato:</strong> {{distribucionHabitat.sustrato}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- 4. Comportamiento -->
     <div id="comportamiento" class="row mb-5 section-anchor">

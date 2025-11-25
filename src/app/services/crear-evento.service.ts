@@ -103,11 +103,17 @@ export class CrearEventoService {
     return this.getToken() !== null;
   }
 
+  // Método para obtener el nombre de usuario actual
+  getCurrentUsername(): string | null {
+    return localStorage.getItem('current_username');
+  }
+
   // Método para cerrar sesión
   logout(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('token_type');
     localStorage.removeItem('remembered_username');
+    localStorage.removeItem('current_username');
   }
 
   // Método para enviar una observación de cangrejo
@@ -175,5 +181,40 @@ export class CrearEventoService {
     });
 
     return this.http.get(url, { headers });
+  }
+
+  // Método para obtener observaciones de Naturalista (SNIB)
+  getObservacionesNaturalista(params?: {
+    limit?: number,
+    offset?: number,
+    estado?: string,
+    municipio?: string,
+    fecha_inicio?: string,
+    fecha_fin?: string
+  }): Observable<any> {
+    let url = `${this.apiUrl}/observaciones-naturalista/`;
+    
+    // Construir query params
+    const queryParams: string[] = [];
+    if (params) {
+      if (params.limit) queryParams.push(`limit=${params.limit}`);
+      if (params.offset) queryParams.push(`offset=${params.offset}`);
+      if (params.estado) queryParams.push(`estado=${encodeURIComponent(params.estado)}`);
+      if (params.municipio) queryParams.push(`municipio=${encodeURIComponent(params.municipio)}`);
+      if (params.fecha_inicio) queryParams.push(`fecha_inicio=${params.fecha_inicio}`);
+      if (params.fecha_fin) queryParams.push(`fecha_fin=${params.fecha_fin}`);
+    }
+    
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+
+    return this.http.get(url);
+  }
+
+  // Método para obtener estadísticas de observaciones Naturalista
+  getEstadisticasNaturalista(): Observable<any> {
+    const url = `${this.apiUrl}/observaciones-naturalista/estadisticas`;
+    return this.http.get(url);
   }
 }

@@ -28,7 +28,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(13, 71, 161, 0.6);
+    background: rgba(199, 237, 253, 0.6);
     z-index: 0;
   }
   
@@ -38,6 +38,33 @@
 
     @media (max-width: 576px) {
       padding: 0 15px;
+    }
+  }
+
+  // Estilos de texto globales (basados en .lead de sobre-especie)
+  // Aplicar a todos los textos excepto títulos y subtítulos
+  p:not(.section-title p):not(.subtitle):not(h1 p):not(h2 p):not(h3 p):not(h4 p):not(h5 p):not(h6 p),
+  span:not(.title):not(.subtitle):not(h1 span):not(h2 span):not(h3 span):not(h4 span):not(h5 span):not(h6 span),
+  li:not(h1 li):not(h2 li):not(h3 li):not(h4 li):not(h5 li):not(h6 li),
+  .text-content,
+  .description,
+  .descripcion,
+  .evento-descripcion,
+  .detalle-item span,
+  .inscritos-texto {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.8;
+
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 1rem;
+      line-height: 1.5;
     }
   }
 
@@ -178,10 +205,10 @@
       }
 
       &.active {
-        background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
-        color: white;
-        border-color: #0d47a1;
-        box-shadow: 0 5px 15px rgba(13, 71, 161, 0.4);
+        background: rgb(199, 237, 253);
+        color: #333;
+        border-color: rgb(12, 74, 110);
+        box-shadow: 0 5px 15px rgba(199, 237, 253, 0.4);
       }
 
       &.tipo-limpieza.active {
@@ -322,9 +349,19 @@
       }
 
       .evento-descripcion {
+        font-size: 1.2rem;
+        line-height: 1.8;
         color: #555;
-        font-size: 0.95rem;
-        line-height: 1.6;
+
+        @media (max-width: 768px) {
+          font-size: 1.1rem;
+          line-height: 1.6;
+        }
+
+        @media (max-width: 576px) {
+          font-size: 1rem;
+          line-height: 1.5;
+        }
 
         @media (max-width: 576px) {
           font-size: 0.85rem;
@@ -359,7 +396,7 @@
 
         i {
           font-size: 1.2rem;
-          color: #1976d2;
+          color: rgb(12, 74, 110);
           width: 20px;
 
           @media (max-width: 576px) {
@@ -390,20 +427,31 @@
         margin-bottom: 8px;
 
         .capacidad-texto {
-          font-size: 0.9rem;
+          font-size: 1.2rem;
+          line-height: 1.8;
           color: #495057;
           display: flex;
+
+          @media (max-width: 768px) {
+            font-size: 1.1rem;
+            line-height: 1.6;
+          }
+
+          @media (max-width: 576px) {
+            font-size: 1rem;
+            line-height: 1.5;
+          }
           align-items: center;
           gap: 5px;
 
           i {
-            color: #1976d2;
+            color: rgb(12, 74, 110);
           }
         }
 
         .capacidad-porcentaje {
           font-weight: 700;
-          color: #0d47a1;
+          color: rgb(12, 74, 110);
         }
       }
 
@@ -415,7 +463,7 @@
 
         .capacidad-progreso {
           height: 100%;
-          background: linear-gradient(90deg, #1976d2 0%, #0d47a1 100%);
+          background: rgb(199, 237, 253);
           transition: width 0.5s ease;
           border-radius: 10px;
 
@@ -432,7 +480,7 @@
       background: rgba(0, 0, 0, 0.05);
       padding: 15px;
       border-radius: 12px;
-      border-left: 4px solid #1976d2;
+      border-left: 4px solid rgb(199, 237, 253);
 
       @media (max-width: 576px) {
         padding: 12px;
@@ -453,7 +501,7 @@
 
         i {
           font-size: 1.5rem;
-          color: #1976d2;
+          color: rgb(12, 74, 110);
 
           @media (max-width: 576px) {
             font-size: 1.3rem;
@@ -463,7 +511,7 @@
         .inscritos-numero {
           font-size: 2rem;
           font-weight: 700;
-          color: #1976d2;
+          color: rgb(12, 74, 110);
 
           @media (max-width: 576px) {
             font-size: 1.5rem;
@@ -503,12 +551,12 @@
         }
 
         i {
-          color: #1976d2;
+          color: rgb(12, 74, 110);
           font-size: 1.2rem;
         }
 
         &:hover {
-          color: #1565c0;
+          color: rgb(12, 74, 110);
         }
       }
 
@@ -539,8 +587,8 @@
       padding: 15px;
       border: none;
       border-radius: 12px;
-      background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
-      color: white;
+      background: rgb(199, 237, 253);
+      color: #333;
       font-size: 1.1rem;
       font-weight: 700;
       cursor: pointer;
@@ -573,7 +621,7 @@
 
       &:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(13, 71, 161, 0.4);
+        box-shadow: 0 10px 25px rgba(199, 237, 253, 0.4);
 
         @media (max-width: 768px) {
           transform: translateY(-1px);

@@ -28,7 +28,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(13, 71, 161, 0.6);
+    background: rgba(199, 237, 253, 0.6);
     z-index: 0;
   }
   
@@ -38,6 +38,36 @@
 
     @media (max-width: 576px) {
       padding: 0 15px;
+    }
+  }
+
+  // Estilos de texto globales (basados en .lead de sobre-especie)
+  // Aplicar a todos los textos excepto títulos y subtítulos
+  p:not(.section-title p):not(.subtitle):not(h1 p):not(h2 p):not(h3 p):not(h4 p):not(h5 p):not(h6 p),
+  span:not(.title):not(.subtitle):not(h1 span):not(h2 span):not(h3 span):not(h4 span):not(h5 span):not(h6 span),
+  li:not(h1 li):not(h2 li):not(h3 li):not(h4 li):not(h5 li):not(h6 li),
+  .text-content,
+  .description,
+  .descripcion,
+  .recurso-descripcion,
+  .recurso-autor span,
+  .recurso-fecha span,
+  .recurso-plataforma span,
+  .recurso-fuente span,
+  .recurso-tipo span {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.8;
+
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 1rem;
+      line-height: 1.5;
     }
   }
 
@@ -127,7 +157,7 @@
         color: #ffffff;
 
         .marker-dot {
-          background: #64b5f6;
+          background: rgb(199, 237, 253);
           transform: scale(1.4);
           border: none;
           width: 18px;
@@ -164,7 +194,7 @@
         transition: all 0.3s ease;
         position: absolute;
         left: 30px;
-        background: rgba(13, 71, 161, 0.9);
+        background: rgba(199, 237, 253, 0.9);
         padding: 4px 10px;
         border-radius: 4px;
         backdrop-filter: blur(10px);
@@ -239,7 +269,7 @@
 
     i {
       margin-right: 10px;
-      color: #64b5f6;
+      color: rgb(12, 74, 110);
     }
 
     @media (max-width: 992px) {
@@ -333,7 +363,7 @@
         position: absolute;
         top: 15px;
         right: 15px;
-        background: rgba(25, 118, 210, 0.9);
+        background: rgba(199, 237, 253, 0.9);
         color: #ffffff;
         padding: 0.4rem 0.8rem;
         border-radius: 20px;
@@ -447,9 +477,11 @@
       }
 
       .recurso-descripcion {
-        font-size: 0.95rem;
+        font-family: 'Lato', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 300;
+        line-height: 1.8;
         color: #555;
-        line-height: 1.6;
         margin-bottom: 1rem;
         flex: 1;
         overflow: hidden;
@@ -458,8 +490,13 @@
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
 
+        @media (max-width: 768px) {
+          font-size: 1rem;
+          line-height: 1.6;
+        }
+
         @media (max-width: 576px) {
-          font-size: 0.9rem;
+          font-size: 0.95rem;
           line-height: 1.5;
           -webkit-line-clamp: 3; // 3 líneas en móvil
         }
@@ -490,7 +527,7 @@
 
           i {
             font-size: 0.9rem;
-            color: #1976d2;
+            color: rgb(12, 74, 110);
           }
 
           @media (max-width: 576px) {
@@ -510,7 +547,7 @@
 
         i {
           font-size: 0.9rem;
-          color: #1976d2;
+          color: rgb(12, 74, 110);
         }
 
         @media (max-width: 576px) {
@@ -524,8 +561,8 @@
         align-items: center;
         gap: 0.5rem;
         padding: 0.7rem 1.5rem;
-        background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
-        color: #ffffff;
+        background: rgb(199, 237, 253);
+        color: #333;
         text-decoration: none;
         border-radius: 25px;
         font-weight: 600;
@@ -536,8 +573,8 @@
 
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(25, 118, 210, 0.4);
-          background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+          box-shadow: 0 5px 15px rgba(199, 237, 253, 0.4);
+          background: rgb(199, 237, 253);
         }
 
         i {
@@ -568,7 +605,7 @@
 
   // Call to Action
   .cta-box {
-    background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+    background: rgb(199, 237, 253);
     padding: 3rem 2rem;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -586,7 +623,7 @@
     h2 {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #ffffff;
+      color: #333;
       margin-bottom: 1rem;
 
       @media (max-width: 992px) {
@@ -605,7 +642,7 @@
 
     p {
       font-size: 1.2rem;
-      color: rgba(255, 255, 255, 0.9);
+      color: #555;
       margin-bottom: 2rem;
 
       @media (max-width: 768px) {
@@ -621,7 +658,7 @@
 
     .btn-primary {
       background: #ffffff;
-      color: #0d47a1;
+      color: rgb(12, 74, 110);
       border: none;
       padding: 1rem 2.5rem;
       font-size: 1.1rem;
@@ -734,17 +771,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #1976d2 !important;
+        color: rgb(199, 237, 253) !important;
         font-size: 1.5rem;
         transition: all 0.3s ease;
-        border: 2px solid rgba(25, 118, 210, 0.3);
+        border: 2px solid rgba(199, 237, 253, 0.3);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 
         &:hover {
-          background: #1976d2 !important;
-          color: #ffffff !important;
+          background: rgb(199, 237, 253) !important;
+          color: #333 !important;
           transform: scale(1.1);
-          box-shadow: 0 8px 20px rgba(25, 118, 210, 0.4);
+          box-shadow: 0 8px 20px rgba(199, 237, 253, 0.4);
         }
 
         &.owl-prev {
@@ -822,7 +859,7 @@
         }
 
         &.active {
-          background: #64b5f6 !important;
+          background: rgb(199, 237, 253) !important;
           width: 30px;
           border-radius: 15px;
           transform: scale(1);

@@ -59,6 +59,9 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('token_type', response.token_type);
             }
             
+            // Guardar el username del usuario siempre (para mostrar en navbar)
+            localStorage.setItem('current_username', this.loginForm.email);
+            
             // Guardar el username del usuario si "Recordarme" está activado
             if (this.loginForm.rememberMe) {
               localStorage.setItem('remembered_username', this.loginForm.email);
