@@ -1,46 +1,361 @@
 <section class="recorrido-section">
+  <!-- Línea Guía de Navegación -->
+  <div class="navigation-guide">
+    <div class="guide-line"></div>
+    <div class="guide-markers">
+      <a href="#por-que-disminuye" class="guide-marker" [class.active]="activeSection === 'por-que-disminuye'" (click)="scrollToSection('por-que-disminuye', $event)">
+        <span class="marker-dot"></span>
+        <span class="marker-label">¿Por qué disminuye?</span>
+      </a>
+      <a href="#recorrido-cangrejo" class="guide-marker" [class.active]="activeSection === 'recorrido-cangrejo'" (click)="scrollToSection('recorrido-cangrejo', $event)">
+        <span class="marker-dot"></span>
+        <span class="marker-label">Recorrido</span>
+      </a>
+      <a href="#amenazas-principales" class="guide-marker" [class.active]="activeSection === 'amenazas-principales'" (click)="scrollToSection('amenazas-principales', $event)">
+        <span class="marker-dot"></span>
+        <span class="marker-label">Amenazas</span>
+      </a>
+      <a href="#evidencias-datos" class="guide-marker" [class.active]="activeSection === 'evidencias-datos'" (click)="scrollToSection('evidencias-datos', $event)">
+        <span class="marker-dot"></span>
+        <span class="marker-label">Evidencias</span>
+      </a>
+      <a href="#invitacion-comunidad" class="guide-marker" [class.active]="activeSection === 'invitacion-comunidad'" (click)="scrollToSection('invitacion-comunidad', $event)">
+        <span class="marker-dot"></span>
+        <span class="marker-label">Comunidad</span>
+      </a>
+    </div>
+  </div>
+
   <div class="container">
     <!-- Header -->
     <div class="row">
       <div class="col-12">
-        <div class="section-header text-center mb-4">
-          <h1 class="title">Recorrido del Cangrejo Azul</h1>
-          <p class="subtitle">Del manglar al mar: La travesía reproductiva del Cardisoma Guanhumi</p>
+        <div class="section-header text-center mb-5">
+          <h1 class="title">Amenazas</h1>
+          <p class="subtitle">Protegiendo al Cardisoma Guanhumi: Conoce los desafíos que enfrenta</p>
         </div>
       </div>
     </div>
 
-    <!-- Información Compacta -->
-    <div class="row mb-4">
+    <!-- ¿Por qué la especie está disminuyendo? -->
+    <div id="por-que-disminuye" class="row mb-5 section-anchor">
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-12">
+            <h2 class="section-title">
+              <i class="bi bi-question-circle"></i> ¿Por qué la especie está disminuyendo?
+            </h2>
+          </div>
+        </div>
+      </div>
       <div class="col-12">
-        <div class="info-compact bg-light p-4 rounded">
-          <div class="row align-items-center">
-            <!-- Distancia -->
-            <div class="col-md-3 col-sm-6 mb-3 mb-md-0 text-center">
-              <i class="bi bi-arrow-left-right text-primary" style="font-size: 2rem;"></i>
-              <h4 class="mt-2 mb-1">2.5 - 3.5 km</h4>
-              <p class="text-muted mb-0 small">Distancia del Recorrido</p>
-            </div>
-
-            <!-- Supervivencia -->
-            <div class="col-md-3 col-sm-6 mb-3 mb-md-0 text-center">
-              <i class="bi bi-heart-pulse text-danger" style="font-size: 2rem;"></i>
-              <h4 class="mt-2 mb-1">5%</h4>
-              <p class="text-muted mb-0 small">Tasa de Supervivencia</p>
-            </div>
-
-            <!-- Amenazas -->
-            <div class="col-md-6 col-12">
-              <h5 class="mb-2"><i class="bi bi-shield-exclamation text-warning"></i> Principales Amenazas</h5>
-              <div class="d-flex flex-wrap gap-2">
-                <span class="badge bg-danger">🚗 Atropellamientos (30%)</span>
-                <span class="badge bg-warning text-dark">🏢 Urbanización (40%)</span>
-                <span class="badge bg-info">👤 Captura (20%)</span>
-                <span class="badge bg-secondary">🦅 Depredadores (10%)</span>
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-10">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-exclamation-triangle"></i> Crisis de Supervivencia</h3>
               </div>
-              <p class="text-muted small mt-2 mb-0">
-                <strong>70% no completa el recorrido</strong> debido a estas amenazas. 
-                La urbanización destruye su hábitat y bloquea rutas migratorias naturales.
+              <p>
+                El <strong>Cardisoma Guanhumi</strong> enfrenta una crisis de supervivencia. Durante su migración reproductiva desde el manglar hacia la playa, 
+                estos cangrejos deben recorrer entre 2.5 y 3.5 kilómetros enfrentando múltiples amenazas que han reducido drásticamente su población.
+              </p>
+              <p class="mt-3">
+                La tasa de supervivencia actual es de apenas <strong>5%</strong>, lo que significa que de cada 100 cangrejos que inician el recorrido, 
+                solo 5 logran completarlo exitosamente. El 70% no completa el recorrido debido a amenazas antropogénicas y naturales.
+              </p>
+              <div class="alert-danger mt-3">
+                <i class="bi bi-exclamation-triangle"></i>
+                <strong>Estado crítico:</strong> La combinación de pérdida de hábitat, tráfico vehicular, captura humana, contaminación y cambio climático 
+                está llevando a esta especie hacia un declive poblacional alarmante.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recorrido del Cangrejo (Puntos críticos, distancia recorrida y vulnerabilidad durante) -->
+    <div id="recorrido-cangrejo" class="row mb-5 section-anchor">
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-12">
+            <h2 class="section-title">
+              <i class="bi bi-map"></i> Recorrido del Cangrejo
+            </h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="caracteristica-card">
+              <div class="caracteristica-icon">
+                <i class="bi bi-arrow-left-right"></i>
+              </div>
+              <h3>Distancia</h3>
+              <p>2.5 - 3.5 km de recorrido desde el manglar hasta la playa</p>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="caracteristica-card">
+              <div class="caracteristica-icon">
+                <i class="bi bi-heart-pulse"></i>
+              </div>
+              <h3>Supervivencia</h3>
+              <p>Solo el 5% de los cangrejos completa el recorrido exitosamente</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-10">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-exclamation-triangle"></i> Puntos Críticos</h3>
+              </div>
+              <p class="mb-3">
+                Durante el recorrido, los cangrejos enfrentan <strong>zonas de alta vulnerabilidad</strong>:
+              </p>
+              <ul class="papel-ecologico-list">
+                <li>Zonas urbanas y fraccionamientos (40% de mortalidad)</li>
+                <li>Intersecciones y carreteras (30% de mortalidad)</li>
+                <li>Zonas costeras con alta actividad humana (20% de mortalidad)</li>
+                <li>Áreas con depredadores naturales (10% de mortalidad)</li>
+              </ul>
+              <div class="mt-3">
+                <h6 class="text-primary"><i class="bi bi-info-circle"></i> Vulnerabilidad durante el recorrido</h6>
+                <p class="mt-2 mb-0">
+                  La vulnerabilidad aumenta significativamente durante las horas de mayor tráfico vehicular y actividad humana. 
+                  Los cangrejos son más susceptibles durante la noche cuando realizan su migración, pero las luces urbanas y 
+                  el tráfico nocturno los exponen a mayores riesgos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulación y Mapa del Recorrido -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-10">
+            <!-- Panel de Control de Simulación -->
+            <div class="simulation-control mb-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="flex-grow-1 me-3">
+                  <h5 class="mb-2">
+                    <i class="bi bi-play-circle"></i> Simulador de Migración Masiva
+                  </h5>
+                  <p class="text-muted small mb-0">
+                    Observa el recorrido de <strong>100 cangrejos</strong> desde su hábitat natural (zona azul) hasta la playa
+                  </p>
+                </div>
+                <button 
+                  class="btn btn-primary btn-lg"
+                  (click)="startMigrationSimulation()"
+                  [disabled]="isSimulating">
+                  <i class="bi" [ngClass]="isSimulating ? 'bi-hourglass-split' : 'bi-play-fill'"></i>
+                  {{ isSimulating ? 'Simulando...' : 'Iniciar Migración' }}
+                </button>
+              </div>
+
+              <!-- Barra de Progreso y Estadísticas -->
+              <div *ngIf="isSimulating" class="mt-3">
+                <div class="row mb-2">
+                  <div class="col-md-4 text-center">
+                    <div class="stat-badge bg-success">
+                      <i class="bi bi-check-circle"></i>
+                      <span class="ms-2">{{ survivedCount }} Sobrevivieron</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <div class="stat-badge bg-danger">
+                      <i class="bi bi-x-circle"></i>
+                      <span class="ms-2">{{ deadCount }} Murieron</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <div class="stat-badge bg-info">
+                      <i class="bi bi-arrow-repeat"></i>
+                      <span class="ms-2">{{ totalCrabs - survivedCount - deadCount }} En camino</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-1">
+                  <span class="text-muted small">{{ simulationStatus }}</span>
+                  <span class="fw-bold">{{ simulationProgress }}%</span>
+                </div>
+                <div class="progress" style="height: 25px;">
+                  <div 
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    [ngClass]="simulationProgress === 100 ? 'bg-success' : (simulationProgress > 50 ? 'bg-warning' : 'bg-info')"
+                    role="progressbar" 
+                    [style.width.%]="simulationProgress">
+                    {{ simulationProgress }}%
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="map-wrapper">
+              <!-- Mapa usando Web Component (más confiable) -->
+              <gmp-map 
+                #mapElement
+                center="19.063,-96.082" 
+                zoom="13" 
+                map-id="DEMO_MAP_ID"
+                style="height: 100%; width: 100%;">
+              </gmp-map>
+            </div>
+
+            <!-- Leyenda del Mapa -->
+            <div class="map-legend mt-3">
+              <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                  <h2 class="section-title"><i class="bi bi-map"></i> Leyenda del Mapa</h2>
+                </div>
+              </div>
+              
+              <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                  <!-- Ruta de Migración -->
+                  <div class="mb-3">
+                    <h6 class="text-primary mb-2"><i class="bi bi-arrow-right-circle"></i> Migración de Cangrejos</h6>
+                    <div class="legend-items">
+                      <div class="legend-item">
+                        <div class="legend-danger-zone" style="background: #0045c4; opacity: 0.6; border: 2px solid #003399;"></div>
+                        <span><strong>Zona Azul:</strong> Hábitat Natural (Manglar)</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="legend-line" style="background: #00E5FF; height: 4px; width: 40px; opacity: 0.6;"></div>
+                        <span>Múltiples Rutas de Migración</span>
+                      </div>
+                      <div class="legend-item">
+                        <span style="font-size: 20px;">🦀</span>
+                        <span>Cangrejos migrando</span>
+                      </div>
+                      <div class="legend-item">
+                        <span style="font-size: 20px;">✅</span>
+                        <span>Llegaron a la playa</span>
+                      </div>
+                      <div class="legend-item">
+                        <span style="font-size: 20px;">🏢🚗👤🦅</span>
+                        <span>No sobrevivieron (Zona Urbana > Atropellamiento > Captura > Depredador)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Zonas Peligrosas -->
+                  <div>
+                    <h6 class="text-danger mb-2"><i class="bi bi-exclamation-triangle"></i> Zonas Peligrosas</h6>
+                    <div class="legend-items">
+                      <div class="legend-item">
+                        <div class="legend-danger-zone" style="background: #FF6B00;"></div>
+                        <span>Zona Urbana / Fraccionamientos</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="legend-danger-zone" style="background: #D50000;"></div>
+                        <span>Intersección Peligrosa / Carretera</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="legend-danger-zone" style="background: #C41C00;"></div>
+                        <span>Zona Costera (Alta actividad humana)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row justify-content-center mt-3">
+                <div class="col-lg-10 col-md-12">
+                  <p class="text-muted small">
+                    <i class="bi bi-info-circle"></i> 
+                    <strong>Simulación:</strong> 100 cangrejos salen simultáneamente de diferentes puntos de la zona azul (manglar) hacia la playa. 
+                    Solo aproximadamente el 5% sobrevivirá al recorrido. Las principales causas de muerte son: 
+                    <strong>40% Zona Urbana</strong>, <strong>30% Atropellamiento</strong>, <strong>20% Captura humana</strong>, y <strong>10% Depredadores</strong>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Amenazas Principales -->
+    <div id="amenazas-principales" class="row mb-5 section-anchor">
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-12">
+            <h2 class="section-title">
+              <i class="bi bi-shield-exclamation"></i> Amenazas Principales
+            </h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-building"></i> Pérdida de Hábitat</h3>
+              </div>
+              <p>
+                La expansión urbana y la construcción de fraccionamientos destruyen directamente el hábitat natural del cangrejo azul. 
+                Las zonas de manglar se fragmentan y desaparecen, bloqueando las rutas migratorias naturales. 
+                <strong>40% de la mortalidad</strong> se debe a esta amenaza, siendo la principal causa de declive poblacional.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-car-front"></i> Tráfico Vehicular</h3>
+              </div>
+              <p>
+                Los cangrejos deben cruzar carreteras y vías durante su migración nocturna. El tráfico vehicular, 
+                especialmente durante las horas de mayor actividad migratoria, resulta en atropellamientos masivos. 
+                <strong>30% de la mortalidad</strong> se debe a atropellamientos, convirtiéndose en la segunda causa más importante.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-person"></i> Captura y Sobreexplotación</h3>
+              </div>
+              <p>
+                La captura humana para consumo y comercio representa una amenaza significativa. La sobreexplotación 
+                reduce las poblaciones reproductivas y afecta el equilibrio ecológico. <strong>20% de la mortalidad</strong> 
+                se debe a la captura humana, especialmente en zonas costeras donde los cangrejos son más vulnerables.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-droplet"></i> Contaminación</h3>
+              </div>
+              <p>
+                La contaminación del agua y del suelo afecta directamente la salud de los cangrejos y su hábitat. 
+                Los desechos químicos, plásticos y residuos urbanos contaminan las zonas de manglar y las rutas migratorias, 
+                afectando la capacidad reproductiva y la supervivencia de la especie.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-10 col-md-12 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-cloud-sun"></i> Cambio Climático</h3>
+              </div>
+              <p>
+                El cambio climático altera los patrones de lluvia, aumenta la temperatura y modifica los niveles del mar, 
+                afectando los manglares y las zonas costeras. Estos cambios pueden alterar los ciclos reproductivos y 
+                reducir la disponibilidad de hábitat adecuado para la especie.
               </p>
             </div>
           </div>
@@ -48,136 +363,84 @@
       </div>
     </div>
 
-    <!-- Simulación y Mapa (Ancho Completo) -->
-    <div class="row">
+    <!-- Evidencias y Datos -->
+    <div id="evidencias-datos" class="row mb-5 section-anchor">
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-12">
+            <h2 class="section-title">
+              <i class="bi bi-graph-up"></i> Evidencias y Datos
+            </h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-bar-chart"></i> Datos Estadísticos</h3>
+              </div>
+              <p>Tasa de supervivencia: 5% | Distancia recorrida: 2.5-3.5 km | Mortalidad total: 70%</p>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-file-earmark-text"></i> Reportes Científicos</h3>
+              </div>
+              <p>Estudios documentan el declive poblacional del Cardisoma Guanhumi en las últimas décadas.</p>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-camera"></i> Evidencias Visuales</h3>
+              </div>
+              <p>Fotografías y videos documentan atropellamientos y pérdida de hábitat en tiempo real.</p>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-6 mb-4">
+            <div class="ecologia-card">
+              <div class="ecologia-header">
+                <h3><i class="bi bi-people"></i> Testimonios de la Comunidad</h3>
+              </div>
+              <p>Los habitantes locales reportan disminución significativa en avistamientos de cangrejos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="col-12">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-10">
+            <div class="alert-danger">
+              <i class="bi bi-exclamation-triangle"></i>
+              <strong>Nota:</strong> Los datos presentados se basan en observaciones científicas y testimonios de la comunidad local. 
+              Se requiere más investigación para cuantificar completamente el impacto de cada amenaza.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <!-- Panel de Control de Simulación -->
-        <div class="simulation-control mb-3">
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="flex-grow-1 me-3">
-              <h5 class="mb-2">
-                <i class="bi bi-play-circle"></i> Simulador de Migración Masiva
-              </h5>
-              <p class="text-muted small mb-0">
-                Observa el recorrido de <strong>100 cangrejos</strong> desde su hábitat natural (zona azul) hasta la playa
+    <!-- Invitación a COMUNIDAD -->
+    <div id="invitacion-comunidad" class="row mb-5 section-anchor">
+      <div class="col-12">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-10">
+            <div class="cta-box text-center">
+              <h2>Únete a la Comunidad</h2>
+              <p>
+                Tu participación es crucial para proteger al <strong>Cardisoma Guanhumi</strong>. 
+                Únete a nuestra comunidad de observadores y comparte tus observaciones, fotografías y testimonios.
+                Juntos podemos documentar el estado de la especie, identificar nuevas amenazas y trabajar en soluciones 
+                para su conservación.
               </p>
-            </div>
-            <button 
-              class="btn btn-primary btn-lg"
-              (click)="startMigrationSimulation()"
-              [disabled]="isSimulating">
-              <i class="bi" [ngClass]="isSimulating ? 'bi-hourglass-split' : 'bi-play-fill'"></i>
-              {{ isSimulating ? 'Simulando...' : 'Iniciar Migración' }}
-            </button>
-          </div>
-
-          <!-- Barra de Progreso y Estadísticas -->
-          <div *ngIf="isSimulating" class="mt-3">
-            <div class="row mb-2">
-              <div class="col-md-4 text-center">
-                <div class="stat-badge bg-success">
-                  <i class="bi bi-check-circle"></i>
-                  <span class="ms-2">{{ survivedCount }} Sobrevivieron</span>
-                </div>
-              </div>
-              <div class="col-md-4 text-center">
-                <div class="stat-badge bg-danger">
-                  <i class="bi bi-x-circle"></i>
-                  <span class="ms-2">{{ deadCount }} Murieron</span>
-                </div>
-              </div>
-              <div class="col-md-4 text-center">
-                <div class="stat-badge bg-info">
-                  <i class="bi bi-arrow-repeat"></i>
-                  <span class="ms-2">{{ totalCrabs - survivedCount - deadCount }} En camino</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="d-flex justify-content-between mb-1">
-              <span class="text-muted small">{{ simulationStatus }}</span>
-              <span class="fw-bold">{{ simulationProgress }}%</span>
-            </div>
-            <div class="progress" style="height: 25px;">
-              <div 
-                class="progress-bar progress-bar-striped progress-bar-animated"
-                [ngClass]="simulationProgress === 100 ? 'bg-success' : (simulationProgress > 50 ? 'bg-warning' : 'bg-info')"
-                role="progressbar" 
-                [style.width.%]="simulationProgress">
-                {{ simulationProgress }}%
-              </div>
+              <a routerLink="/comunidad" class="btn btn-primary btn-lg">
+                <i class="bi bi-arrow-right-circle"></i> Ver Comunidad de Observadores
+              </a>
             </div>
           </div>
-        </div>
-
-        <div class="map-wrapper">
-          <!-- Mapa usando Web Component (más confiable) -->
-          <gmp-map 
-            #mapElement
-            center="19.063,-96.082" 
-            zoom="13" 
-            map-id="DEMO_MAP_ID"
-            style="height: 100%; width: 100%;">
-          </gmp-map>
-        </div>
-
-        <!-- Leyenda del Mapa -->
-        <div class="map-legend mt-3">
-          <h5><i class="bi bi-map"></i> Leyenda del Mapa</h5>
-          
-          <!-- Ruta de Migración -->
-          <div class="mb-3">
-            <h6 class="text-primary mb-2"><i class="bi bi-arrow-right-circle"></i> Migración de Cangrejos</h6>
-            <div class="legend-items">
-              <div class="legend-item">
-                <div class="legend-danger-zone" style="background: #0045c4; opacity: 0.6; border: 2px solid #003399;"></div>
-                <span><strong>Zona Azul:</strong> Hábitat Natural (Manglar)</span>
-              </div>
-              <div class="legend-item">
-                <div class="legend-line" style="background: #00E5FF; height: 4px; width: 40px; opacity: 0.6;"></div>
-                <span>Múltiples Rutas de Migración</span>
-              </div>
-              <div class="legend-item">
-                <span style="font-size: 20px;">🦀</span>
-                <span>Cangrejos migrando</span>
-              </div>
-              <div class="legend-item">
-                <span style="font-size: 20px;">✅</span>
-                <span>Llegaron a la playa</span>
-              </div>
-              <div class="legend-item">
-                <span style="font-size: 20px;">🏢🚗👤🦅</span>
-                <span>No sobrevivieron (Zona Urbana > Atropellamiento > Captura > Depredador)</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Zonas Peligrosas -->
-          <div>
-            <h6 class="text-danger mb-2"><i class="bi bi-exclamation-triangle"></i> Zonas Peligrosas</h6>
-            <div class="legend-items">
-              <div class="legend-item">
-                <div class="legend-danger-zone" style="background: #FF6B00;"></div>
-                <span>Zona Urbana / Fraccionamientos</span>
-              </div>
-              <div class="legend-item">
-                <div class="legend-danger-zone" style="background: #D50000;"></div>
-                <span>Intersección Peligrosa / Carretera</span>
-              </div>
-              <div class="legend-item">
-                <div class="legend-danger-zone" style="background: #C41C00;"></div>
-                <span>Zona Costera (Alta actividad humana)</span>
-              </div>
-            </div>
-          </div>
-          
-          <p class="mt-3 text-muted small">
-            <i class="bi bi-info-circle"></i> 
-            <strong>Simulación:</strong> 100 cangrejos salen simultáneamente de diferentes puntos de la zona azul (manglar) hacia la playa. 
-            Solo aproximadamente el 5% sobrevivirá al recorrido. Las principales causas de muerte son: 
-            <strong>40% Zona Urbana</strong>, <strong>30% Atropellamiento</strong>, <strong>20% Captura humana</strong>, y <strong>10% Depredadores</strong>.
-          </p>
         </div>
       </div>
     </div>

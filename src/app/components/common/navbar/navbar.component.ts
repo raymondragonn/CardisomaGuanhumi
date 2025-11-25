@@ -102,6 +102,10 @@ export class NavbarComponent implements OnInit {
         {
             title: 'Eventos',
             route: 'eventos'
+        },
+        {
+            title: 'Recursos',
+            route: 'recursos'
         }
     ];
 

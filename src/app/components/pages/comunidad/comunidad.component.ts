@@ -31,7 +31,7 @@ interface Observacion {
 @Component({
   selector: 'app-comunidad',
   templateUrl: './comunidad.component.html',
-  styleUrl: './comunidad.component.scss'
+  styleUrls: ['./comunidad.component.scss']
 })
 export class ComunidadComponent implements OnInit {
   observaciones: Observacion[] = [];
@@ -39,6 +39,11 @@ export class ComunidadComponent implements OnInit {
   mostrarModal: boolean = false;
   cargando: boolean = false;
   error: string | null = null;
+
+  // Estadísticas comunitarias
+  totalObservaciones: number = 0;
+  objetivoObservaciones: number = 100;
+  porcentajeCompletado: number = 0;
 
   constructor(
     private crearEventoService: CrearEventoService,
@@ -70,12 +75,14 @@ export class ComunidadComponent implements OnInit {
           // Si no hay datos, usar ejemplos
           this.observaciones = this.getObservacionesEjemplo();
         }
+        this.calcularEstadisticas();
         this.cargando = false;
       },
       error: (error) => {
         console.error('Error al cargar observaciones:', error);
         // En caso de error, usar datos de ejemplo para demostración
         this.observaciones = this.getObservacionesEjemplo();
+        this.calcularEstadisticas();
         this.cargando = false;
         
         // Si el error es 401, el usuario no está autenticado
@@ -91,6 +98,7 @@ export class ComunidadComponent implements OnInit {
     // Simular carga asíncrona
     setTimeout(() => {
       this.observaciones = this.getObservacionesEjemplo();
+      this.calcularEstadisticas();
       this.cargando = false;
     }, 500);
   }
@@ -282,5 +290,22 @@ export class ComunidadComponent implements OnInit {
 
   irAFormulario(): void {
     this.router.navigate(['/formulario']);
+  }
+
+  solicitarTestimonio(): void {
+    // Redirigir a formulario o a una página específica de testimonio
+    // Por ahora redirige al formulario, pero puedes cambiar esto según tu necesidad
+    this.router.navigate(['/formulario']);
+  }
+
+  calcularEstadisticas(): void {
+    // Total de observaciones
+    this.totalObservaciones = this.observaciones.length;
+
+    // Calcular porcentaje completado (máximo 100%)
+    this.porcentajeCompletado = Math.min(
+      (this.totalObservaciones / this.objetivoObservaciones) * 100,
+      100
+    );
   }
 }

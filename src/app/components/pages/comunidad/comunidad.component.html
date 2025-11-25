@@ -1,86 +1,144 @@
 <section class="comunidad-section">
   <div class="container">
     <!-- Encabezado de la sección -->
-    <div class="section-header text-center mb-5">
-      <h1 class="title">Comunidad de Observadores</h1>
-      <p class="subtitle">Descubre las observaciones compartidas por nuestra comunidad</p>
+    <div class="row">
+      <div class="col-12">
+        <div class="section-header text-center mb-5">
+          <h1 class="title">Comunidad de Observadores</h1>
+          <p class="subtitle">Descubre las observaciones compartidas por nuestra comunidad</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Box para registrar observación -->
+    <div class="row justify-content-center mb-5" *ngIf="!cargando && !error">
+      <div class="col-lg-10 col-md-12">
+        <div class="cta-box text-center">
+          <div class="cta-icon">
+            <i class="fas fa-binoculars"></i>
+          </div>
+          <h2>Comparte tu Observación</h2>
+          <p>Ayuda a la comunidad científica registrando tus avistamientos del cangrejo azul</p>
+          <button class="btn btn-primary btn-lg" (click)="irAFormulario()">
+            <i class="fas fa-plus-circle"></i> Registrar Observación
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Estado de carga -->
-    <div *ngIf="cargando" class="text-center py-5">
-      <div class="spinner-border text-light" role="status">
-        <span class="visually-hidden">Cargando...</span>
+    <div class="row justify-content-center" *ngIf="cargando">
+      <div class="col-lg-10 col-md-12">
+        <div class="estado-carga text-center py-5">
+          <div class="spinner-container">
+            <div class="spinner-border text-light" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+          <p class="mt-3">Cargando observaciones de la comunidad...</p>
+        </div>
       </div>
-      <p class="text-light mt-3">Cargando observaciones...</p>
     </div>
 
     <!-- Mensaje de error -->
-    <div *ngIf="error && !cargando" class="alert alert-warning text-center" role="alert">
-      <i class="fas fa-exclamation-triangle me-2"></i>
-      {{ error }}
+    <div class="row justify-content-center" *ngIf="!cargando && error">
+      <div class="col-lg-10 col-md-12">
+        <div class="error-card">
+          <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h3>¡Ups! Algo salió mal</h3>
+          <p>{{ error }}</p>
+        </div>
+      </div>
     </div>
 
     <!-- Mensaje cuando no hay observaciones -->
-    <div *ngIf="!cargando && !error && observaciones.length === 0" class="text-center py-5">
-      <i class="fas fa-inbox fa-3x text-light mb-3"></i>
-      <p class="text-light">Aún no hay observaciones compartidas. ¡Sé el primero en compartir!</p>
-    </div>
-
-    <!-- Botón para crear nueva observación -->
-    <div class="text-center mb-4" *ngIf="!cargando && !error">
-      <button class="btn-nueva-observacion" (click)="irAFormulario()">
-        <i class="fas fa-plus-circle"></i>
-        Registrar Nueva Observación
-      </button>
+    <div class="row justify-content-center" *ngIf="!cargando && !error && observaciones.length === 0">
+      <div class="col-lg-10 col-md-12">
+        <div class="empty-state text-center">
+          <div class="empty-icon">
+            <i class="fas fa-inbox"></i>
+          </div>
+          <h3>Aún no hay observaciones</h3>
+          <p>¡Sé el primero en compartir tu avistamiento del cangrejo azul!</p>
+        </div>
+      </div>
     </div>
 
     <!-- Grid de cards con observaciones -->
-    <div *ngIf="!cargando && !error && observaciones.length > 0" class="observaciones-grid">
-      <div class="row g-4">
-        <div *ngFor="let observacion of observaciones" class="col-md-6 col-lg-4">
-          <div class="observacion-card" (click)="verDetalle(observacion)">
-            <div class="card-header">
-              <div class="card-avatar">
-                <i class="fas fa-user"></i>
-              </div>
-              <div class="card-user-info">
-                <h3 class="card-nombre">
-                  {{ observacion.nombre_observador || 'Observador anónimo' }}
-                </h3>
-                <p class="card-comunidad">
-                  <i class="fas fa-map-marker-alt"></i>
-                  {{ observacion.comunidad || 'Comunidad no especificada' }}
-                </p>
-              </div>
-            </div>
-            
-            <div class="card-body">
-              <div class="card-info-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>{{ formatearFecha(observacion.fecha_observacion) }}</span>
-              </div>
-              <div class="card-info-item">
-                <i class="fas fa-clock"></i>
-                <span>{{ formatearHora(observacion.hora_observacion) }}</span>
-              </div>
-              <div class="card-info-item">
-                <i class="fas fa-map-pin"></i>
-                <span>{{ observacion.lugar_observacion || 'Lugar no especificado' }}</span>
-              </div>
-              <div class="card-info-item">
-                <i class="fas fa-crab"></i>
-                <span>{{ observacion.cantidad_cangrejos || 'Cantidad no especificada' }} cangrejos</span>
-              </div>
-              <div class="card-info-item" *ngIf="observacion.tipo_habitat">
-                <i class="fas fa-tree"></i>
-                <span>{{ observacion.tipo_habitat }}</span>
-              </div>
-            </div>
+    <div *ngIf="!cargando && !error && observaciones.length > 0" class="observaciones-container">
+      <!-- Título de sección -->
+      <div class="row justify-content-center mb-4">
+        <div class="col-lg-10 col-md-12">
+          <h2 class="section-title">
+            <i class="fas fa-eye"></i> Observaciones de la Comunidad
+          </h2>
+          <p class="section-description">
+            {{ observaciones.length }} {{ observaciones.length === 1 ? 'observación registrada' : 'observaciones registradas' }}
+          </p>
+        </div>
+      </div>
 
-            <div class="card-footer">
-              <button class="btn-ver-detalle">
-                Ver detalles <i class="fas fa-arrow-right"></i>
-              </button>
+      <!-- Grid de observaciones -->
+      <div class="row justify-content-center">
+        <div class="col-lg-11 col-md-12">
+          <div class="row g-4">
+            <div *ngFor="let observacion of observaciones" class="col-12 col-sm-6 col-lg-4 col-xl-3">
+              <div class="observacion-card" (click)="verDetalle(observacion)">
+                <!-- Icono decorativo superior -->
+                <div class="card-icon-wrapper">
+                  <div class="card-icon">
+                    <i class="fas fa-crab"></i>
+                  </div>
+                </div>
+
+                <!-- Información del observador -->
+                <div class="card-header">
+                  <h3 class="card-nombre">{{ observacion.nombre_observador || 'Anónimo' }}</h3>
+                  <p class="card-comunidad">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ observacion.comunidad || 'Ubicación no especificada' }}
+                  </p>
+                </div>
+                
+                <!-- Datos principales -->
+                <div class="card-body">
+                  <div class="card-stat">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>{{ formatearFecha(observacion.fecha_observacion) }}</span>
+                  </div>
+                  <div class="card-stat">
+                    <i class="fas fa-clock"></i>
+                    <span>{{ formatearHora(observacion.hora_observacion) }}</span>
+                  </div>
+                  <div class="card-stat" *ngIf="observacion.cantidad_cangrejos">
+                    <i class="fas fa-hashtag"></i>
+                    <span>{{ observacion.cantidad_cangrejos }} cangrejos</span>
+                  </div>
+                  <div class="card-stat" *ngIf="observacion.tipo_habitat">
+                    <i class="fas fa-tree"></i>
+                    <span>{{ observacion.tipo_habitat }}</span>
+                  </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="card-tags" *ngIf="observacion.sexo_cangrejos?.length || observacion.comportamientos?.length">
+                  <span class="tag" *ngFor="let sexo of observacion.sexo_cangrejos?.slice(0, 2)">
+                    {{ sexo }}
+                  </span>
+                  <span class="tag tag-behavior" *ngFor="let comportamiento of observacion.comportamientos?.slice(0, 1)">
+                    {{ comportamiento }}
+                  </span>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer">
+                  <button class="btn-ver-mas">
+                    Ver detalles <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

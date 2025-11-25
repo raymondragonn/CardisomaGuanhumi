@@ -1,11 +1,11 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-recorrido',
   templateUrl: './recorrido.component.html',
   styleUrls: ['./recorrido.component.scss']
 })
-export class RecorridoComponent implements OnInit, AfterViewInit {
+export class RecorridoComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mapElement', { static: false }) mapElement!: ElementRef;
 
   // Variables para la simulación
@@ -22,17 +22,39 @@ export class RecorridoComponent implements OnInit, AfterViewInit {
   private dangerZones: any[] = [];
   private beachDestination = { lat: 19.094, lng: -96.074 }; // Zona de playa general
 
+  // Variables para la navegación guía
+  activeSection: string = 'informacion-recorrido';
+  private observer?: IntersectionObserver;
+  private sections: Element[] = [];
+  private scrollTimeout?: any;
+
   constructor() { }
 
   ngOnInit(): void {
     console.log('RecorridoComponent inicializado');
+    // Inicializar con la primera sección
+    this.activeSection = 'por-que-disminuye';
   }
 
   ngAfterViewInit(): void {
+    // Configurar navegación guía
+    this.setupIntersectionObserver();
+    this.setupScrollListener();
+    
     // Esperar a que el mapa esté completamente cargado
     setTimeout(() => {
       this.initializeMap();
     }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+    }
+    window.removeEventListener('scroll', this.onScroll);
   }
 
   initializeMap(): void {
@@ -757,5 +779,111 @@ export class RecorridoComponent implements OnInit, AfterViewInit {
       }
     }
     return false;
+  }
+
+  // ===== NAVEGACIÓN GUÍA =====
+  setupIntersectionObserver() {
+    const options = {
+      root: null,
+      rootMargin: '-10% 0px -70% 0px',
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    };
+
+    this.observer = new IntersectionObserver((entries) => {
+      // Encontrar la sección más visible
+      let maxRatio = 0;
+      let mostVisibleSection: string | null = null;
+
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio;
+          const id = entry.target.id;
+          if (id) {
+            mostVisibleSection = id;
+          }
+        }
+      });
+
+      // Si hay una sección visible, actualizar
+      if (mostVisibleSection) {
+        this.activeSection = mostVisibleSection;
+      }
+    }, options);
+
+    // Observar todas las secciones
+    this.sections = Array.from(document.querySelectorAll('.section-anchor'));
+    this.sections.forEach(section => {
+      this.observer?.observe(section);
+    });
+  }
+
+  setupScrollListener() {
+    // Usar throttling para mejorar el rendimiento
+    this.onScroll = this.throttle(() => {
+      this.updateActiveSection();
+    }, 100);
+
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+  }
+
+  onScroll = () => {
+    // Esta función será sobrescrita por throttle
+  };
+
+  throttle(func: Function, limit: number) {
+    let inThrottle: boolean;
+    return function(this: any, ...args: any[]) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }
+
+  updateActiveSection() {
+    const viewportHeight = window.innerHeight;
+    const scrollPosition = window.scrollY + viewportHeight / 3; // Punto de referencia en el tercio superior
+
+    let closestSection: string | null = null;
+    let closestDistance = Infinity;
+
+    this.sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      const sectionTop = rect.top + window.scrollY;
+      const sectionBottom = sectionTop + rect.height;
+      const sectionCenter = sectionTop + rect.height / 2;
+
+      // Calcular la distancia desde el punto de referencia hasta el centro de la sección
+      const distance = Math.abs(scrollPosition - sectionCenter);
+
+      // Si la sección está visible y es la más cercana
+      if (rect.top < viewportHeight && rect.bottom > 0 && distance < closestDistance) {
+        closestDistance = distance;
+        const id = section.id;
+        if (id) {
+          closestSection = id;
+        }
+      }
+    });
+
+    if (closestSection) {
+      this.activeSection = closestSection;
+    }
+  }
+
+  scrollToSection(sectionId: string, event: Event) {
+    event.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 100; // Offset para compensar cualquier header fijo
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   }
 }

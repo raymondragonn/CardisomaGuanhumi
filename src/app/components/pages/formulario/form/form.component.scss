@@ -4,16 +4,54 @@
   min-height: 100vh;
 
   .form-header {
-    h1 {
-      color: #2c3e50;
-      font-weight: 700;
-      margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    margin-bottom: 0;
+
+    @media (max-width: 768px) {
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
     }
 
-    .lead {
+    @media (max-width: 576px) {
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+    }
+
+    .title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+
+      @media (max-width: 992px) {
+        font-size: 3rem;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+
+      @media (max-width: 576px) {
+        font-size: 2rem;
+        margin-bottom: 0.3rem;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
       color: #5a6c7d;
-      font-size: 1.1rem;
+      font-weight: 300;
+
+      @media (max-width: 768px) {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 576px) {
+        font-size: 1rem;
+        padding: 0 15px;
+      }
     }
   }
 
@@ -41,9 +79,12 @@
 
     .section-title {
       color: #2c3e50;
-      font-size: 1.8rem;
-      font-weight: 600;
-      margin-bottom: 25px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0;
+      margin-left: 0;
+      margin-right: 0;
+      text-align: left;
       display: flex;
       align-items: center;
       gap: 15px;
