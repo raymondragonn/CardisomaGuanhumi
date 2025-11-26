@@ -109,12 +109,63 @@ export class CrearEventoService {
     return localStorage.getItem('current_username');
   }
 
+  // Método para obtener el permiso del usuario actual
+  getCurrentUserPermiso(): string | null {
+    return localStorage.getItem('user_permiso');
+  }
+
+  // Método para obtener información del usuario actual desde el backend
+  getCurrentUserInfo(): Observable<any> {
+    const url = `${this.apiUrl}/auth/me`;
+    
+    // Obtener el header de autorización
+    const authHeader = this.getAuthorizationHeader();
+    
+    // Headers con autorización
+    const headers = new HttpHeaders({
+      'Authorization': authHeader || ''
+    });
+
+    return this.http.get(url, { headers });
+  }
+
+  // Método para verificar si el usuario es administrador
+  isAdmin(): boolean {
+    return this.getCurrentUserPermiso() === 'admin';
+  }
+
   // Método para cerrar sesión
   logout(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('token_type');
     localStorage.removeItem('remembered_username');
     localStorage.removeItem('current_username');
+    localStorage.removeItem('user_permiso');
+  }
+
+  // Método para crear un nuevo evento (solo admin)
+  crearEvento(eventoData: {
+    titulo: string,
+    descripcion: string,
+    fecha: string,
+    hora: string,
+    lugar: string,
+    duracion: number,
+    requisitos: string | null,
+    tipo: string
+  }): Observable<any> {
+    const url = `${this.apiUrl}/eventos/`;
+    
+    // Obtener el header de autorización
+    const authHeader = this.getAuthorizationHeader();
+    
+    // Headers con autorización y JSON
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': authHeader || ''
+    });
+
+    return this.http.post(url, eventoData, { headers });
   }
 
   // Método para enviar una observación de cangrejo

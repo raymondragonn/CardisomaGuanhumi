@@ -1358,3 +1358,255 @@
     }
   }
 }
+
+// ==========================================
+// POST ESTILO INSTAGRAM
+// ==========================================
+.instagram-post {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #dbdbdb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 0 auto;
+
+  @media (max-width: 576px) {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+// Header del post
+.instagram-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #efefef;
+
+  .instagram-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .profile-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .username {
+      font-weight: 600;
+      font-size: 14px;
+      color: #262626;
+    }
+
+    .location {
+      font-size: 12px;
+      color: #8e8e8e;
+    }
+  }
+
+  .more-options {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: #262626;
+
+    i {
+      font-size: 20px;
+    }
+  }
+}
+
+// Contenedor de la imagen
+.instagram-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: white;
+}
+
+.instagram-slides {
+  display: flex;
+  height: 100%;
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+}
+
+.instagram-slide {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instagram-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+// Controles del carrusel (más discretos)
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  i {
+    font-size: 1.2rem;
+    color: white;
+  }
+
+  &.prev {
+    left: 12px;
+  }
+
+  &.next {
+    right: 12px;
+  }
+}
+
+// Indicador de foto múltiple
+.photo-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+// Acciones del post
+.instagram-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid #efefef;
+
+  .action-buttons {
+    display: flex;
+    gap: 16px;
+  }
+
+  .action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: #262626;
+    transition: transform 0.1s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    i {
+      font-size: 24px;
+    }
+
+    &.bookmark {
+      margin-left: auto;
+    }
+  }
+}
+
+// Caption del post
+.instagram-caption {
+  padding: 0 16px 16px;
+
+  .likes {
+    font-weight: 600;
+    font-size: 14px;
+    color: #262626;
+    margin-bottom: 8px;
+  }
+
+  .caption-text {
+    font-size: 14px;
+    color: #262626;
+    line-height: 1.4;
+    margin-bottom: 8px;
+
+    .username {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+  }
+
+  .post-time {
+    font-size: 12px;
+    color: #8e8e8e;
+    text-transform: uppercase;
+  }
+}
+
+.carousel-info {
+  p {
+    font-size: 1.1rem;
+    color: #555;
+    font-family: 'Lato', sans-serif;
+    line-height: 1.6;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 0.95rem;
+    }
+
+    i {
+      color: rgb(12, 74, 110);
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+
+      @media (max-width: 576px) {
+        font-size: 1rem;
+      }
+    }
+  }
+}

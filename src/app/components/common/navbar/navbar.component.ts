@@ -146,8 +146,6 @@ export class NavbarComponent implements OnInit {
         this.authService.login(this.loginForm.username, this.loginForm.password)
             .subscribe({
                 next: (response) => {
-                    this.isSubmitting = false;
-                    
                     if (response.access_token) {
                         localStorage.setItem('access_token', response.access_token);
                     }
@@ -163,10 +161,33 @@ export class NavbarComponent implements OnInit {
                     } else {
                         localStorage.removeItem('remembered_username');
                     }
-                    
-                    this.checkAuthentication();
-                    this.closeAuthModal();
-                    alert('¡Bienvenido de vuelta al movimiento del Cangrejo Azul!');
+
+                    // Obtener información completa del usuario incluyendo el permiso
+                    this.authService.getCurrentUserInfo()
+                        .subscribe({
+                            next: (userInfo) => {
+                                console.log('Información del usuario:', userInfo);
+                                
+                                // Guardar el permiso del usuario
+                                if (userInfo.permiso) {
+                                    localStorage.setItem('user_permiso', userInfo.permiso);
+                                    console.log('Permiso del usuario guardado:', userInfo.permiso);
+                                }
+                                
+                                this.isSubmitting = false;
+                                this.checkAuthentication();
+                                this.closeAuthModal();
+                                alert('¡Bienvenido de vuelta al movimiento del Cangrejo Azul!');
+                            },
+                            error: (error) => {
+                                console.error('Error al obtener información del usuario:', error);
+                                this.isSubmitting = false;
+                                // Continuar de todas formas, el usuario ya está autenticado
+                                this.checkAuthentication();
+                                this.closeAuthModal();
+                                alert('¡Bienvenido de vuelta al movimiento del Cangrejo Azul!');
+                            }
+                        });
                 },
                 error: (error) => {
                     this.isSubmitting = false;

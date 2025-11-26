@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { CrearEventoService } from 'src/app/services/crear-evento.service';
 
 @Component({
   selector: 'app-recorrido',
@@ -21,6 +22,7 @@ export class RecorridoComponent implements OnInit, AfterViewInit, OnDestroy {
   private routePolylines: google.maps.Polyline[] = []; // Polylines de rutas
   private dangerZones: any[] = [];
   private beachDestination = { lat: 19.094, lng: -96.074 }; // Zona de playa general
+  private naturalistaMarkers: google.maps.Marker[] = []; // Marcadores de observaciones de Naturalista
 
   // Variables para la navegación guía
   activeSection: string = 'informacion-recorrido';
@@ -28,12 +30,119 @@ export class RecorridoComponent implements OnInit, AfterViewInit, OnDestroy {
   private sections: Element[] = [];
   private scrollTimeout?: any;
 
-  constructor() { }
+  // Variables para el carrusel de amenazas
+  amenazasImages = [
+    { src: 'assets/img/amenazas/Amenaza1.jpeg', alt: 'Amenaza 1 - Cangrejo Azul', caption: 'Pérdida de hábitat y fragmentación' },
+    { src: 'assets/img/amenazas/Amenaza2.jpeg', alt: 'Amenaza 2 - Cangrejo Azul', caption: 'Tráfico vehicular y atropellamientos' },
+    { src: 'assets/img/amenazas/Amenaza3.jpeg', alt: 'Amenaza 3 - Cangrejo Azul', caption: 'Captura y sobreexplotación' },
+    { src: 'assets/img/amenazas/Amenaza4.jpeg', alt: 'Amenaza 4 - Cangrejo Azul', caption: 'Contaminación ambiental' },
+    { src: 'assets/img/amenazas/Amenaza5.jpeg', alt: 'Amenaza 5 - Cangrejo Azul', caption: 'Cambio climático' },
+    { src: 'assets/img/amenazas/Amenaza6.jpeg', alt: 'Amenaza 6 - Cangrejo Azul', caption: 'Desarrollo urbano' },
+    { src: 'assets/img/amenazas/Amenaza7.jpeg', alt: 'Amenaza 7 - Cangrejo Azul', caption: 'Destrucción de manglares' },
+    { src: 'assets/img/amenazas/Amenaza8.jpeg', alt: 'Amenaza 8 - Cangrejo Azul', caption: 'Impacto humano' },
+    { src: 'assets/img/amenazas/Amenaza9.jpeg', alt: 'Amenaza 9 - Cangrejo Azul', caption: 'Riesgos durante migración' }
+  ];
+  currentSlide = 0;
+  private autoPlayInterval: any;
+
+  constructor(private crearEventoService: CrearEventoService) { }
 
   ngOnInit(): void {
-    console.log('RecorridoComponent inicializado');
-    // Inicializar con la primera sección
+    // Cargar observaciones de Naturalista
+    this.loadNaturalistaObservations();
     this.activeSection = 'por-que-disminuye';
+    this.startAutoPlay();
+  }
+
+  // Cargar y mostrar observaciones de Naturalista
+  loadNaturalistaObservations(): void {
+    this.crearEventoService.getObservacionesNaturalista().subscribe({
+      next: (response) => {
+        console.log('Respuesta de Naturalista:', response);
+        
+        // La respuesta puede venir como array directo o como objeto con propiedad 'data' o 'results'
+        const observaciones = Array.isArray(response) ? response : (response.data || response.results || []);
+        console.log('Observaciones de Naturalista recibidas:', observaciones);
+        
+        // Esperar a que el mapa esté inicializado
+        this.waitForMapAndAddMarkers(observaciones);
+      },
+      error: (error) => {
+        console.error('Error al cargar observaciones de Naturalista:', error);
+      }
+    });
+  }
+
+  // Esperar a que el mapa esté listo y agregar marcadores
+  private waitForMapAndAddMarkers(observaciones: any[]): void {
+    if (this.map) {
+      this.addNaturalistaMarkers(observaciones);
+    } else {
+      // Reintentar después de 500ms
+      setTimeout(() => this.waitForMapAndAddMarkers(observaciones), 500);
+    }
+  }
+
+  // Agregar marcadores de observaciones de Naturalista al mapa
+  private addNaturalistaMarkers(observaciones: any[]): void {
+    // Limpiar marcadores anteriores si existen
+    this.naturalistaMarkers.forEach(marker => marker.setMap(null));
+    this.naturalistaMarkers = [];
+
+    // Filtrar observaciones que tengan latitud y longitud válidas
+    const validObservations = observaciones.filter(obs => 
+      obs.latitud != null && 
+      obs.longitud != null && 
+      !isNaN(obs.latitud) && 
+      !isNaN(obs.longitud)
+    );
+
+    console.log(`Creando ${validObservations.length} marcadores de Naturalista`);
+
+    // Crear un marcador por cada observación
+    validObservations.forEach((obs, index) => {
+      const marker = new google.maps.Marker({
+        position: {
+          lat: parseFloat(obs.latitud),
+          lng: parseFloat(obs.longitud)
+        },
+        map: this.map,
+        title: `Observación Naturalista #${obs.id}`,
+        label: {
+          text: '📍',
+          fontSize: '20px',
+          color: '#4CAF50'
+        },
+        zIndex: 500 + index
+      });
+
+      // Agregar información al hacer clic
+      marker.addListener('click', () => {
+        const infoContent = `
+          <div style="padding: 10px; max-width: 300px;">
+            <h3 style="margin: 0 0 10px 0; color: #2E7D32;">🌿 Observación Naturalist</h3>
+            <p style= "color: black;"><strong>ID:</strong> ${obs.id}</p>
+            <p style= "color: black;"><strong>Especie:</strong> ${obs.especie_valida_busqueda || 'N/A'}</p>
+            <p style= "color: black;"><strong>Fecha:</strong> ${obs.fecha_colecta || 'N/A'}</p>
+            <p style= "color: black;"><strong>Localidad:</strong> ${obs.localidad || 'N/A'}</p>
+            <p style= "color: black;"><strong>Municipio:</strong> ${obs.municipio || 'N/A'}</p>
+            <p style= "color: black;"><strong>Estado:</strong> ${obs.estado || 'N/A'}</p>
+            <p><strong>Colector:</strong> ${obs.colector || 'N/A'}</p>
+            ${obs.url_origen ? `<p><a href="${obs.url_origen}" target="_blank">Ver en iNaturalist</a></p>` : ''}
+          </div>
+        `;
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: infoContent
+        });
+
+        infoWindow.open(this.map, marker);
+      });
+
+      this.naturalistaMarkers.push(marker);
+    });
+
+    console.log(`${this.naturalistaMarkers.length} marcadores de Naturalista agregados al mapa`);
   }
 
   ngAfterViewInit(): void {
@@ -48,6 +157,8 @@ export class RecorridoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stopAutoPlay();
+    
     if (this.observer) {
       this.observer.disconnect();
     }
@@ -885,5 +996,38 @@ export class RecorridoComponent implements OnInit, AfterViewInit, OnDestroy {
         behavior: 'smooth'
       });
     }
+  }
+
+  // ===== CARRUSEL DE AMENAZAS =====
+  nextSlide(): void {
+    this.currentSlide = (this.currentSlide + 1) % this.amenazasImages.length;
+    this.resetAutoPlay();
+  }
+
+  prevSlide(): void {
+    this.currentSlide = (this.currentSlide - 1 + this.amenazasImages.length) % this.amenazasImages.length;
+    this.resetAutoPlay();
+  }
+
+  goToSlide(index: number): void {
+    this.currentSlide = index;
+    this.resetAutoPlay();
+  }
+
+  startAutoPlay(): void {
+    this.autoPlayInterval = setInterval(() => {
+      this.nextSlide();
+    }, 5000); // Cambiar cada 5 segundos
+  }
+
+  stopAutoPlay(): void {
+    if (this.autoPlayInterval) {
+      clearInterval(this.autoPlayInterval);
+    }
+  }
+
+  resetAutoPlay(): void {
+    this.stopAutoPlay();
+    this.startAutoPlay();
   }
 }

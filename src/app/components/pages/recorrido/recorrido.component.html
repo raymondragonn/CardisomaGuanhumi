@@ -363,6 +363,51 @@
       </div>
     </div>
 
+    <!-- Amenazas en Imágenes (Carrusel) -->
+    <div class="row mb-5">
+      <div class="col-12 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-12">
+            <h2 class="section-title">
+              <i class="bi bi-images"></i> Amenazas en Imágenes
+            </h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="row justify-content-center">
+          <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="instagram-post">
+              <!-- Imagen del post -->
+              <div class="instagram-image-wrapper">
+                <div class="instagram-slides" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
+                  <div class="instagram-slide" *ngFor="let image of amenazasImages; let i = index">
+                    <img [src]="image.src" [alt]="image.alt" class="instagram-image">
+                  </div>
+                </div>
+
+                <!-- Controles del carrusel -->
+                <button class="carousel-control prev" (click)="prevSlide()" aria-label="Anterior">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="carousel-control next" (click)="nextSlide()" aria-label="Siguiente">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="carousel-info mt-4">
+              <p class="text-center">
+                <i class="bi bi-info-circle"></i>
+                Estas imágenes documentan las principales amenazas que enfrenta el Cangrejo Azul en su hábitat natural y durante su migración reproductiva.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Evidencias y Datos -->
     <div id="evidencias-datos" class="row mb-5 section-anchor">
       <div class="col-12 mb-4">

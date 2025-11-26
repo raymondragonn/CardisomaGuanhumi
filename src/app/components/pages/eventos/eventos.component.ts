@@ -44,10 +44,134 @@ export class EventosComponent implements OnInit {
     { id: 'voluntariado', nombre: 'Voluntariado', icono: 'bi-hand-thumbs-up' }
   ];
 
+  // Control del modal de creación
+  mostrarModalCrear: boolean = false;
+  creandoEvento: boolean = false;
+
+  // Datos del formulario de creación
+  nuevoEvento = {
+    titulo: '',
+    descripcion: '',
+    fecha: '',
+    hora: '',
+    lugar: '',
+    duracion: 120,
+    requisitos: '',
+    tipo: 'voluntariado'
+  };
+
   constructor(private eventoService: CrearEventoService) { }
 
   ngOnInit(): void {
     this.cargarEventos();
+    console.log('Usuario es admin:', this.isAdmin());
+    console.log('Permiso en localStorage:', localStorage.getItem('user_permiso'));
+  }
+
+  // Verificar si el usuario es administrador
+  isAdmin(): boolean {
+    const isAdminValue = this.eventoService.isAdmin();
+    console.log('isAdmin() devuelve:', isAdminValue);
+    return isAdminValue;
+  }
+
+  // Abrir modal de creación
+  abrirModalCrear(): void {
+    this.mostrarModalCrear = true;
+    this.limpiarFormulario();
+  }
+
+  // Cerrar modal de creación
+  cerrarModalCrear(): void {
+    this.mostrarModalCrear = false;
+    this.limpiarFormulario();
+  }
+
+  // Limpiar formulario
+  limpiarFormulario(): void {
+    this.nuevoEvento = {
+      titulo: '',
+      descripcion: '',
+      fecha: '',
+      hora: '',
+      lugar: '',
+      duracion: 120,
+      requisitos: '',
+      tipo: 'voluntariado'
+    };
+  }
+
+  // Crear evento
+  crearEvento(): void {
+    // Validaciones
+    if (!this.nuevoEvento.titulo || this.nuevoEvento.titulo.trim().length < 3) {
+      alert('⚠️ El título debe tener al menos 3 caracteres.');
+      return;
+    }
+
+    if (!this.nuevoEvento.descripcion || this.nuevoEvento.descripcion.trim().length < 10) {
+      alert('⚠️ La descripción debe tener al menos 10 caracteres.');
+      return;
+    }
+
+    if (!this.nuevoEvento.fecha) {
+      alert('⚠️ Debes seleccionar una fecha.');
+      return;
+    }
+
+    if (!this.nuevoEvento.hora) {
+      alert('⚠️ Debes seleccionar una hora.');
+      return;
+    }
+
+    if (!this.nuevoEvento.lugar || this.nuevoEvento.lugar.trim().length < 3) {
+      alert('⚠️ El lugar debe tener al menos 3 caracteres.');
+      return;
+    }
+
+    if (!this.nuevoEvento.duracion || this.nuevoEvento.duracion <= 0) {
+      alert('⚠️ La duración debe ser mayor a 0 minutos.');
+      return;
+    }
+
+    this.creandoEvento = true;
+
+    // Preparar datos para enviar
+    const eventoData = {
+      titulo: this.nuevoEvento.titulo.trim(),
+      descripcion: this.nuevoEvento.descripcion.trim(),
+      fecha: this.nuevoEvento.fecha,
+      hora: this.nuevoEvento.hora,
+      lugar: this.nuevoEvento.lugar.trim(),
+      duracion: this.nuevoEvento.duracion,
+      requisitos: this.nuevoEvento.requisitos.trim() || null,
+      tipo: this.nuevoEvento.tipo === 'limpieza' ? 'Limpieza' : 'Voluntariado'
+    };
+
+    this.eventoService.crearEvento(eventoData)
+      .subscribe({
+        next: (response) => {
+          console.log('Evento creado exitosamente:', response);
+          alert(`✅ ¡Evento "${response.titulo}" creado exitosamente!`);
+          this.cerrarModalCrear();
+          this.cargarEventos(); // Recargar eventos
+        },
+        error: (error) => {
+          console.error('Error al crear evento:', error);
+          this.creandoEvento = false;
+          
+          if (error.status === 401) {
+            alert('⚠️ No tienes autorización para crear eventos. Debes ser administrador.');
+          } else if (error.status === 403) {
+            alert('⚠️ No tienes permisos para crear eventos.');
+          } else {
+            alert(`❌ Error al crear evento: ${error.error?.detail || error.message || 'Error desconocido'}`);
+          }
+        },
+        complete: () => {
+          this.creandoEvento = false;
+        }
+      });
   }
 
   // Método para cargar eventos desde el backend

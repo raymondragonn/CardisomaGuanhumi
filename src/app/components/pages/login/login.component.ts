@@ -47,7 +47,6 @@ export class LoginComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Login exitoso:', response);
-            this.isSubmitting = false;
             
             // Guardar access_token y token_type en localStorage
             if (response.access_token) {
@@ -68,9 +67,31 @@ export class LoginComponent implements OnInit {
             } else {
               localStorage.removeItem('remembered_username');
             }
-            
-            alert('¡Bienvenido de vuelta al movimiento del Cangrejo Azul!');
-            this.router.navigate(['/']);
+
+            // Obtener información completa del usuario incluyendo el permiso
+            this.authService.getCurrentUserInfo()
+              .subscribe({
+                next: (userInfo) => {
+                  console.log('Información del usuario:', userInfo);
+                  
+                  // Guardar el permiso del usuario
+                  if (userInfo.permiso) {
+                    localStorage.setItem('user_permiso', userInfo.permiso);
+                    console.log('Permiso del usuario guardado:', userInfo.permiso);
+                  }
+                  
+                  this.isSubmitting = false;
+                  alert('¡Bienvenido de vuelta al movimiento del Cangrejo Azul!');
+                  this.router.navigate(['/']);
+                },
+                error: (error) => {
+                  console.error('Error al obtener información del usuario:', error);
+                  this.isSubmitting = false;
+                  // Continuar de todas formas, el usuario ya está autenticado
+                  alert('¡Bienvenido de vuelta al movimiento del Cangrejo Azul!');
+                  this.router.navigate(['/']);
+                }
+              });
           },
           error: (error) => {
             console.error('Error en el login:', error);
