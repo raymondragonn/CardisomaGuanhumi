@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CrearEventoService } from 'src/app/services/crear-evento.service';
+import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 interface ObservacionNaturalista {
   id: number;
@@ -38,7 +41,19 @@ interface Estadisticas {
   templateUrl: './comunidad.component.html',
   styleUrls: ['./comunidad.component.scss']
 })
-export class ComunidadComponent implements OnInit {
+export class ComunidadComponent implements OnInit, OnDestroy {
+  @ViewChild('municipioChart') municipioChart?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('anioChart') anioChart?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('mesChart') mesChart?: ElementRef<HTMLCanvasElement>;
+  
+  // Control de vistas
+  vistaActual: 'observaciones' | 'graficas' = 'observaciones';
+  
+  // Charts
+  chartMunicipio?: Chart;
+  chartAnio?: Chart;
+  chartMes?: Chart;
+  
   observaciones: ObservacionNaturalista[] = [];
   observacionSeleccionada: ObservacionNaturalista | null = null;
   mostrarModal: boolean = false;
@@ -63,6 +78,222 @@ export class ComunidadComponent implements OnInit {
   ngOnInit(): void {
     this.cargarObservaciones();
     this.cargarEstadisticas();
+  }
+  
+  cambiarVista(vista: 'observaciones' | 'graficas'): void {
+    this.vistaActual = vista;
+    if (vista === 'graficas') {
+      // Esperar a que el DOM se actualice antes de crear las gráficas
+      setTimeout(() => {
+        this.crearGraficas();
+      }, 100);
+    }
+  }
+  
+  crearGraficas(): void {
+    if (!this.estadisticas) return;
+    
+    // Destruir gráficas existentes
+    this.destruirGraficas();
+    
+    this.crearGraficaMunicipios();
+    this.crearGraficaAnios();
+    this.crearGraficaMeses();
+  }
+  
+  destruirGraficas(): void {
+    if (this.chartMunicipio) {
+      this.chartMunicipio.destroy();
+    }
+    if (this.chartAnio) {
+      this.chartAnio.destroy();
+    }
+    if (this.chartMes) {
+      this.chartMes.destroy();
+    }
+  }
+  
+  crearGraficaMunicipios(): void {
+    if (!this.municipioChart || !this.estadisticas) return;
+    
+    const ctx = this.municipioChart.nativeElement.getContext('2d');
+    if (!ctx) return;
+    
+    const municipios = Object.entries(this.estadisticas.por_municipio)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10); // Top 10 municipios
+    
+    const config: ChartConfiguration = {
+      type: 'bar',
+      data: {
+        labels: municipios.map(m => m[0]),
+        datasets: [{
+          label: 'Observaciones por Municipio',
+          data: municipios.map(m => m[1]),
+          backgroundColor: 'rgba(39, 174, 96, 0.7)',
+          borderColor: 'rgba(39, 174, 96, 1)',
+          borderWidth: 2,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          },
+          title: {
+            display: true,
+            text: 'Top 10 Municipios con más Observaciones',
+            font: {
+              size: 16,
+              weight: 'bold'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    };
+    
+    this.chartMunicipio = new Chart(ctx, config);
+  }
+  
+  crearGraficaAnios(): void {
+    if (!this.anioChart || !this.estadisticas) return;
+    
+    const ctx = this.anioChart.nativeElement.getContext('2d');
+    if (!ctx) return;
+    
+    const anios = Object.entries(this.estadisticas.por_anio)
+      .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+    
+    const config: ChartConfiguration = {
+      type: 'line',
+      data: {
+        labels: anios.map(a => a[0]),
+        datasets: [{
+          label: 'Observaciones por Año',
+          data: anios.map(a => a[1]),
+          backgroundColor: 'rgba(199, 237, 253, 0.3)',
+          borderColor: 'rgba(12, 74, 110, 1)',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: 'rgba(12, 74, 110, 1)',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          },
+          title: {
+            display: true,
+            text: 'Tendencia de Observaciones por Año',
+            font: {
+              size: 16,
+              weight: 'bold'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    };
+    
+    this.chartAnio = new Chart(ctx, config);
+  }
+  
+  crearGraficaMeses(): void {
+    if (!this.mesChart || !this.observaciones || this.observaciones.length === 0) return;
+    
+    const ctx = this.mesChart.nativeElement.getContext('2d');
+    if (!ctx) return;
+    
+    // Contar observaciones por mes
+    const mesesCount: { [key: string]: number } = {};
+    const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    // Inicializar todos los meses en 0
+    nombresMeses.forEach(mes => mesesCount[mes] = 0);
+    
+    this.observaciones.forEach(obs => {
+      if (obs.fecha_colecta) {
+        const fecha = new Date(obs.fecha_colecta);
+        const mes = nombresMeses[fecha.getMonth()];
+        mesesCount[mes]++;
+      }
+    });
+    
+    const config: ChartConfiguration = {
+      type: 'doughnut',
+      data: {
+        labels: nombresMeses,
+        datasets: [{
+          label: 'Observaciones por Mes',
+          data: nombresMeses.map(mes => mesesCount[mes]),
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 206, 86, 0.7)',
+            'rgba(75, 192, 192, 0.7)',
+            'rgba(153, 102, 255, 0.7)',
+            'rgba(255, 159, 64, 0.7)',
+            'rgba(199, 237, 253, 0.7)',
+            'rgba(39, 174, 96, 0.7)',
+            'rgba(231, 76, 60, 0.7)',
+            'rgba(241, 196, 15, 0.7)',
+            'rgba(155, 89, 182, 0.7)',
+            'rgba(52, 152, 219, 0.7)'
+          ],
+          borderColor: '#fff',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'right'
+          },
+          title: {
+            display: true,
+            text: 'Distribución de Observaciones por Mes',
+            font: {
+              size: 16,
+              weight: 'bold'
+            }
+          }
+        }
+      }
+    };
+    
+    this.chartMes = new Chart(ctx, config);
   }
 
   cargarObservaciones(): void {
@@ -190,5 +421,9 @@ export class ComunidadComponent implements OnInit {
 
   irAFormulario(): void {
     this.router.navigate(['/formulario']);
+  }
+  
+  ngOnDestroy(): void {
+    this.destruirGraficas();
   }
 }

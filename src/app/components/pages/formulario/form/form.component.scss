@@ -117,7 +117,7 @@
 
   .form-label {
     font-weight: 600;
-    color: #495057;
+    color: #212529;
     margin-bottom: 8px;
 
     .text-danger {
@@ -131,11 +131,19 @@
     border-radius: 8px;
     padding: 10px 15px;
     font-size: 1rem;
+    color: #212529;
+    background-color: #ffffff;
     transition: all 0.3s ease;
 
     &:focus {
       border-color: #667eea;
       box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      color: #212529;
+      background-color: #ffffff;
+    }
+
+    &::placeholder {
+      color: #6c757d;
     }
 
     &.is-invalid {
@@ -180,7 +188,7 @@
 
       .form-check-label {
         cursor: pointer;
-        color: #495057;
+        color: #212529;
         font-size: 0.95rem;
         margin-left: 5px;
       }

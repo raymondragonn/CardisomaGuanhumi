@@ -126,9 +126,16 @@ export class FormComponent implements OnInit {
       this.crearEventoService.enviarObservacion(observacionData).subscribe({
         next: (response) => {
           console.log('Respuesta del servidor:', response);
-          alert('¡Observación enviada con éxito! Gracias por contribuir a la conservación del cangrejo azul.');
-          this.resetForm();
-          this.isSubmitting = false;
+          
+          // Si hay archivo seleccionado, subirlo
+          if (this.selectedFile && response.id) {
+            console.log('Subiendo archivo a observación ID:', response.id);
+            this.subirArchivo(response.id);
+          } else {
+            alert('¡Observación enviada con éxito! Gracias por contribuir a la conservación del cangrejo azul.');
+            this.resetForm();
+            this.isSubmitting = false;
+          }
         },
         error: (error) => {
           console.error('Error al enviar observación:', error);
@@ -150,6 +157,29 @@ export class FormComponent implements OnInit {
       alert('Por favor, complete todos los campos requeridos.');
       this.markFormGroupTouched(this.observacionForm);
     }
+  }
+
+  subirArchivo(observacionId: number): void {
+    if (!this.selectedFile) {
+      return;
+    }
+
+    console.log('Subiendo archivo:', this.selectedFile.name);
+    this.crearEventoService.subirFotoObservacion(observacionId, this.selectedFile).subscribe({
+      next: (response) => {
+        console.log('Archivo subido exitosamente:', response);
+        alert('¡Observación y archivo enviados con éxito! Gracias por contribuir a la conservación del cangrejo azul.');
+        this.resetForm();
+        this.isSubmitting = false;
+      },
+      error: (error) => {
+        console.error('Error al subir archivo:', error);
+        // La observación se creó pero el archivo falló
+        alert('La observación se guardó correctamente, pero hubo un error al subir el archivo. Puede intentar subirlo más tarde.');
+        this.resetForm();
+        this.isSubmitting = false;
+      }
+    });
   }
 
   prepareFormData(): any {
@@ -311,6 +341,12 @@ export class FormComponent implements OnInit {
       importanciaConservacion: 3
     });
     this.selectedFile = null;
+    
+    // Limpiar el input de archivo
+    const fileInput = document.getElementById('archivo') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 
   markFormGroupTouched(formGroup: FormGroup): void {

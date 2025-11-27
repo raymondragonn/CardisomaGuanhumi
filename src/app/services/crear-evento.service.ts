@@ -269,4 +269,23 @@ export class CrearEventoService {
     const url = `${this.apiUrl}/observaciones-naturalista/estadisticas`;
     return this.http.get(url);
   }
+
+  // Método para subir foto/video a una observación existente
+  subirFotoObservacion(observacionId: number, archivo: File): Observable<any> {
+    const url = `${this.apiUrl}/observaciones/${observacionId}/foto`;
+    
+    // Crear FormData para enviar archivo
+    const formData = new FormData();
+    formData.append('foto', archivo);
+    
+    // Obtener el header de autorización
+    const authHeader = this.getAuthorizationHeader();
+    
+    // Headers con autorización (sin Content-Type, se establece automáticamente para FormData)
+    const headers = new HttpHeaders({
+      'Authorization': authHeader || ''
+    });
+
+    return this.http.post(url, formData, { headers });
+  }
 }
