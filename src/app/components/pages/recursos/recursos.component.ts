@@ -79,9 +79,10 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2024',
         fuente: 'Actívate.org.mx',
         enlace: 'https://activate.org.mx/activacion/salvamos-al-cangrejo-azul-de-la-riviera-veracruzana-68994bd8c1391',
+        imagen: 'assets/img/recursos/salvemos_al_cangrejo_azul.png',
         categoria: 'Activismo',
         tipo: 'articulo',
-        previewType: 'embed'
+        previewType: 'image'
       },
 
       // Investigaciones
@@ -93,10 +94,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2019',
         fuente: 'Universidad Veracruzana - MCA',
         enlace: 'https://www.uv.mx/pozarica/mca/files/2019/05/G03_GLORIA-ISABEL-AQUINO-DIAZ.pdf',
+        imagen: 'assets/img/recursos/estudio_de_cardisoma_guanhumi.png',
         categoria: 'Tesis',
         tipo: 'investigacion',
         tipoDocumento: 'PDF',
-        previewType: 'pdf'
+        previewType: 'image'
       },
       {
         id: 3,
@@ -106,10 +108,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2013',
         fuente: 'UNAM - Tesis',
         enlace: 'https://tesiunamdocumentos.dgb.unam.mx/ptd2013/Presenciales/0696227/0696227.pdf',
+        imagen: 'assets/img/recursos/biologia_y_ecologia_del_cardisoma_guanhumi.png',
         categoria: 'Tesis Doctoral',
         tipo: 'investigacion',
         tipoDocumento: 'PDF',
-        previewType: 'pdf'
+        previewType: 'image'
       },
       {
         id: 4,
@@ -119,10 +122,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2021',
         fuente: 'Latin American Journal of Aquatic Research',
         enlace: 'https://www.scielo.cl/scielo.php?pid=S0718-560X2021000100136&script=sci_arttext&tlng=en',
+        imagen: 'assets/img/cangrejo/ciclo_vida_cardisoma.png',
         categoria: 'Artículo Científico',
         tipo: 'investigacion',
         tipoDocumento: 'Artículo',
-        previewType: 'embed'
+        previewType: 'image'
       },
       {
         id: 5,
@@ -132,10 +136,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2015',
         fuente: 'Publicación Académica',
         enlace: 'https://books.google.com.mx/books?hl=es&lr=&id=mRnM8zubAI0C&oi=fnd&pg=PA9&dq=cardisoma+guanhumi+alvarado&ots=qyAAOPtmof&sig=BZPsee3Y56rhCwBihRYBaOMdqSQ&redir_esc=y#v=onepage&q=cardisoma%20guanhumi%20alvarado&f=false',
+        imagen: 'assets/img/cangrejo/map_cardisoma.jpg',
         categoria: 'Libro',
         tipo: 'investigacion',
         tipoDocumento: 'Libro',
-        previewType: 'embed'
+        previewType: 'image'
       },
 
       // Videos
@@ -146,12 +151,12 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         plataforma: 'Instagram',
         fecha: '2024',
         enlace: 'https://www.instagram.com/p/DNHK6EDtk79/',
-        imagen: 'https://www.instagram.com/p/DNHK6EDtk79/media/?size=l',
+        imagen: 'assets/img/recursos/el_cangrejo_azul_en_su_habitat.png',
         imagenRelacionada: true,
         categoria: 'Documental',
         tipo: 'video',
         duracion: '0:30',
-        previewType: 'instagram'
+        previewType: 'image'
       },
       {
         id: 7,
@@ -160,12 +165,12 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         plataforma: 'Instagram',
         fecha: '2024',
         enlace: 'https://www.instagram.com/p/DLP2OsZu6gj/',
-        imagen: 'https://www.instagram.com/p/DLP2OsZu6gj/media/?size=l',
+        imagen: 'assets/img/recursos/conservacion_del_cardisoma_guanhumi.png',
         imagenRelacionada: true,
         categoria: 'Educativo',
         tipo: 'video',
         duracion: '0:45',
-        previewType: 'instagram'
+        previewType: 'image'
       },
       {
         id: 8,
@@ -174,12 +179,12 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         plataforma: 'Instagram',
         fecha: '2024',
         enlace: 'https://www.instagram.com/reel/C9SAlisud5Y/',
-        imagen: 'https://www.instagram.com/reel/C9SAlisud5Y/media/?size=l',
+        imagen: 'assets/img/cangrejo/CangrejoAzul1.jpg',
         imagenRelacionada: true,
         categoria: 'Naturaleza',
         tipo: 'video',
         duracion: '0:35',
-        previewType: 'instagram'
+        previewType: 'image'
       },
 
       // Noticias
@@ -191,9 +196,10 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2025',
         fuente: 'Excélsior',
         enlace: 'https://www.excelsior.com.mx/nacional/sobreexplotacion-desdibuja-al-cangrejo-azul-en-alvarado-alertan-de-su-posible-extincion',
+        imagen: 'assets/img/recursos/sobreexplotacion_desdibuja.png',
         categoria: 'Alerta Ambiental',
         tipo: 'noticia',
-        previewType: 'embed'
+        previewType: 'image'
       },
       {
         id: 10,
@@ -203,9 +209,10 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2025',
         fuente: 'Aristegui Noticias',
         enlace: 'https://aristeguinoticias.com/1208/naturaleza/earth-mission-denuncia-desarrollos-inmobiliarios-hunden-al-cangrejo-azul-en-veracruz/',
+        imagen: 'assets/img/recursos/desarrollos_inmobiliarios_hunden_al_cangrejo_azul.png',
         categoria: 'Denuncia',
         tipo: 'noticia',
-        previewType: 'embed'
+        previewType: 'image'
       },
       {
         id: 11,
@@ -215,9 +222,10 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2025-09-11',
         fuente: 'e-Veracruz',
         enlace: 'https://e-veracruz.mx/nota/2025-09-11/ecologia/cangrejo-azul-no-detiene-urbanizacion-en-alvarado-afirma-alcaldesa',
+        imagen: 'assets/img/recursos/no_se_detiene_urbanizacion_en_alvarado.png',
         categoria: 'Política',
         tipo: 'noticia',
-        previewType: 'embed'
+        previewType: 'image'
       },
       {
         id: 12,
@@ -227,9 +235,10 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2025-08-13',
         fuente: 'La Silla Rota Veracruz',
         enlace: 'https://lasillarota.com/veracruz/reportajes/2025/8/13/riviera-veracruzana-el-desarrollo-inmobiliario-que-devasta-ecosistema-del-cangrejo-azul-550252.html',
+        imagen: 'assets/img/cangrejo/CangrejoAzul2.jpg',
         categoria: 'Reportaje',
         tipo: 'noticia',
-        previewType: 'embed'
+        previewType: 'image'
       },
       {
         id: 13,
@@ -239,9 +248,10 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2025-08-15',
         fuente: 'Riviera Veracruz Now',
         enlace: 'https://rivieraveracruznow.com/2025/08/15/lanzan-campana-para-salvar-al-cangrejo-azul-en-la-riviera-veracruzana/',
+        imagen: 'assets/img/cangrejo/photo_cardisoma.jpeg',
         categoria: 'Conservación',
         tipo: 'noticia',
-        previewType: 'embed'
+        previewType: 'image'
       },
       {
         id: 14,
@@ -251,9 +261,10 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         fecha: '2025-09-25',
         fuente: 'CNN en Español',
         enlace: 'https://cnnespanol.cnn.com/2025/09/25/video/video/cnne-cangrejos-azules-veracruz-cte-llamado-tierra',
+        imagen: 'assets/img/cangrejo/text_cardisoma.jpeg',
         categoria: 'Internacional',
         tipo: 'noticia',
-        previewType: 'video'
+        previewType: 'image'
       },
 
       // Publicaciones de redes sociales
@@ -264,11 +275,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         plataforma: 'Instagram',
         fecha: '2024',
         enlace: 'https://www.instagram.com/p/DLQe4bJSJSl/?img_index=1',
-        imagen: 'https://www.instagram.com/p/DLQe4bJSJSl/media/?size=l',
+        imagen: 'assets/img/recursos/informacion_sobre_el_cangrejo_azul.png',
         imagenRelacionada: true,
         categoria: 'Educativo',
         tipo: 'publicacion',
-        previewType: 'instagram'
+        previewType: 'image'
       },
       {
         id: 16,
@@ -277,11 +288,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         plataforma: 'Instagram',
         fecha: '2024',
         enlace: 'https://www.instagram.com/p/DNMWmmltFM_/?img_index=1',
-        imagen: 'https://www.instagram.com/p/DNMWmmltFM_/media/?size=l',
+        imagen: 'assets/img/recursos/conservemos_al_cardisoma_guanhumi.png',
         imagenRelacionada: true,
         categoria: 'Conservación',
         tipo: 'publicacion',
-        previewType: 'instagram'
+        previewType: 'image'
       },
       {
         id: 17,
@@ -290,11 +301,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         plataforma: 'Instagram',
         fecha: '2024',
         enlace: 'https://www.instagram.com/p/DN9ZY8KDcG2/?img_index=1',
-        imagen: 'https://www.instagram.com/p/DN9ZY8KDcG2/media/?size=l',
+        imagen: 'assets/img/cangrejo/hembra_macho_cardisoma.png',
         imagenRelacionada: true,
         categoria: 'Curiosidades',
         tipo: 'publicacion',
-        previewType: 'instagram'
+        previewType: 'image'
       },
       {
         id: 18,
@@ -303,11 +314,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         plataforma: 'Instagram',
         fecha: '2024',
         enlace: 'https://www.instagram.com/p/DNlrzaBBsBk/?img_index=1',
-        imagen: 'https://www.instagram.com/p/DNlrzaBBsBk/media/?size=l',
+        imagen: 'assets/img/cangrejo/macho_cardisoma.jpg',
         imagenRelacionada: true,
         categoria: 'Activismo',
         tipo: 'publicacion',
-        previewType: 'instagram'
+        previewType: 'image'
       }
     ];
 
@@ -320,6 +331,9 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
     // Filtrar por tipo
     if (this.filtroActivo !== 'todos') {
       recursos = recursos.filter(r => r.tipo === this.filtroActivo);
+    } else {
+      // Intercalar recursos por tipo cuando se muestra "Todos"
+      recursos = this.intercalarPorTipo(recursos);
     }
 
     // Filtrar por término de búsqueda
@@ -337,6 +351,35 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.recursosFiltrados = recursos;
+  }
+
+  // Intercala recursos de diferentes tipos para una distribución uniforme
+  private intercalarPorTipo(recursos: Recurso[]): Recurso[] {
+    const tipos = ['noticia', 'articulo', 'investigacion', 'video', 'publicacion'];
+    const porTipo: { [key: string]: Recurso[] } = {};
+    
+    // Agrupar por tipo
+    tipos.forEach(tipo => {
+      porTipo[tipo] = recursos.filter(r => r.tipo === tipo);
+    });
+
+    const resultado: Recurso[] = [];
+    let tieneRecursos = true;
+    let index = 0;
+
+    // Intercalar tomando uno de cada tipo en cada iteración
+    while (tieneRecursos) {
+      tieneRecursos = false;
+      for (const tipo of tipos) {
+        if (porTipo[tipo] && porTipo[tipo].length > index) {
+          resultado.push(porTipo[tipo][index]);
+          tieneRecursos = true;
+        }
+      }
+      index++;
+    }
+
+    return resultado;
   }
 
   cambiarFiltro(filtro: string) {

@@ -4,138 +4,99 @@
     <!-- Header de la Sección -->
     <div class="row">
       <div class="col-12">
-        <div class="section-header text-center mb-4">
+        <div class="section-header text-center mb-5">
           <h1 class="title">Recursos</h1>
           <p class="subtitle">Explora artículos, investigaciones, videos y contenido sobre el Cangrejo Azul</p>
         </div>
       </div>
     </div>
 
-    <!-- Buscador y Filtros -->
+    <!-- Filtros minimalistas -->
     <div class="row justify-content-center mb-4">
-      <div class="col-lg-10 col-md-10">
-        <div class="search-filter-container">
-          <!-- Buscador -->
-          <div class="search-box">
-            <input 
-              type="text" 
-              [(ngModel)]="searchTerm" 
-              (input)="onSearchChange()"
-              placeholder="Buscar por tipo de contenido, título, descripción, autor..."
-              class="search-input"
-            >
-            <span class="search-icon" *ngIf="!searchTerm">
-              <i class="bi bi-search"></i>
-            </span>
-            <button *ngIf="searchTerm" class="clear-search" (click)="limpiarFiltros()">
+      <div class="col-lg-10">
+        <div class="news-filters">
+          <div class="filter-tabs">
+            <button 
+              *ngFor="let categoria of categorias" 
+              [class.active]="filtroActivo === categoria.id"
+              (click)="cambiarFiltro(categoria.id)">
+              {{ categoria.nombre }}
+            </button>
+          </div>
+          <div class="search-mini" *ngIf="searchTerm || filtroActivo !== 'todos'">
+            <span class="results-badge">{{ recursosFiltrados.length }} resultados</span>
+            <button class="btn-clear" (click)="limpiarFiltros()">
               <i class="bi bi-x-lg"></i>
             </button>
           </div>
-          
-          <!-- Filtro por tipo -->
-          <div class="filtro-box">
-            <label for="tipo-select">
-              <i class="bi bi-funnel"></i> Filtrar por tipo:
-            </label>
-            <select id="tipo-select" [(ngModel)]="filtroActivo" (change)="cambiarFiltro(filtroActivo)" class="form-select">
-              <option *ngFor="let categoria of categorias" [value]="categoria.id">
-                {{categoria.nombre}} ({{contarPorTipo(categoria.id)}})
-              </option>
-            </select>
-          </div>
-
-          <!-- Botón limpiar filtros -->
-          <div class="filtro-actions" *ngIf="filtroActivo !== 'todos' || searchTerm">
-            <button class="clear-filters-btn" (click)="limpiarFiltros()">
-              <i class="bi bi-x-circle"></i> Limpiar filtros
-            </button>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- Contador de resultados -->
-    <div class="row justify-content-center mb-3">
-      <div class="col-lg-10 col-md-10">
-        <div class="results-info">
-          <span class="results-count">
-            <i class="bi bi-collection"></i>
-            {{recursosFiltrados.length}} recurso{{recursosFiltrados.length !== 1 ? 's' : ''}} encontrado{{recursosFiltrados.length !== 1 ? 's' : ''}}
-          </span>
-          <button *ngIf="filtroActivo !== 'todos' || searchTerm" class="clear-filters-btn" (click)="limpiarFiltros()">
-            <i class="bi bi-x-circle"></i> Limpiar filtros
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Grid de Recursos -->
-    <div class="row justify-content-center" id="recursos-grid">
-      <div class="col-lg-10 col-md-10">
-        <div class="row">
-          <div 
-            class="col-lg-4 col-md-6 col-sm-12 mb-4" 
-            *ngFor="let recurso of recursosFiltrados; let i = index"
-          >
-            <a 
-              [href]="recurso.enlace" 
-              target="_blank"
-              class="recurso-card"
-              [ngClass]="'tipo-' + recurso.tipo"
-            >
-              <!-- Badge de tipo -->
-              <div class="tipo-badge-header" [style.background-color]="getColorPorTipo(recurso.tipo)">
-                <i class="bi" [ngClass]="getIconoPorTipo(recurso.tipo)"></i>
-                <span>{{getNombreTipo(recurso.tipo)}}</span>
-                <span class="categoria-badge-inline">{{recurso.categoria}}</span>
-              </div>
-              
-              <!-- Contenido -->
-              <div class="recurso-content">
-                <h3 class="recurso-titulo">{{recurso.titulo}}</h3>
-                <p class="recurso-descripcion">{{recurso.descripcion}}</p>
-                
-                <div class="recurso-meta">
-                  <!-- Autor/Fuente (solo uno, el más relevante) -->
-                  <div class="meta-item" *ngIf="recurso.autor && recurso.autor.trim()">
-                    <i class="bi bi-person-fill"></i>
-                    <span>{{recurso.autor}}</span>
-                  </div>
-                  <div class="meta-item" *ngIf="!recurso.autor && recurso.fuente && recurso.fuente.trim()">
-                    <i class="bi bi-link-45deg"></i>
-                    <span>{{recurso.fuente}}</span>
-                  </div>
-                  <!-- Plataforma -->
-                  <div class="meta-item" *ngIf="recurso.plataforma && recurso.plataforma.trim()">
-                    <i class="bi" [ngClass]="{
-                      'bi-instagram': recurso.plataforma === 'Instagram',
-                      'bi-youtube': recurso.plataforma === 'YouTube',
-                      'bi-facebook': recurso.plataforma === 'Facebook',
-                      'bi-tiktok': recurso.plataforma === 'TikTok'
-                    }"></i>
-                    <span>{{recurso.plataforma}}</span>
-                  </div>
-                  <!-- Fecha -->
-                  <div class="meta-item" *ngIf="recurso.fecha && recurso.fecha.trim()">
-                    <i class="bi bi-calendar3"></i>
-                    <span>{{recurso.fecha}}</span>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          <!-- Sin resultados -->
-          <div class="col-12" *ngIf="recursosFiltrados.length === 0">
-            <div class="no-results">
-              <i class="bi bi-search"></i>
-              <h3>No se encontraron recursos</h3>
-              <p>Intenta con otros términos de búsqueda o cambia los filtros</p>
-              <button class="btn-reset" (click)="limpiarFiltros()">
-                <i class="bi bi-arrow-counterclockwise"></i> Ver todos los recursos
-              </button>
+    <!-- Noticias Destacadas (2 grandes) -->
+    <div class="row justify-content-center mb-4" *ngIf="recursosFiltrados.length > 0">
+      <div class="col-lg-10">
+        <div class="featured-news">
+          <a 
+            *ngFor="let recurso of recursosFiltrados.slice(0, 2); let i = index"
+            [href]="recurso.enlace" 
+            target="_blank"
+            class="featured-card"
+            [style.background-image]="recurso.imagen ? 'url(' + recurso.imagen + ')' : 'linear-gradient(135deg, #0c4a6e 0%, #075985 100%)'">
+            <div class="featured-overlay"></div>
+            <div class="featured-content">
+              <span class="news-category" [style.background-color]="getColorPorTipo(recurso.tipo)">
+                {{ getNombreTipo(recurso.tipo) }}
+              </span>
+              <h2 class="featured-title">{{ recurso.titulo }}</h2>
+              <span class="featured-date">{{ recurso.fecha }}</span>
             </div>
-          </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de Noticias (tarjetas pequeñas) -->
+    <div class="row justify-content-center" *ngIf="recursosFiltrados.length > 2">
+      <div class="col-lg-10">
+        <div class="news-grid">
+          <a 
+            *ngFor="let recurso of recursosFiltrados.slice(2)"
+            [href]="recurso.enlace" 
+            target="_blank"
+            class="news-card">
+            <div class="news-image" [style.background-image]="recurso.imagen ? 'url(' + recurso.imagen + ')' : 'linear-gradient(135deg, #0c4a6e 0%, #075985 100%)'">
+              <span class="news-category-small" [style.background-color]="getColorPorTipo(recurso.tipo)">
+                {{ getNombreTipo(recurso.tipo) }}
+              </span>
+            </div>
+            <div class="news-body">
+              <span class="news-tag">{{ recurso.categoria }}</span>
+              <h3 class="news-title">{{ recurso.titulo }}</h3>
+              <div class="news-meta">
+                <span *ngIf="recurso.autor" class="news-author">
+                  <i class="bi bi-person"></i> {{ recurso.autor }}
+                </span>
+                <span *ngIf="!recurso.autor && recurso.fuente" class="news-source">
+                  <i class="bi bi-link-45deg"></i> {{ recurso.fuente }}
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sin resultados -->
+    <div class="row justify-content-center" *ngIf="recursosFiltrados.length === 0">
+      <div class="col-lg-10">
+        <div class="no-results-news">
+          <i class="bi bi-search"></i>
+          <h3>No se encontraron recursos</h3>
+          <p>Intenta con otros filtros</p>
+          <button class="btn-reset" (click)="limpiarFiltros()">
+            <i class="bi bi-arrow-counterclockwise"></i> Ver todos
+          </button>
         </div>
       </div>
     </div>
@@ -144,7 +105,7 @@
     <div class="row mt-5">
       <div class="col-12">
         <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-10">
+          <div class="col-lg-10">
             <div class="cta-box text-center">
               <h2>¿Tienes Contenido para Compartir?</h2>
               <p>Si tienes artículos, investigaciones o contenido relacionado con el cangrejo azul, compártelo con nosotros</p>
@@ -158,5 +119,4 @@
     </div>
 
   </div>
-
 </section>
