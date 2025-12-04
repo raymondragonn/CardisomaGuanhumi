@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { trigger, transition, style, animate } from '@angular/animations';
 import { CrearEventoService } from 'src/app/services/crear-evento.service';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
 
@@ -39,20 +41,44 @@ interface Estadisticas {
 @Component({
   selector: 'app-comunidad',
   templateUrl: './comunidad.component.html',
-  styleUrls: ['./comunidad.component.scss']
+  styleUrls: ['./comunidad.component.scss'],
+  animations: [
+    trigger('slideAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(30px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0, transform: 'translateX(-30px)' }))
+      ])
+    ])
+  ]
 })
-export class ComunidadComponent implements OnInit, OnDestroy {
+export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('municipioChart') municipioChart?: ElementRef<HTMLCanvasElement>;
   @ViewChild('anioChart') anioChart?: ElementRef<HTMLCanvasElement>;
   @ViewChild('mesChart') mesChart?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('estacionalidadChart') estacionalidadChart?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('historialChart') historialChart?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('municipiosChart') municipiosChart?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('mapElement', { static: false }) mapElement!: ElementRef;
   
   // Control de vistas
   vistaActual: 'observaciones' | 'graficas' = 'observaciones';
+  chartTabActual: 'estacionalidad' | 'historial' | 'municipios' = 'estacionalidad';
   
   // Charts
   chartMunicipio?: Chart;
   chartAnio?: Chart;
   chartMes?: Chart;
+  chartEstacionalidad?: Chart;
+  chartHistorial?: Chart;
+  chartMunicipios?: Chart;
+
+  // Google Maps
+  private map: any = null;
+  private observationMarkers: google.maps.Marker[] = [];
+  private activeInfoWindow: google.maps.InfoWindow | null = null;
   
   observaciones: ObservacionNaturalista[] = [];
   observacionSeleccionada: ObservacionNaturalista | null = null;
@@ -70,14 +96,178 @@ export class ComunidadComponent implements OnInit, OnDestroy {
   anioFiltro: string = '';
   aniosUnicos: number[] = [];
 
+  // Modal de Observación
+  mostrarModalObservacion: boolean = false;
+  pasoActual: number = 1;
+  pasos: string[] = ['Observador', 'Observación', 'Identificación', 'Comportamiento', 'Percepción', 'Finalizar'];
+  observacionForm: FormGroup;
+  selectedFileModal: File | null = null;
+  isSubmittingModal: boolean = false;
+
   constructor(
     private crearEventoService: CrearEventoService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.observacionForm = this.fb.group({
+      // Paso 1: Datos del observador
+      nombre: [''],
+      edad: ['', [Validators.pattern(/^\d+$/)]],
+      comunidad: ['', Validators.required],
+      frecuenciaObservacion: ['', Validators.required],
+
+      // Paso 2: Observación
+      fechaObservacion: ['', Validators.required],
+      horaObservacion: ['', Validators.required],
+      lugarObservacion: ['', Validators.required],
+      tipoHabitat: ['', Validators.required],
+      numeroCangrejos: ['', Validators.required],
+
+      // Paso 3: Identificación
+      sexoCangrejos: this.fb.group({
+        machos: [false],
+        hembras: [false],
+        hembrasOvigeras: [false],
+        noIdentifica: [false]
+      }),
+      tamanoCangrejos: ['', Validators.required],
+
+      // Paso 4: Comportamientos
+      comportamientos: this.fb.group({
+        migrando: [false],
+        alimentandose: [false],
+        escondiendose: [false],
+        cruzandoCarretera: [false],
+        enMadrigueras: [false]
+      }),
+      mortalidadAtropellamiento: ['', Validators.required],
+
+      // Paso 5: Percepción
+      comparacionCantidad: ['', Validators.required],
+      amenazas: this.fb.group({
+        perdidaHabitat: [false],
+        capturaExcesiva: [false],
+        carreteras: [false],
+        contaminacion: [false],
+        cambioclimatico: [false]
+      }),
+      importanciaConservacion: [3, Validators.required],
+
+      // Paso 6: Finalizar
+      accionesProteccion: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.cargarObservaciones();
     this.cargarEstadisticas();
+  }
+
+  ngAfterViewInit(): void {
+    // Inicializar el mapa después de que la vista esté lista
+    setTimeout(() => this.initializeMap(), 500);
+  }
+
+  private initializeMap(): void {
+    if (this.mapElement && this.mapElement.nativeElement) {
+      const mapEl = this.mapElement.nativeElement;
+      
+      // Esperar a que el componente gmp-map esté listo
+      if (mapEl.innerMap) {
+        this.map = mapEl.innerMap;
+        this.addObservationMarkers();
+      } else {
+        // Reintentar
+        setTimeout(() => this.initializeMap(), 300);
+      }
+    }
+  }
+
+  private addObservationMarkers(): void {
+    if (!this.map) return;
+
+    // Limpiar marcadores anteriores
+    this.observationMarkers.forEach(marker => marker.setMap(null));
+    this.observationMarkers = [];
+
+    // Filtrar observaciones válidas (solo Boca del Río y Alvarado)
+    const municipiosPermitidos = ['alvarado', 'boca del río', 'boca del rio'];
+    const validObservations = this.observaciones.filter(obs => 
+      obs.latitud != null && 
+      obs.longitud != null && 
+      !isNaN(obs.latitud) && 
+      !isNaN(obs.longitud) &&
+      obs.municipio && 
+      municipiosPermitidos.includes(obs.municipio.toLowerCase())
+    );
+
+    // Crear marcadores
+    validObservations.forEach((obs, index) => {
+      const marker = new google.maps.Marker({
+        position: {
+          lat: parseFloat(String(obs.latitud)),
+          lng: parseFloat(String(obs.longitud))
+        },
+        map: this.map,
+        title: obs.colector || 'Observación',
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: '#0c4a6e',
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 2
+        },
+        zIndex: 100 + index
+      });
+
+      // InfoWindow al hacer clic
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div style="padding: 10px; max-width: 280px; font-family: Arial, sans-serif;">
+            <h4 style="margin: 0 0 8px 0; color: #0c4a6e; font-size: 14px; font-weight: 600;">
+              ${obs.colector || 'Observador anónimo'}
+            </h4>
+            <p style="margin: 4px 0; color: #333; font-size: 12px;">
+              <strong>Fecha:</strong> ${this.formatearFecha(obs.fecha_colecta)}
+            </p>
+            <p style="margin: 4px 0; color: #333; font-size: 12px;">
+              <strong>Ubicación:</strong> ${obs.municipio || obs.localidad || 'Veracruz'}
+            </p>
+            ${obs.url_origen ? `<p style="margin: 8px 0 0;"><a href="${obs.url_origen}" target="_blank" style="color: #0c4a6e; font-size: 12px; text-decoration: none;">Ver en iNaturalist →</a></p>` : ''}
+          </div>
+        `
+      });
+
+      marker.addListener('click', () => {
+        // Cerrar el InfoWindow anterior si existe
+        if (this.activeInfoWindow) {
+          this.activeInfoWindow.close();
+        }
+        infoWindow.open(this.map, marker);
+        this.activeInfoWindow = infoWindow;
+      });
+
+      this.observationMarkers.push(marker);
+    });
+
+    // Ajustar vista si hay marcadores
+    if (validObservations.length > 0) {
+      const bounds = new google.maps.LatLngBounds();
+      validObservations.forEach(obs => {
+        bounds.extend({ lat: parseFloat(String(obs.latitud)), lng: parseFloat(String(obs.longitud)) });
+      });
+      this.map.fitBounds(bounds);
+    }
+  }
+
+  private updateMapMarkers(): void {
+    if (this.map) {
+      this.addObservationMarkers();
+    } else {
+      // Reintentar inicializar
+      setTimeout(() => this.initializeMap(), 300);
+    }
   }
   
   cambiarVista(vista: 'observaciones' | 'graficas'): void {
@@ -88,6 +278,209 @@ export class ComunidadComponent implements OnInit, OnDestroy {
         this.crearGraficas();
       }, 100);
     }
+  }
+
+  cambiarChartTab(tab: 'estacionalidad' | 'historial' | 'municipios'): void {
+    this.chartTabActual = tab;
+    setTimeout(() => {
+      this.crearGraficaActual();
+    }, 50);
+  }
+
+  crearGraficaActual(): void {
+    this.destruirGraficasNuevas();
+    
+    switch (this.chartTabActual) {
+      case 'estacionalidad':
+        this.crearGraficaEstacionalidad();
+        break;
+      case 'historial':
+        this.crearGraficaHistorial();
+        break;
+      case 'municipios':
+        this.crearGraficaMunicipiosNueva();
+        break;
+    }
+  }
+
+  destruirGraficasNuevas(): void {
+    if (this.chartEstacionalidad) {
+      this.chartEstacionalidad.destroy();
+      this.chartEstacionalidad = undefined;
+    }
+    if (this.chartHistorial) {
+      this.chartHistorial.destroy();
+      this.chartHistorial = undefined;
+    }
+    if (this.chartMunicipios) {
+      this.chartMunicipios.destroy();
+      this.chartMunicipios = undefined;
+    }
+  }
+
+  crearGraficaEstacionalidad(): void {
+    if (!this.estacionalidadChart || !this.observaciones || this.observaciones.length === 0) return;
+    
+    const ctx = this.estacionalidadChart.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const mesesAbrev = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    const mesesCount: number[] = new Array(12).fill(0);
+    
+    this.observaciones.forEach(obs => {
+      if (obs.fecha_colecta) {
+        const fecha = new Date(obs.fecha_colecta);
+        mesesCount[fecha.getMonth()]++;
+      }
+    });
+
+    const config: ChartConfiguration = {
+      type: 'line',
+      data: {
+        labels: mesesAbrev,
+        datasets: [{
+          label: 'Observaciones',
+          data: mesesCount,
+          backgroundColor: 'rgba(125, 211, 252, 0.3)',
+          borderColor: '#0c4a6e',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#0c4a6e',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Observaciones por Mes',
+            font: { size: 14, weight: 'bold' },
+            color: '#0c4a6e',
+            padding: { bottom: 15 }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    };
+
+    this.chartEstacionalidad = new Chart(ctx, config);
+  }
+
+  crearGraficaHistorial(): void {
+    if (!this.historialChart || !this.estadisticas) return;
+    
+    const ctx = this.historialChart.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const anios = Object.entries(this.estadisticas.por_anio)
+      .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+
+    const config: ChartConfiguration = {
+      type: 'bar',
+      data: {
+        labels: anios.map(a => a[0]),
+        datasets: [{
+          label: 'Observaciones por año',
+          data: anios.map(a => a[1]),
+          backgroundColor: '#7dd3fc',
+          borderColor: '#0c4a6e',
+          borderWidth: 1,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Tendencia Anual de Observaciones',
+            font: { size: 14, weight: 'bold' },
+            color: '#0c4a6e',
+            padding: { bottom: 15 }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    };
+
+    this.chartHistorial = new Chart(ctx, config);
+  }
+
+  crearGraficaMunicipiosNueva(): void {
+    if (!this.municipiosChart || !this.estadisticas) return;
+    
+    const ctx = this.municipiosChart.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const municipios = Object.entries(this.estadisticas.por_municipio)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8);
+
+    const config: ChartConfiguration = {
+      type: 'bar',
+      data: {
+        labels: municipios.map(m => m[0]),
+        datasets: [{
+          label: 'Observaciones',
+          data: municipios.map(m => m[1]),
+          backgroundColor: '#7dd3fc',
+          borderColor: '#0c4a6e',
+          borderWidth: 1,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Top Municipios con más Observaciones',
+            font: { size: 14, weight: 'bold' },
+            color: '#0c4a6e',
+            padding: { bottom: 15 }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          y: {
+            grid: { display: false }
+          }
+        }
+      }
+    };
+
+    this.chartMunicipios = new Chart(ctx, config);
   }
   
   crearGraficas(): void {
@@ -305,6 +698,11 @@ export class ComunidadComponent implements OnInit, OnDestroy {
           this.observaciones = response;
         this.extraerMunicipios();
         this.cargando = false;
+        
+        // Actualizar marcadores del mapa
+        setTimeout(() => {
+          this.updateMapMarkers();
+        }, 500);
       },
       error: (error) => {
         console.error('Error al cargar observaciones:', error);
@@ -325,6 +723,10 @@ export class ComunidadComponent implements OnInit, OnDestroy {
             .map(key => parseInt(key))
             .sort((a, b) => b - a); // Ordenar de más reciente a más antiguo
         }
+        // Crear gráfica inicial después de cargar estadísticas
+        setTimeout(() => {
+          this.crearGraficaActual();
+        }, 300);
       },
       error: (error) => {
         console.error('Error al cargar estadísticas:', error);
@@ -367,6 +769,8 @@ export class ComunidadComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.observaciones = response;
         this.cargando = false;
+        // Actualizar marcadores del mapa
+        this.updateMapMarkers();
       },
       error: (error) => {
         console.error('Error al filtrar:', error);
@@ -413,6 +817,16 @@ export class ComunidadComponent implements OnInit, OnDestroy {
     }
   }
 
+  getIniciales(nombre: string | undefined): string {
+    if (!nombre || nombre.trim() === '') return '?';
+    
+    const palabras = nombre.trim().split(/\s+/);
+    if (palabras.length === 1) {
+      return palabras[0].substring(0, 2).toUpperCase();
+    }
+    return (palabras[0][0] + palabras[palabras.length - 1][0]).toUpperCase();
+  }
+
   abrirEnlaceOriginal(url: string): void {
     if (url) {
       window.open(url, '_blank');
@@ -422,8 +836,239 @@ export class ComunidadComponent implements OnInit, OnDestroy {
   irAFormulario(): void {
     this.router.navigate(['/formulario']);
   }
+
+  // ==========================================
+  // MODAL DE OBSERVACIÓN
+  // ==========================================
+  
+  abrirModalObservacion(): void {
+    // Verificar autenticación
+    if (!this.crearEventoService.isAuthenticated()) {
+      alert('Debes iniciar sesión para registrar una observación.');
+      return;
+    }
+    this.mostrarModalObservacion = true;
+    this.pasoActual = 1;
+    document.body.style.overflow = 'hidden';
+  }
+
+  cerrarModalObservacion(): void {
+    this.mostrarModalObservacion = false;
+    this.pasoActual = 1;
+    this.observacionForm.reset({ importanciaConservacion: 3 });
+    this.selectedFileModal = null;
+    document.body.style.overflow = 'auto';
+  }
+
+  pasoSiguiente(): void {
+    if (this.puedeAvanzar() && this.pasoActual < 6) {
+      this.pasoActual++;
+    }
+  }
+
+  pasoAnterior(): void {
+    if (this.pasoActual > 1) {
+      this.pasoActual--;
+    }
+  }
+
+  irAPaso(paso: number): void {
+    // Solo permitir ir a pasos anteriores o al actual
+    if (paso <= this.pasoActual) {
+      this.pasoActual = paso;
+    }
+  }
+
+  puedeAvanzar(): boolean {
+    switch (this.pasoActual) {
+      case 1:
+        return this.observacionForm.get('comunidad')?.valid === true && 
+               this.observacionForm.get('frecuenciaObservacion')?.valid === true;
+      case 2:
+        return this.observacionForm.get('fechaObservacion')?.valid === true && 
+               this.observacionForm.get('horaObservacion')?.valid === true &&
+               this.observacionForm.get('lugarObservacion')?.valid === true &&
+               this.observacionForm.get('tipoHabitat')?.valid === true &&
+               this.observacionForm.get('numeroCangrejos')?.valid === true;
+      case 3:
+        return this.observacionForm.get('tamanoCangrejos')?.valid === true;
+      case 4:
+        return this.observacionForm.get('mortalidadAtropellamiento')?.valid === true;
+      case 5:
+        return this.observacionForm.get('comparacionCantidad')?.valid === true;
+      default:
+        return true;
+    }
+  }
+
+  onFileSelectedModal(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'video/mp4', 'video/quicktime'];
+      if (validTypes.includes(file.type)) {
+        this.selectedFileModal = file;
+      } else {
+        alert('Formato no válido. Use JPG, PNG, MP4 o MOV.');
+        event.target.value = '';
+      }
+    }
+  }
+
+  publicarObservacion(): void {
+    if (this.observacionForm.valid) {
+      this.isSubmittingModal = true;
+      const observacionData = this.prepareObservacionData();
+      
+      this.crearEventoService.enviarObservacion(observacionData).subscribe({
+        next: (response) => {
+          if (this.selectedFileModal && response.id) {
+            this.subirArchivoObservacion(response.id);
+          } else {
+            alert('¡Observación publicada con éxito! Gracias por contribuir.');
+            this.cerrarModalObservacion();
+            this.isSubmittingModal = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error al publicar:', error);
+          let msg = 'Error al publicar. Intente nuevamente.';
+          if (error.status === 401) msg = 'Sesión expirada. Inicie sesión nuevamente.';
+          alert(msg);
+          this.isSubmittingModal = false;
+        }
+      });
+    }
+  }
+
+  subirArchivoObservacion(observacionId: number): void {
+    if (!this.selectedFileModal) return;
+
+    this.crearEventoService.subirFotoObservacion(observacionId, this.selectedFileModal).subscribe({
+      next: () => {
+        alert('¡Observación y foto publicadas con éxito! Gracias por contribuir.');
+        this.cerrarModalObservacion();
+        this.isSubmittingModal = false;
+      },
+      error: () => {
+        alert('Observación guardada, pero hubo un error al subir la foto.');
+        this.cerrarModalObservacion();
+        this.isSubmittingModal = false;
+      }
+    });
+  }
+
+  prepareObservacionData(): any {
+    const formValue = this.observacionForm.value;
+    
+    const frecuenciaMap: any = {
+      'nunca': 'Nunca',
+      'rara-vez': 'Rara vez (1–2 veces al año)',
+      'a-veces': 'A veces (cada temporada)',
+      'frecuentemente': 'Frecuentemente (varias veces al mes)',
+      'muy-frecuentemente': 'Muy frecuentemente (casi todos los días)'
+    };
+
+    const cantidadMap: any = {
+      '1-5': '1–5',
+      '6-20': '6–20',
+      '21-50': '21–50',
+      'mas-50': 'Más de 50'
+    };
+
+    const mortalidadMap: any = {
+      'si-muchos': 'Sí, muchos (>10)',
+      'si-pocos': 'Sí, pocos (1–10)',
+      'no': 'No'
+    };
+
+    const comparacionMap: any = {
+      'mucho-menor': 'Mucho menor',
+      'menor': 'Menor',
+      'igual': 'Igual',
+      'mayor': 'Mayor',
+      'no-se': 'No sé'
+    };
+
+    const habitatMap: any = {
+      'manglar': 'Manglar',
+      'humedal': 'Humedal / laguna',
+      'playa': 'Playa / costa',
+      'carretera': 'Carretera',
+      'zona-urbana': 'Zona urbana',
+      'otro': 'Otro'
+    };
+
+    const tamanoMap: any = {
+      'pequenos': 'Pequeños (<5 cm ancho de caparazón)',
+      'medianos': 'Medianos (5–10 cm)',
+      'grandes': 'Grandes (>10 cm)',
+      'mezcla': 'Mezcla de tamaños'
+    };
+
+    // Obtener checkboxes seleccionados
+    const sexoCangrejos = this.getSelectedFromGroup(formValue.sexoCangrejos, {
+      machos: 'Machos',
+      hembras: 'Hembras',
+      hembrasOvigeras: 'Hembras con huevos (ovígeras)',
+      noIdentifica: 'No sé identificarlo'
+    });
+
+    const comportamientos = this.getSelectedFromGroup(formValue.comportamientos, {
+      migrando: 'Migrando (movimiento en grupo hacia agua)',
+      alimentandose: 'Alimentándose',
+      escondiendose: 'Escondiéndose en vegetación',
+      cruzandoCarretera: 'Cruzando carretera',
+      enMadrigueras: 'Dentro o cerca de madrigueras'
+    });
+
+    const amenazas = this.getSelectedFromGroup(formValue.amenazas, {
+      perdidaHabitat: 'Pérdida de manglar/hábitat',
+      capturaExcesiva: 'Captura excesiva',
+      carreteras: 'Carreteras y atropellamiento',
+      contaminacion: 'Contaminación',
+      cambioclimatico: 'Cambio climático (sequías, inundaciones)'
+    });
+
+    return {
+      nombre_observador: formValue.nombre || null,
+      edad: formValue.edad ? parseInt(formValue.edad) : null,
+      comunidad: formValue.comunidad,
+      frecuencia_observacion: frecuenciaMap[formValue.frecuenciaObservacion],
+      fecha_observacion: formValue.fechaObservacion,
+      hora_observacion: formValue.horaObservacion + ':00',
+      lugar_observacion: formValue.lugarObservacion,
+      tipo_habitat: habitatMap[formValue.tipoHabitat],
+      tipo_habitat_otro: null,
+      cantidad_cangrejos: cantidadMap[formValue.numeroCangrejos],
+      sexo_cangrejos: sexoCangrejos,
+      tamano_cangrejos: tamanoMap[formValue.tamanoCangrejos],
+      comportamientos: comportamientos,
+      comportamiento_otro: null,
+      mortalidad_atropellamiento: mortalidadMap[formValue.mortalidadAtropellamiento],
+      cambio_poblacion: comparacionMap[formValue.comparacionCantidad],
+      amenazas_principales: amenazas,
+      amenaza_otra: null,
+      importancia_conservacion: formValue.importanciaConservacion,
+      acciones_proteccion: formValue.accionesProteccion
+    };
+  }
+
+  getSelectedFromGroup(group: any, labels: any): string[] {
+    const selected: string[] = [];
+    for (const key in group) {
+      if (group[key]) {
+        selected.push(labels[key] || key);
+      }
+    }
+    return selected;
+  }
   
   ngOnDestroy(): void {
     this.destruirGraficas();
+    this.destruirGraficasNuevas();
+    
+    // Limpiar marcadores del mapa
+    this.observationMarkers.forEach(marker => marker.setMap(null));
+    this.observationMarkers = [];
   }
 }

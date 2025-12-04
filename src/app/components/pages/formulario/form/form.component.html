@@ -16,6 +16,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
             <h2 class="section-title">
+              <i class="bi bi-person-circle"></i>
               <span class="section-number">1</span>
               Datos Generales del Observador
             </h2>
@@ -24,6 +25,7 @@
         
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
+            <div class="section-content">
           <div class="col-md-6 mb-3">
             <label for="nombre" class="form-label">Nombre (opcional)</label>
             <input 
@@ -76,6 +78,7 @@
               Este campo es requerido.
             </div>
           </div>
+            </div>
           </div>
         </div>
       </div>
@@ -85,6 +88,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
             <h2 class="section-title">
+              <i class="bi bi-eye"></i>
               <span class="section-number">2</span>
               Observación del Cangrejo
             </h2>
@@ -93,6 +97,7 @@
         
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
+            <div class="section-content">
           <div class="col-md-6 mb-3">
             <label for="fechaObservacion" class="form-label">Fecha de la observación <span class="text-danger">*</span></label>
             <input 
@@ -172,6 +177,7 @@
               Este campo es requerido.
             </div>
           </div>
+            </div>
           </div>
         </div>
       </div>
@@ -181,6 +187,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
             <h2 class="section-title">
+              <i class="bi bi-search"></i>
               <span class="section-number">3</span>
               Identificación
             </h2>
@@ -189,6 +196,7 @@
         
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
+            <div class="section-content">
           <div class="col-12 mb-3">
             <label class="form-label d-block">Sexo de los cangrejos observados (puede seleccionar más de una opción)</label>
             <div formGroupName="sexoCangrejos" class="checkbox-group">
@@ -224,6 +232,7 @@
               Este campo es requerido.
             </div>
           </div>
+            </div>
           </div>
         </div>
       </div>
@@ -233,6 +242,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
             <h2 class="section-title">
+              <i class="bi bi-activity"></i>
               <span class="section-number">4</span>
               Comportamientos Observados
             </h2>
@@ -241,6 +251,7 @@
         
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
+            <div class="section-content">
           <div class="col-12 mb-3">
             <label class="form-label d-block">¿Qué estaban haciendo los cangrejos? (puede seleccionar varias opciones)</label>
             <div formGroupName="comportamientos" class="checkbox-group">
@@ -293,6 +304,7 @@
               Este campo es requerido.
             </div>
           </div>
+            </div>
           </div>
         </div>
       </div>
@@ -302,6 +314,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
             <h2 class="section-title">
+              <i class="bi bi-people"></i>
               <span class="section-number">5</span>
               Percepción Local
             </h2>
@@ -310,6 +323,7 @@
         
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
+            <div class="section-content">
           <div class="col-md-6 mb-3">
             <label for="comparacionCantidad" class="form-label">En comparación con hace 5 años, la cantidad de cangrejos es: <span class="text-danger">*</span></label>
             <select class="form-select" id="comparacionCantidad" formControlName="comparacionCantidad" required>
@@ -401,6 +415,7 @@
               Este campo es requerido.
             </div>
           </div>
+            </div>
           </div>
         </div>
       </div>
@@ -410,6 +425,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
             <h2 class="section-title">
+              <i class="bi bi-camera"></i>
               <span class="section-number">6</span>
               Evidencia
             </h2>
@@ -418,6 +434,7 @@
         
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12">
+            <div class="section-content">
           <div class="col-12 mb-3">
             <label for="archivo" class="form-label">¿Desea subir una foto o video de los cangrejos?</label>
             <input 
@@ -427,16 +444,20 @@
               (change)="onFileSelected($event)"
               accept="image/*,video/*">
             <small class="form-text text-muted">Formatos aceptados: JPG, PNG, MP4, MOV</small>
-            <div *ngIf="selectedFile" class="mt-2">
-              <span class="badge bg-success">Archivo seleccionado: {{ selectedFile.name }}</span>
+            <div *ngIf="selectedFile" class="mt-3">
+              <span class="badge bg-success">
+                <i class="bi bi-check-circle-fill"></i>
+                Archivo seleccionado: {{ selectedFile.name }}
+              </span>
             </div>
           </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Botones de acción -->
-      <div class="form-actions text-center mt-5">
+      <div class="form-actions text-center">
         <button type="button" class="btn btn-secondary me-3" (click)="resetForm()" [disabled]="isSubmitting">
           <i class="fas fa-redo"></i> Limpiar Formulario
         </button>

@@ -1,231 +1,563 @@
 <section class="comunidad-section">
   <div class="container">
-    <!-- Encabezado de la sección -->
+    
+    <!-- Header de la Sección -->
     <div class="row">
       <div class="col-12">
-        <div class="section-header text-center mb-4">
-          <h1 class="title">Observaciones <span class="highlight">Cardisoma guanhumi</span></h1>
-          <p class="subtitle">Datos de iNaturalist México - CONABIO (Veracruz)</p>
+        <div class="section-header text-center mb-5">
+          <h1 class="title">Comunidad</h1>
+          <p class="subtitle">¡Ayuda a conservar al Cangrejo Azul!</p>
         </div>
       </div>
     </div>
 
-    <!-- Estadísticas -->
-    <div class="row justify-content-center mb-4" *ngIf="estadisticas">
-      <div class="col-lg-10 col-md-10">
-        <div class="stats-box">
-          <div class="stat-item">
-            <i class="bi bi-binoculars"></i>
-            <span class="stat-number">{{ estadisticas.total_observaciones }}</span>
-            <span class="stat-label">Observaciones totales</span>
+    <!-- Layout principal estilo iNaturalist -->
+    <div class="row justify-content-center" *ngIf="!cargando && !error">
+      <div class="col-lg-10">
+        <div class="inaturalist-layout">
+          
+          <!-- Panel izquierdo: Mapa -->
+          <div class="map-panel">
+            <div class="map-container">
+              <gmp-map 
+                #mapElement
+                center="18.85,-96.10" 
+                zoom="9" 
+                map-id="DEMO_MAP_ID"
+                style="height: 100%; width: 100%;">
+              </gmp-map>
+            </div>
+            <div class="map-legend">
+              <div class="legend-item">
+                <span class="legend-marker"></span>
+                <span class="legend-text">Punto de observación</span>
+              </div>
+              <div class="legend-info">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>{{ observaciones.length }} observaciones en Veracruz, México</span>
+              </div>
+            </div>
           </div>
-          <div class="stat-item">
-            <i class="bi bi-geo-alt"></i>
-            <span class="stat-number">{{ municipiosUnicos.length }}</span>
-            <span class="stat-label">Municipios</span>
-          </div>
-          <div class="stat-item" *ngIf="estadisticas.rango_fechas.fecha_minima">
-            <i class="bi bi-calendar3"></i>
-            <span class="stat-number">{{ estadisticas.rango_fechas.fecha_minima?.substring(0,4) }} - {{ estadisticas.rango_fechas.fecha_maxima?.substring(0,4) }}</span>
-            <span class="stat-label">Período</span>
+
+          <!-- Panel derecho: Información -->
+          <div class="info-panel">
+            
+            <!-- Estadísticas principales -->
+            <div class="info-section stats-section">
+              <div class="stat-card primary">
+                <div class="stat-icon">
+                  <i class="bi bi-binoculars-fill"></i>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-label">TOTAL DE OBSERVACIONES</span>
+                  <span class="stat-number">{{ estadisticas?.total_observaciones || 0 | number }}</span>
+                </div>
+                <button class="btn-action" (click)="cambiarVista('observaciones')" *ngIf="vistaActual !== 'observaciones'">
+                  Ver todas
+                </button>
+              </div>
+            </div>
+
+            <!-- Última observación -->
+            <div class="info-section">
+              <h3 class="section-label">ÚLTIMA OBSERVACIÓN</h3>
+              <div class="last-observation" *ngIf="observaciones.length > 0">
+                <div class="observer-avatar">
+                  <span class="avatar-initials">{{ getIniciales(observaciones[0]?.colector) }}</span>
+                </div>
+                <div class="observation-info">
+                  <span class="observation-date">{{ formatearFecha(observaciones[0]?.fecha_colecta) }}</span>
+                  <span class="observer-name">{{ observaciones[0]?.colector || 'Observador anónimo' }}</span>
+                </div>
+                <button class="btn-view" (click)="verDetalle(observaciones[0])">
+                  Ver observación
+                </button>
+              </div>
+            </div>
+
+            <!-- Resumen de ubicaciones -->
+            <div class="info-section">
+              <div class="location-summary">
+                <div class="location-item">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <div class="location-text">
+                    <span class="location-count">{{ municipiosUnicos.length }}</span>
+                    <span class="location-label">Municipios</span>
+                  </div>
+                </div>
+                <div class="location-item">
+                  <i class="bi bi-calendar-range"></i>
+                  <div class="location-text" *ngIf="estadisticas?.rango_fechas?.fecha_minima">
+                    <span class="location-count">{{ estadisticas?.rango_fechas?.fecha_minima?.substring(0,4) }}-{{ estadisticas?.rango_fechas?.fecha_maxima?.substring(0,4) }}</span>
+                    <span class="location-label">Período</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botón agregar observación -->
+            <div class="info-section">
+              <button class="btn-add-observation" (click)="abrirModalObservacion()">
+                <i class="bi bi-plus-circle-fill"></i>
+                ¡He visto un cangrejo!
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Filtros -->
-    <div class="row justify-content-center mb-4" *ngIf="!cargando && !error && (municipiosUnicos.length > 0 || aniosUnicos.length > 0)">
-      <div class="col-lg-10 col-md-10">
-        <div class="search-filter-container">
-          <!-- Filtro por municipio -->
-          <div class="filtro-box" *ngIf="municipiosUnicos.length > 0">
-            <label for="municipio-select">
-              <i class="bi bi-geo-alt"></i> Filtrar por municipio:
-            </label>
-            <select id="municipio-select" [(ngModel)]="municipioFiltro" (change)="filtrarPorMunicipio()" class="form-select">
+    <!-- Sección de Gráficas estilo iNaturalist -->
+    <div class="row justify-content-center mt-5" *ngIf="!cargando && !error && estadisticas">
+      <div class="col-lg-10">
+        <div class="charts-section">
+          <h3 class="charts-title">Gráficas</h3>
+          
+          <!-- Tabs de gráficas -->
+          <div class="chart-tabs">
+            <button 
+              [class.active]="chartTabActual === 'estacionalidad'" 
+              (click)="cambiarChartTab('estacionalidad')">
+              Estacionalidad
+            </button>
+            <button 
+              [class.active]="chartTabActual === 'historial'" 
+              (click)="cambiarChartTab('historial')">
+              Historial
+            </button>
+            <button 
+              [class.active]="chartTabActual === 'municipios'" 
+              (click)="cambiarChartTab('municipios')">
+              Municipios
+            </button>
+          </div>
+
+          <!-- Contenedor de gráfica -->
+          <div class="chart-container">
+            <canvas #estacionalidadChart *ngIf="chartTabActual === 'estacionalidad'"></canvas>
+            <canvas #historialChart *ngIf="chartTabActual === 'historial'"></canvas>
+            <canvas #municipiosChart *ngIf="chartTabActual === 'municipios'"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros y vista de observaciones -->
+    <div class="row justify-content-center mt-5" *ngIf="!cargando && !error && observaciones.length > 0">
+      <div class="col-lg-10">
+        
+        <!-- Barra de controles -->
+        <div class="observations-header">
+          <h3 class="observations-title">
+            <i class="bi bi-collection"></i>
+            Observaciones
+            <span class="count-badge">{{ observaciones.length }}</span>
+          </h3>
+          
+          <div class="filters-bar">
+            <select [(ngModel)]="municipioFiltro" (change)="filtrarPorMunicipio()" class="filter-select" *ngIf="municipiosUnicos.length > 0">
               <option value="">Todos los municipios</option>
               <option *ngFor="let municipio of municipiosUnicos" [value]="municipio">{{ municipio }}</option>
             </select>
-          </div>
-
-          <!-- Filtro por año -->
-          <div class="filtro-box" *ngIf="aniosUnicos.length > 0">
-            <label for="anio-select">
-              <i class="bi bi-calendar3"></i> Filtrar por año:
-            </label>
-            <select id="anio-select" [(ngModel)]="anioFiltro" (change)="filtrarPorAnio()" class="form-select">
+            <select [(ngModel)]="anioFiltro" (change)="filtrarPorAnio()" class="filter-select" *ngIf="aniosUnicos.length > 0">
               <option value="">Todos los años</option>
               <option *ngFor="let anio of aniosUnicos" [value]="anio">{{ anio }}</option>
             </select>
-          </div>
-
-          <!-- Botón limpiar filtros -->
-          <div class="filtro-actions" *ngIf="municipioFiltro || anioFiltro">
-            <button class="clear-filters-btn" (click)="limpiarFiltros()">
-              <i class="bi bi-x-circle"></i> Limpiar filtros
+            <button class="btn-clear-filters" (click)="limpiarFiltros()" *ngIf="municipioFiltro || anioFiltro">
+              <i class="bi bi-x-lg"></i>
             </button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Sistema de Tabs -->
-    <div class="row justify-content-center mb-4" *ngIf="!cargando && !error && observaciones.length > 0">
-      <div class="col-lg-10 col-md-10">
-        <div class="tabs-container">
-          <button 
-            class="tab-button" 
-            [class.active]="vistaActual === 'observaciones'"
-            (click)="cambiarVista('observaciones')">
-            <i class="bi bi-collection"></i>
-            <span>Observaciones</span>
-          </button>
-          <button 
-            class="tab-button" 
-            [class.active]="vistaActual === 'graficas'"
-            (click)="cambiarVista('graficas')">
-            <i class="bi bi-bar-chart-line"></i>
-            <span>Gráficas</span>
-          </button>
+        <!-- Grid de observaciones -->
+        <div class="observations-grid">
+          <div *ngFor="let observacion of observaciones" class="observation-card" (click)="verDetalle(observacion)">
+            <div class="card-top">
+              <div class="observer-avatar">
+                <span class="avatar-initials">{{ getIniciales(observacion.colector) }}</span>
+      </div>
+              <div class="card-info">
+                <span class="observer">{{ observacion.colector || 'Anónimo' }}</span>
+                <span class="date">{{ formatearFecha(observacion.fecha_colecta) }}</span>
+    </div>
+              <span class="source-badge">iNaturalist</span>
         </div>
+            <div class="card-location">
+              <i class="bi bi-geo-alt"></i>
+              <span>{{ observacion.municipio || observacion.localidad || 'México' }}</span>
       </div>
     </div>
-
-    <!-- Contador de resultados -->
-    <div class="row justify-content-center mb-3" *ngIf="!cargando && !error && observaciones.length > 0 && vistaActual === 'observaciones'">
-      <div class="col-lg-10 col-md-10">
-        <div class="results-info">
-          <span class="results-count">
-            <i class="bi bi-collection"></i>
-            {{ observaciones.length }} observación{{ observaciones.length !== 1 ? 'es' : '' }} encontrada{{ observaciones.length !== 1 ? 's' : '' }}
-          </span>
         </div>
       </div>
     </div>
 
     <!-- Estado de carga -->
     <div class="row justify-content-center" *ngIf="cargando">
-      <div class="col-lg-10 col-md-10">
-        <div class="text-center py-5">
-          <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-            <span class="visually-hidden">Cargando...</span>
-          </div>
-          <p class="mt-3 text-muted">Cargando observaciones...</p>
+      <div class="col-lg-10">
+        <div class="loading-state">
+          <div class="loader"></div>
+          <p>Cargando observaciones...</p>
         </div>
       </div>
     </div>
 
     <!-- Mensaje de error -->
     <div class="row justify-content-center" *ngIf="!cargando && error">
-      <div class="col-lg-10 col-md-10">
-        <div class="error-card">
-          <div class="error-icon">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-          </div>
-          <h3>¡Ups! Algo salió mal</h3>
+      <div class="col-lg-10">
+        <div class="message-state error">
+          <i class="bi bi-exclamation-circle"></i>
           <p>{{ error }}</p>
-          <button class="btn btn-primary mt-3" (click)="cargarObservaciones()">
-            <i class="bi bi-arrow-clockwise"></i> Reintentar
-          </button>
+          <button (click)="cargarObservaciones()">Reintentar</button>
         </div>
       </div>
     </div>
 
-    <!-- Mensaje cuando no hay observaciones -->
-    <div class="row justify-content-center" *ngIf="!cargando && !error && observaciones.length === 0">
-      <div class="col-lg-10 col-md-10">
-        <div class="no-results-simple text-center py-5">
-          <i class="bi bi-search"></i>
-          <h3>No se encontraron observaciones</h3>
-          <p>No se encontraron observaciones con los filtros seleccionados.</p>
+  </div>
+
+  <!-- Modal de Observación de Cangrejo -->
+  <div class="observation-modal-overlay" *ngIf="mostrarModalObservacion" (click)="cerrarModalObservacion()">
+    <div class="observation-modal" (click)="$event.stopPropagation()">
+      <!-- Botón cerrar -->
+      <button class="modal-close-btn" (click)="cerrarModalObservacion()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <!-- Logo y título -->
+      <div class="modal-logo">
+        <img src="assets/img/CangrejoSinFondo.png" alt="Cangrejo Azul">
+        <p class="modal-invitation-text">¡Comparte tu avistamiento y ayuda a conservar al Cangrejo Azul!</p>
+      </div>
+
+      <!-- Indicador de pasos -->
+      <div class="steps-indicator">
+        <div class="step" *ngFor="let step of pasos; let i = index" 
+             [class.active]="pasoActual === i + 1"
+             [class.completed]="pasoActual > i + 1"
+             (click)="irAPaso(i + 1)">
+          <div class="step-number">
+            <span *ngIf="pasoActual <= i + 1">{{ i + 1 }}</span>
+            <i *ngIf="pasoActual > i + 1" class="bi bi-check"></i>
+          </div>
         </div>
       </div>
+
+      <!-- Formulario por pasos -->
+      <form [formGroup]="observacionForm" class="observation-form-modal">
+        
+        <!-- Paso 1: Datos del Observador -->
+        <div class="form-step" *ngIf="pasoActual === 1" [@slideAnimation]>
+          <h3 class="step-title">
+            <i class="bi bi-person-circle"></i>
+            Datos del Observador
+          </h3>
+          
+          <div class="form-group">
+            <label class="form-label">Nombre (opcional)</label>
+            <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese su nombre">
     </div>
 
-    <!-- Grid de cards con observaciones -->
-    <div *ngIf="!cargando && !error && observaciones.length > 0 && vistaActual === 'observaciones'" class="observaciones-container">
-      <!-- Grid de observaciones -->
-      <div class="row justify-content-center">
-        <div class="col-lg-10 col-md-10">
-          <div class="row">
-            <div *ngFor="let observacion of observaciones" class="col-lg-4 col-md-6 col-sm-12 mb-4">
-              <div class="observacion-card" (click)="verDetalle(observacion)">
-                <!-- Badge de tipo -->
-                <div class="tipo-badge-header" style="background-color: #27ae60;">
-                  <i class="bi bi-binoculars"></i>
-                  <span>iNaturalist</span>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Edad</label>
+              <input type="number" class="form-control" formControlName="edad" placeholder="Edad" min="1">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Comunidad <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="comunidad" placeholder="Ej: Playa del Carmen" required>
+            </div>
                 </div>
 
-                <!-- Contenido -->
-                <div class="observacion-content">
-                  <h3 class="observacion-titulo">{{ observacion.colector || 'Observador no registrado' }}</h3>
-                  
-                  <div class="observacion-meta">
-                    <!-- Fecha de observación -->
-                    <div class="meta-item" *ngIf="observacion.fecha_colecta">
-                      <span class="meta-label">Fecha de observación</span>
-                      <span class="meta-dot">·</span>
-                      <span class="meta-value">{{ formatearFecha(observacion.fecha_colecta) }}</span>
+          <div class="form-group">
+            <label class="form-label">¿Con qué frecuencia observa cangrejos? <span class="required">*</span></label>
+            <select class="form-select" formControlName="frecuenciaObservacion" required>
+              <option value="">Seleccione una opción</option>
+              <option value="nunca">Nunca</option>
+              <option value="rara-vez">Rara vez (1–2 veces al año)</option>
+              <option value="a-veces">A veces (cada temporada)</option>
+              <option value="frecuentemente">Frecuentemente (varias veces al mes)</option>
+              <option value="muy-frecuentemente">Muy frecuentemente (casi todos los días)</option>
+            </select>
                     </div>
-                    <!-- Municipio -->
-                    <div class="meta-item" *ngIf="observacion.municipio">
-                      <span class="meta-label">Municipio</span>
-                      <span class="meta-dot">·</span>
-                      <span class="meta-value">{{ observacion.municipio }}</span>
                     </div>
-                    <!-- Estado -->
-                    <div class="meta-item" *ngIf="observacion.estado">
-                      <span class="meta-label">Estado</span>
-                      <span class="meta-dot">·</span>
-                      <span class="meta-value">{{ observacion.estado }}</span>
+
+        <!-- Paso 2: Observación -->
+        <div class="form-step" *ngIf="pasoActual === 2" [@slideAnimation]>
+          <h3 class="step-title">
+            <i class="bi bi-eye"></i>
+            Datos de la Observación
+          </h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Fecha <span class="required">*</span></label>
+              <input type="date" class="form-control" formControlName="fechaObservacion" required>
                     </div>
-                    <!-- Localidad -->
-                    <div class="meta-item meta-item-full" *ngIf="observacion.localidad">
-                      <span class="meta-label">Localidad</span>
-                      <span class="meta-dot">·</span>
-                      <span class="meta-value truncate">{{ observacion.localidad | slice:0:50 }}{{ observacion.localidad.length > 50 ? '...' : '' }}</span>
+            <div class="form-group">
+              <label class="form-label">Hora <span class="required">*</span></label>
+              <input type="time" class="form-control" formControlName="horaObservacion" required>
                     </div>
                   </div>
+
+          <div class="form-group">
+            <label class="form-label">Lugar de observación <span class="required">*</span></label>
+            <input type="text" class="form-control" formControlName="lugarObservacion" placeholder="Colonia, playa, carretera, manglar..." required>
                 </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tipo de hábitat <span class="required">*</span></label>
+              <select class="form-select" formControlName="tipoHabitat" required>
+                <option value="">Seleccione...</option>
+                <option value="manglar">Manglar</option>
+                <option value="humedal">Humedal / laguna</option>
+                <option value="playa">Playa / costa</option>
+                <option value="carretera">Carretera</option>
+                <option value="zona-urbana">Zona urbana</option>
+                <option value="otro">Otro</option>
+              </select>
               </div>
+            <div class="form-group">
+              <label class="form-label">Cantidad <span class="required">*</span></label>
+              <select class="form-select" formControlName="numeroCangrejos" required>
+                <option value="">Seleccione...</option>
+                <option value="1-5">1–5</option>
+                <option value="6-20">6–20</option>
+                <option value="21-50">21–50</option>
+                <option value="mas-50">Más de 50</option>
+              </select>
             </div>
           </div>
         </div>
+
+        <!-- Paso 3: Identificación -->
+        <div class="form-step" *ngIf="pasoActual === 3" [@slideAnimation]>
+          <h3 class="step-title">
+            <i class="bi bi-search"></i>
+            Identificación
+          </h3>
+
+          <div class="form-group">
+            <label class="form-label">Sexo de los cangrejos observados</label>
+            <div formGroupName="sexoCangrejos" class="checkbox-group-modal">
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="machos">
+                <span class="checkbox-custom"></span>
+                <span>Machos</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="hembras">
+                <span class="checkbox-custom"></span>
+                <span>Hembras</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="hembrasOvigeras">
+                <span class="checkbox-custom"></span>
+                <span>Hembras con huevos</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="noIdentifica">
+                <span class="checkbox-custom"></span>
+                <span>No sé identificarlo</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tamaño aproximado <span class="required">*</span></label>
+            <select class="form-select" formControlName="tamanoCangrejos" required>
+              <option value="">Seleccione...</option>
+              <option value="pequenos">Pequeños (&lt;5 cm)</option>
+              <option value="medianos">Medianos (5–10 cm)</option>
+              <option value="grandes">Grandes (&gt;10 cm)</option>
+              <option value="mezcla">Mezcla de tamaños</option>
+            </select>
       </div>
     </div>
 
-    <!-- Vista de Gráficas -->
-    <div *ngIf="!cargando && !error && observaciones.length > 0 && vistaActual === 'graficas'" class="graficas-container">
-      <div class="row justify-content-center">
-        <div class="col-lg-10 col-md-10">
-          <!-- Gráfica de Municipios -->
-          <div class="chart-card mb-4">
-            <div class="chart-wrapper">
-              <canvas #municipioChart></canvas>
+        <!-- Paso 4: Comportamiento -->
+        <div class="form-step" *ngIf="pasoActual === 4" [@slideAnimation]>
+          <h3 class="step-title">
+            <i class="bi bi-activity"></i>
+            Comportamiento
+          </h3>
+
+          <div class="form-group">
+            <label class="form-label">¿Qué estaban haciendo los cangrejos?</label>
+            <div formGroupName="comportamientos" class="checkbox-group-modal">
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="migrando">
+                <span class="checkbox-custom"></span>
+                <span>Migrando hacia agua</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="alimentandose">
+                <span class="checkbox-custom"></span>
+                <span>Alimentándose</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="escondiendose">
+                <span class="checkbox-custom"></span>
+                <span>Escondiéndose</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="cruzandoCarretera">
+                <span class="checkbox-custom"></span>
+                <span>Cruzando carretera</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="enMadrigueras">
+                <span class="checkbox-custom"></span>
+                <span>En madrigueras</span>
+              </label>
             </div>
           </div>
 
-          <!-- Fila con dos gráficas -->
-          <div class="row">
-            <!-- Gráfica de Años -->
-            <div class="col-lg-6 col-md-12 mb-4">
-              <div class="chart-card">
-                <div class="chart-wrapper chart-wrapper-small">
-                  <canvas #anioChart></canvas>
-                </div>
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-label">¿Observó mortalidad por atropellamiento? <span class="required">*</span></label>
+            <select class="form-select" formControlName="mortalidadAtropellamiento" required>
+              <option value="">Seleccione...</option>
+              <option value="si-muchos">Sí, muchos (&gt;10)</option>
+              <option value="si-pocos">Sí, pocos (1–10)</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
 
-            <!-- Gráfica de Meses -->
-            <div class="col-lg-6 col-md-12 mb-4">
-              <div class="chart-card">
-                <div class="chart-wrapper chart-wrapper-small">
-                  <canvas #mesChart></canvas>
+        <!-- Paso 5: Percepción -->
+        <div class="form-step" *ngIf="pasoActual === 5" [@slideAnimation]>
+          <h3 class="step-title">
+            <i class="bi bi-people"></i>
+            Percepción Local
+          </h3>
+
+          <div class="form-group">
+            <label class="form-label">Comparado con hace 5 años, la cantidad es: <span class="required">*</span></label>
+            <select class="form-select" formControlName="comparacionCantidad" required>
+              <option value="">Seleccione...</option>
+              <option value="mucho-menor">Mucho menor</option>
+              <option value="menor">Menor</option>
+              <option value="igual">Igual</option>
+              <option value="mayor">Mayor</option>
+              <option value="no-se">No sé</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Principales amenazas que percibe</label>
+            <div formGroupName="amenazas" class="checkbox-group-modal">
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="perdidaHabitat">
+                <span class="checkbox-custom"></span>
+                <span>Pérdida de hábitat</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="capturaExcesiva">
+                <span class="checkbox-custom"></span>
+                <span>Captura excesiva</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="carreteras">
+                <span class="checkbox-custom"></span>
+                <span>Carreteras</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="contaminacion">
+                <span class="checkbox-custom"></span>
+                <span>Contaminación</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="cambioclimatico">
+                <span class="checkbox-custom"></span>
+                <span>Cambio climático</span>
+              </label>
+            </div>
+                </div>
+
+          <div class="form-group">
+            <label class="form-label">Importancia de conservar al cangrejo <span class="required">*</span></label>
+            <div class="importance-scale-modal">
+              <div class="scale-labels">
+                <span>Nada</span>
+                <span>Muy importante</span>
+              </div>
+              <input type="range" class="form-range" formControlName="importanciaConservacion" min="1" max="5" step="1">
+              <div class="scale-value">Nivel: {{ observacionForm.get('importanciaConservacion')?.value }}</div>
+            </div>
                 </div>
               </div>
+
+        <!-- Paso 6: Finalizar -->
+        <div class="form-step" *ngIf="pasoActual === 6" [@slideAnimation]>
+          <h3 class="step-title">
+            <i class="bi bi-camera"></i>
+            Evidencia y Comentarios
+          </h3>
+
+          <div class="form-group">
+            <label class="form-label">¿Qué acciones cree necesarias para protegerlos? <span class="required">*</span></label>
+            <textarea class="form-control textarea-modal" formControlName="accionesProteccion" rows="4" 
+                      placeholder="Describa las acciones que considera necesarias..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Subir foto o video (opcional)</label>
+            <div class="file-upload-area" (click)="fileInput.click()">
+              <input #fileInput type="file" (change)="onFileSelectedModal($event)" accept="image/*,video/*" hidden>
+              <i class="bi bi-cloud-arrow-up"></i>
+              <span *ngIf="!selectedFileModal">Haz clic para seleccionar archivo</span>
+              <span *ngIf="selectedFileModal" class="file-selected">
+                <i class="bi bi-check-circle-fill"></i>
+                {{ selectedFileModal.name }}
+              </span>
+            </div>
+            <small class="form-text">Formatos: JPG, PNG, MP4, MOV</small>
+          </div>
+
+          <!-- Resumen -->
+          <div class="summary-box">
+            <h4><i class="bi bi-clipboard-check"></i> Resumen de tu observación</h4>
+            <div class="summary-item">
+              <span class="label">Fecha:</span>
+              <span class="value">{{ observacionForm.get('fechaObservacion')?.value | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">Lugar:</span>
+              <span class="value">{{ observacionForm.get('lugarObservacion')?.value || 'No especificado' }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">Cantidad:</span>
+              <span class="value">{{ observacionForm.get('numeroCangrejos')?.value || 'No especificado' }}</span>
             </div>
           </div>
         </div>
+
+      </form>
+
+      <!-- Navegación de pasos -->
+      <div class="step-navigation">
+        <button class="btn-step btn-prev" (click)="pasoAnterior()" *ngIf="pasoActual > 1" [disabled]="isSubmittingModal">
+          <i class="bi bi-arrow-left"></i>
+          Anterior
+        </button>
+        <div class="spacer" *ngIf="pasoActual === 1"></div>
+        
+        <button class="btn-step btn-next" (click)="pasoSiguiente()" *ngIf="pasoActual < 6" [disabled]="!puedeAvanzar()">
+          Siguiente
+          <i class="bi bi-arrow-right"></i>
+        </button>
+        
+        <button class="btn-step btn-submit-modal" (click)="publicarObservacion()" *ngIf="pasoActual === 6" 
+                [disabled]="observacionForm.invalid || isSubmittingModal">
+          <span *ngIf="!isSubmittingModal">
+            <i class="bi bi-send-fill"></i>
+            Publicar
+          </span>
+          <span *ngIf="isSubmittingModal">
+            <i class="bi bi-arrow-repeat spin"></i>
+            Publicando...
+          </span>
+        </button>
       </div>
     </div>
   </div>
