@@ -1,4 +1,9 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Registrar ScrollTrigger
+gsap.registerPlugin(ScrollTrigger);
 
 interface Recurso {
   id: number;
@@ -25,10 +30,21 @@ interface Recurso {
   styleUrls: ['./recursos.component.scss']
 })
 export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('sectionHeader', { static: false }) sectionHeader!: ElementRef;
+  @ViewChild('filtersContainer', { static: false }) filtersContainer!: ElementRef;
+  @ViewChild('featuredContainer', { static: false }) featuredContainer!: ElementRef;
+  @ViewChild('newsGrid', { static: false }) newsGrid!: ElementRef;
+  @ViewChild('ctaBox', { static: false }) ctaBox!: ElementRef;
+  @ViewChildren('featuredCard') featuredCards!: QueryList<ElementRef>;
+  @ViewChildren('newsCard') newsCards!: QueryList<ElementRef>;
+  
   activeSection: string = 'todos';
   private observer?: IntersectionObserver;
   private sections: Element[] = [];
   private scrollTimeout?: any;
+  private gsapTimeline?: gsap.core.Timeline;
+  private gsapContext?: gsap.Context;
+  private hoverAnimations: Map<Element, gsap.core.Tween> = new Map();
   
   // Filtros
   searchTerm: string = '';
@@ -56,6 +72,12 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.setupIntersectionObserver();
     this.setupScrollListener();
+    // Usar requestAnimationFrame para mejor sincronización con el renderizado
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        this.initGSAPAnimations();
+      });
+    });
   }
 
   ngOnDestroy() {
@@ -65,6 +87,16 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.scrollTimeout) {
       clearTimeout(this.scrollTimeout);
     }
+    if (this.gsapTimeline) {
+      this.gsapTimeline.kill();
+    }
+    if (this.gsapContext) {
+      this.gsapContext.kill();
+    }
+    // Limpiar hover animations
+    this.hoverAnimations.forEach(animation => animation.kill());
+    this.hoverAnimations.clear();
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     window.removeEventListener('scroll', this.onScroll);
   }
 
@@ -351,6 +383,11 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.recursosFiltrados = recursos;
+    
+    // Animar los cambios de filtro
+    setTimeout(() => {
+      this.animateFilterChange();
+    }, 50);
   }
 
   // Intercala recursos de diferentes tipos para una distribución uniforme
@@ -533,5 +570,517 @@ export class RecursosComponent implements OnInit, AfterViewInit, OnDestroy {
         behavior: 'smooth'
       });
     }
+  }
+
+  // ==========================================
+  // ANIMACIONES GSAP AVANZADAS
+  // ==========================================
+  initGSAPAnimations() {
+    // Crear contexto GSAP para limpieza automática
+    this.gsapContext = gsap.context(() => {
+      // Timeline principal de entrada
+      const masterTL = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      
+      // Animación del header con efecto cinematográfico
+      if (this.sectionHeader?.nativeElement) {
+        const title = this.sectionHeader.nativeElement.querySelector('.title');
+        const subtitle = this.sectionHeader.nativeElement.querySelector('.subtitle');
+        
+        if (title) {
+          // Animación de título con efecto de revelación
+          masterTL.fromTo(title, 
+            {
+              y: 60,
+              opacity: 0,
+              scale: 0.9,
+              rotationX: -15,
+              transformPerspective: 1000
+            },
+            {
+              duration: 1,
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              rotationX: 0,
+              ease: 'power4.out'
+            }
+          );
+        }
+        
+        if (subtitle) {
+          masterTL.fromTo(subtitle, 
+            {
+              y: 40,
+              opacity: 0,
+              filter: 'blur(10px)'
+            },
+            {
+              duration: 0.8,
+              y: 0,
+              opacity: 1,
+              filter: 'blur(0px)',
+              ease: 'power2.out'
+            }, '-=0.6'
+          );
+        }
+      }
+
+      // Animación de los filtros con efecto de rebote elegante
+      if (this.filtersContainer?.nativeElement) {
+        const filterButtons = this.filtersContainer.nativeElement.querySelectorAll('.filter-tabs button');
+        
+        masterTL.fromTo(filterButtons, 
+          {
+            y: 30,
+            opacity: 0,
+            scale: 0.8
+          },
+          {
+            duration: 0.6,
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            stagger: {
+              amount: 0.4,
+              from: 'center'
+            },
+            ease: 'back.out(1.4)'
+          }, '-=0.3'
+        );
+
+        // Hover con efecto de elevación y brillo
+        filterButtons.forEach((button: Element) => {
+          this.setupAdvancedHover(button, 'filter');
+        });
+      }
+
+      // Animación de las tarjetas destacadas
+      this.animateFeaturedCards();
+      
+      // Animación del grid de noticias
+      this.animateNewsGrid();
+      
+      // Animación del CTA box
+      this.animateCTABox();
+    });
+  }
+
+  animateFeaturedCards() {
+    const featuredCards = document.querySelectorAll('.featured-card');
+    if (featuredCards.length === 0) return;
+
+    // Animación de entrada con efecto 3D y parallax
+    featuredCards.forEach((card: Element, index: number) => {
+      const overlay = card.querySelector('.featured-overlay');
+      const content = card.querySelector('.featured-content');
+      const category = card.querySelector('.news-category');
+      const title = card.querySelector('.featured-title');
+      const date = card.querySelector('.featured-date');
+
+      const cardTL = gsap.timeline({
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 85%',
+          once: true
+        }
+      });
+
+      // Entrada de la tarjeta con efecto 3D
+      cardTL.fromTo(card, 
+        {
+          opacity: 0,
+          y: 80,
+          scale: 0.85,
+          rotationY: index === 0 ? -8 : 8,
+          transformPerspective: 1200,
+          transformOrigin: index === 0 ? 'right center' : 'left center'
+        },
+        {
+          duration: 1,
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotationY: 0,
+          ease: 'power3.out',
+          delay: index * 0.15
+        }
+      );
+
+      // Animación del overlay
+      if (overlay) {
+        cardTL.fromTo(overlay,
+          { opacity: 0 },
+          { duration: 0.6, opacity: 1, ease: 'power2.out' },
+          '-=0.6'
+        );
+      }
+
+      // Animación del contenido con stagger
+      if (content) {
+        const contentElements = [category, title, date].filter(el => el);
+        cardTL.fromTo(contentElements,
+          {
+            y: 30,
+            opacity: 0
+          },
+          {
+            duration: 0.5,
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            ease: 'power2.out'
+          },
+          '-=0.4'
+        );
+      }
+
+      // Hover avanzado con parallax en imagen
+      this.setupAdvancedHover(card, 'featured');
+    });
+  }
+
+  animateNewsGrid() {
+    const newsCards = document.querySelectorAll('.news-card');
+    if (newsCards.length === 0) return;
+
+    // Animación con efecto de cascada diagonal
+    ScrollTrigger.batch(newsCards, {
+      onEnter: (elements) => {
+        gsap.fromTo(elements, 
+          {
+            opacity: 0,
+            y: 50,
+            scale: 0.9,
+            rotationX: 10,
+            transformPerspective: 800
+          },
+          {
+            duration: 0.7,
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            rotationX: 0,
+            stagger: {
+              amount: 0.6,
+              from: 'start',
+              grid: [4, 4],
+              axis: 'x'
+            },
+            ease: 'power2.out'
+          }
+        );
+      },
+      start: 'top 90%',
+      once: true
+    });
+
+    // Hover avanzado para cada tarjeta
+    newsCards.forEach((card: Element) => {
+      this.setupAdvancedHover(card, 'news');
+    });
+  }
+
+  animateFilterChange() {
+    // Animar salida de elementos actuales con efecto de dispersión
+    const featuredCards = document.querySelectorAll('.featured-card');
+    const newsCards = document.querySelectorAll('.news-card');
+    
+    if (featuredCards.length === 0 && newsCards.length === 0) {
+      return;
+    }
+    
+    const allCards = [...Array.from(featuredCards), ...Array.from(newsCards)];
+    
+    // Efecto de salida con dispersión
+    const exitTimeline = gsap.timeline({
+      onComplete: () => {
+        requestAnimationFrame(() => {
+          const newFeaturedCards = document.querySelectorAll('.featured-card');
+          const newNewsCards = document.querySelectorAll('.news-card');
+          const newAllCards = [...Array.from(newFeaturedCards), ...Array.from(newNewsCards)];
+          
+          if (newAllCards.length > 0) {
+            // Estado inicial con efecto de zoom
+            gsap.set(newAllCards, { 
+              opacity: 0, 
+              y: 40, 
+              scale: 0.9,
+              rotationX: 5,
+              transformPerspective: 800
+            });
+            
+            // Entrada con efecto de materialización
+            gsap.to(newAllCards, {
+              duration: 0.6,
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              rotationX: 0,
+              stagger: {
+                amount: 0.4,
+                from: 'start',
+                grid: 'auto'
+              },
+              ease: 'power2.out'
+            });
+          }
+        });
+      }
+    });
+    
+    // Animación de salida con efecto de elevación y desvanecimiento
+    exitTimeline.to(allCards, {
+      duration: 0.3,
+      opacity: 0,
+      y: -25,
+      scale: 0.95,
+      stagger: {
+        amount: 0.15,
+        from: 'end'
+      },
+      ease: 'power2.in'
+    });
+  }
+
+  animateCTABox() {
+    const ctaBox = document.querySelector('.cta-box');
+    if (!ctaBox) return;
+
+    const ctaTitle = ctaBox.querySelector('h2');
+    const ctaText = ctaBox.querySelector('p');
+    const ctaButton = ctaBox.querySelector('.btn-primary');
+
+    const ctaTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: ctaBox,
+        start: 'top 85%',
+        once: true
+      }
+    });
+
+    // Animación del contenedor con efecto de expansión
+    ctaTL.fromTo(ctaBox,
+      {
+        opacity: 0,
+        y: 60,
+        scale: 0.95,
+        boxShadow: '0 0 0 rgba(0, 0, 0, 0)'
+      },
+      {
+        duration: 0.9,
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+        ease: 'power3.out'
+      }
+    );
+
+    // Animación del título
+    if (ctaTitle) {
+      ctaTL.fromTo(ctaTitle,
+        { y: 30, opacity: 0 },
+        { duration: 0.6, y: 0, opacity: 1, ease: 'power2.out' },
+        '-=0.5'
+      );
+    }
+
+    // Animación del texto
+    if (ctaText) {
+      ctaTL.fromTo(ctaText,
+        { y: 20, opacity: 0 },
+        { duration: 0.5, y: 0, opacity: 1, ease: 'power2.out' },
+        '-=0.3'
+      );
+    }
+
+    // Animación del botón con efecto de pulso
+    if (ctaButton) {
+      ctaTL.fromTo(ctaButton,
+        { scale: 0.8, opacity: 0 },
+        { 
+          duration: 0.5, 
+          scale: 1, 
+          opacity: 1, 
+          ease: 'back.out(2)'
+        },
+        '-=0.2'
+      );
+
+      // Hover especial para el botón
+      this.setupAdvancedHover(ctaButton, 'cta-button');
+    }
+
+    // Animación flotante sutil
+    gsap.to(ctaBox, {
+      y: -5,
+      duration: 2.5,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: 1
+    });
+  }
+
+  // Sistema avanzado de hover según el tipo de elemento
+  private setupAdvancedHover(element: Element, type: 'filter' | 'featured' | 'news' | 'cta-button') {
+    let currentTween: gsap.core.Tween | null = null;
+
+    const handleMouseEnter = () => {
+      if (currentTween) currentTween.kill();
+      
+      switch(type) {
+        case 'filter':
+          currentTween = gsap.to(element, {
+            duration: 0.25,
+            scale: 1.08,
+            y: -2,
+            ease: 'power2.out'
+          });
+          break;
+          
+        case 'featured':
+          const featuredOverlay = element.querySelector('.featured-overlay');
+          const featuredContent = element.querySelector('.featured-content');
+          
+          currentTween = gsap.to(element, {
+            duration: 0.4,
+            scale: 1.03,
+            y: -8,
+            ease: 'power2.out'
+          });
+          
+          if (featuredOverlay) {
+            gsap.to(featuredOverlay, {
+              duration: 0.4,
+              background: 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.2) 100%)',
+              ease: 'power2.out'
+            });
+          }
+          
+          if (featuredContent) {
+            gsap.to(featuredContent, {
+              duration: 0.3,
+              y: -5,
+              ease: 'power2.out'
+            });
+          }
+          break;
+          
+        case 'news':
+          const newsImage = element.querySelector('.news-image');
+          
+          currentTween = gsap.to(element, {
+            duration: 0.35,
+            y: -10,
+            scale: 1.02,
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
+            ease: 'power2.out'
+          });
+          
+          if (newsImage) {
+            gsap.to(newsImage, {
+              duration: 0.4,
+              scale: 1.1,
+              ease: 'power2.out'
+            });
+          }
+          break;
+          
+        case 'cta-button':
+          currentTween = gsap.to(element, {
+            duration: 0.3,
+            scale: 1.05,
+            y: -3,
+            boxShadow: '0 15px 30px rgba(0, 0, 0, 0.3)',
+            ease: 'power2.out'
+          });
+          break;
+      }
+      
+      if (currentTween) {
+        this.hoverAnimations.set(element, currentTween);
+      }
+    };
+
+    const handleMouseLeave = () => {
+      if (currentTween) currentTween.kill();
+      
+      switch(type) {
+        case 'filter':
+          currentTween = gsap.to(element, {
+            duration: 0.2,
+            scale: 1,
+            y: 0,
+            ease: 'power1.out'
+          });
+          break;
+          
+        case 'featured':
+          const featuredOverlay = element.querySelector('.featured-overlay');
+          const featuredContent = element.querySelector('.featured-content');
+          
+          currentTween = gsap.to(element, {
+            duration: 0.35,
+            scale: 1,
+            y: 0,
+            ease: 'power2.out'
+          });
+          
+          if (featuredOverlay) {
+            gsap.to(featuredOverlay, {
+              duration: 0.35,
+              background: 'linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.1) 100%)',
+              ease: 'power2.out'
+            });
+          }
+          
+          if (featuredContent) {
+            gsap.to(featuredContent, {
+              duration: 0.25,
+              y: 0,
+              ease: 'power2.out'
+            });
+          }
+          break;
+          
+        case 'news':
+          const newsImage = element.querySelector('.news-image');
+          
+          currentTween = gsap.to(element, {
+            duration: 0.3,
+            y: 0,
+            scale: 1,
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+            ease: 'power1.out'
+          });
+          
+          if (newsImage) {
+            gsap.to(newsImage, {
+              duration: 0.35,
+              scale: 1,
+              ease: 'power2.out'
+            });
+          }
+          break;
+          
+        case 'cta-button':
+          currentTween = gsap.to(element, {
+            duration: 0.25,
+            scale: 1,
+            y: 0,
+            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+            ease: 'power1.out'
+          });
+          break;
+      }
+      
+      if (currentTween) {
+        this.hoverAnimations.set(element, currentTween);
+      }
+    };
+
+    element.addEventListener('mouseenter', handleMouseEnter, { passive: true });
+    element.addEventListener('mouseleave', handleMouseLeave, { passive: true });
   }
 }

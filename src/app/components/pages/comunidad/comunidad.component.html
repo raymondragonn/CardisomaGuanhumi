@@ -50,7 +50,7 @@
                 </div>
                 <div class="stat-content">
                   <span class="stat-label">TOTAL DE OBSERVACIONES</span>
-                  <span class="stat-number">{{ estadisticas?.total_observaciones || 0 | number }}</span>
+                  <span class="stat-number">{{ (estadisticas?.total_observaciones || 0) + totalObservacionesFormulario | number }}</span>
                 </div>
                 <button class="btn-action" (click)="cambiarVista('observaciones')" *ngIf="vistaActual !== 'observaciones'">
                   Ver todas
@@ -100,6 +100,14 @@
               <button class="btn-add-observation" (click)="abrirModalObservacion()">
                 <i class="bi bi-plus-circle-fill"></i>
                 ¡He visto un cangrejo!
+              </button>
+            </div>
+
+            <!-- Botón guía rápida -->
+            <div class="info-section">
+              <button class="btn-guide" (click)="abrirModalGuia()">
+                <i class="bi bi-book"></i>
+                Guía rápida
               </button>
             </div>
 
@@ -181,7 +189,9 @@
                 <span class="observer">{{ observacion.colector || 'Anónimo' }}</span>
                 <span class="date">{{ formatearFecha(observacion.fecha_colecta) }}</span>
     </div>
-              <span class="source-badge">iNaturalist</span>
+              <span class="source-badge" [class.badge-formulario]="observacion.proyecto === 'Observación Comunitaria'">
+                {{ observacion.proyecto === 'Observación Comunitaria' ? 'Comunidad' : 'iNaturalist' }}
+              </span>
         </div>
             <div class="card-location">
               <i class="bi bi-geo-alt"></i>
@@ -264,7 +274,11 @@
             </div>
             <div class="form-group">
               <label class="form-label">Comunidad <span class="required">*</span></label>
-              <input type="text" class="form-control" formControlName="comunidad" placeholder="Ej: Playa del Carmen" required>
+              <select class="form-select" formControlName="comunidad" required>
+                <option value="">Seleccione una comunidad</option>
+                <option value="BOCA DEL RIO">BOCA DEL RIO</option>
+                <option value="ALVARADO">ALVARADO</option>
+              </select>
             </div>
                 </div>
 
@@ -674,12 +688,291 @@
               </div>
             </div>
           </div>
+
+          <!-- Detalles completos del formulario (siempre visible para observaciones del formulario) -->
+          <div class="detalle-group" *ngIf="observacionSeleccionada.esFormulario && observacionSeleccionada.datosFormulario">
+            <!-- Datos del Observador -->
+            <h3 class="detalle-group-title">
+              <i class="bi bi-person-circle"></i>
+              Datos del Observador
+            </h3>
+            <div class="detalle-grid">
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.nombre_observador">
+                <label>Nombre</label>
+                <span>{{ observacionSeleccionada.datosFormulario.nombre_observador }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.edad">
+                <label>Edad</label>
+                <span>{{ observacionSeleccionada.datosFormulario.edad }} años</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.comunidad">
+                <label>Comunidad</label>
+                <span>{{ observacionSeleccionada.datosFormulario.comunidad }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.frecuencia_observacion">
+                <label>Frecuencia de observación</label>
+                <span>{{ observacionSeleccionada.datosFormulario.frecuencia_observacion }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detalles de la Observación -->
+          <div class="detalle-group" *ngIf="observacionSeleccionada.esFormulario && observacionSeleccionada.datosFormulario">
+            <h3 class="detalle-group-title">
+              <i class="bi bi-eye"></i>
+              Detalles de la Observación
+            </h3>
+            <div class="detalle-grid">
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.fecha_observacion">
+                <label>Fecha</label>
+                <span>{{ formatearFecha(observacionSeleccionada.datosFormulario.fecha_observacion) }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.hora_observacion">
+                <label>Hora</label>
+                <span>{{ observacionSeleccionada.datosFormulario.hora_observacion }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.lugar_observacion">
+                <label>Lugar</label>
+                <span>{{ observacionSeleccionada.datosFormulario.lugar_observacion }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.tipo_habitat">
+                <label>Tipo de hábitat</label>
+                <span>{{ observacionSeleccionada.datosFormulario.tipo_habitat }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.tipo_habitat_otro">
+                <label>Otro hábitat</label>
+                <span>{{ observacionSeleccionada.datosFormulario.tipo_habitat_otro }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.cantidad_cangrejos">
+                <label>Cantidad de cangrejos</label>
+                <span>{{ observacionSeleccionada.datosFormulario.cantidad_cangrejos }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Identificación -->
+          <div class="detalle-group" *ngIf="observacionSeleccionada.esFormulario && observacionSeleccionada.datosFormulario && observacionSeleccionada.datosFormulario.sexo_cangrejos && observacionSeleccionada.datosFormulario.sexo_cangrejos.length > 0">
+            <h3 class="detalle-group-title">
+              <i class="bi bi-search"></i>
+              Identificación
+            </h3>
+            <div class="detalle-grid">
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.sexo_cangrejos">
+                <label>Sexo observado</label>
+                <span>{{ observacionSeleccionada.datosFormulario.sexo_cangrejos.join(', ') }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.tamano_cangrejos">
+                <label>Tamaño</label>
+                <span>{{ observacionSeleccionada.datosFormulario.tamano_cangrejos }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comportamiento -->
+          <div class="detalle-group" *ngIf="observacionSeleccionada.esFormulario && observacionSeleccionada.datosFormulario && observacionSeleccionada.datosFormulario.comportamientos && observacionSeleccionada.datosFormulario.comportamientos.length > 0">
+            <h3 class="detalle-group-title">
+              <i class="bi bi-activity"></i>
+              Comportamiento
+            </h3>
+            <div class="detalle-grid">
+              <div class="detalle-item detalle-item-full" *ngIf="observacionSeleccionada.datosFormulario.comportamientos">
+                <label>Comportamientos observados</label>
+                <span>{{ observacionSeleccionada.datosFormulario.comportamientos.join(', ') }}</span>
+              </div>
+              <div class="detalle-item detalle-item-full" *ngIf="observacionSeleccionada.datosFormulario.comportamiento_otro">
+                <label>Otro comportamiento</label>
+                <span>{{ observacionSeleccionada.datosFormulario.comportamiento_otro }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.mortalidad_atropellamiento">
+                <label>Mortalidad por atropellamiento</label>
+                <span>{{ observacionSeleccionada.datosFormulario.mortalidad_atropellamiento }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Percepción Local -->
+          <div class="detalle-group" *ngIf="observacionSeleccionada.esFormulario && observacionSeleccionada.datosFormulario">
+            <h3 class="detalle-group-title">
+              <i class="bi bi-people"></i>
+              Percepción Local
+            </h3>
+            <div class="detalle-grid">
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.cambio_poblacion">
+                <label>Cambio de población (vs hace 5 años)</label>
+                <span>{{ observacionSeleccionada.datosFormulario.cambio_poblacion }}</span>
+              </div>
+              <div class="detalle-item detalle-item-full" *ngIf="observacionSeleccionada.datosFormulario.amenazas_principales && observacionSeleccionada.datosFormulario.amenazas_principales.length > 0">
+                <label>Amenazas principales</label>
+                <span>{{ observacionSeleccionada.datosFormulario.amenazas_principales.join(', ') }}</span>
+              </div>
+              <div class="detalle-item detalle-item-full" *ngIf="observacionSeleccionada.datosFormulario.amenaza_otra">
+                <label>Otra amenaza</label>
+                <span>{{ observacionSeleccionada.datosFormulario.amenaza_otra }}</span>
+              </div>
+              <div class="detalle-item" *ngIf="observacionSeleccionada.datosFormulario.importancia_conservacion">
+                <label>Importancia de conservación</label>
+                <span>{{ observacionSeleccionada.datosFormulario.importancia_conservacion }}/5</span>
+              </div>
+              <div class="detalle-item detalle-item-full" *ngIf="observacionSeleccionada.datosFormulario.acciones_proteccion">
+                <label>Acciones de protección sugeridas</label>
+                <span class="text-multiline">{{ observacionSeleccionada.datosFormulario.acciones_proteccion }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="modal-footer">
         <button class="btn-modal-close" (click)="cerrarModal()">
           Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Guía Rápida -->
+  <div class="guide-modal-overlay" *ngIf="mostrarModalGuia" (click)="cerrarModalGuia()">
+    <div class="guide-modal" (click)="$event.stopPropagation()">
+      <!-- Botón cerrar -->
+      <button class="modal-close-btn" (click)="cerrarModalGuia()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <!-- Logo y título -->
+      <div class="modal-logo">
+        <img src="assets/img/CangrejoSinFondo.png" alt="Cangrejo Azul">
+        <p class="modal-invitation-text">Guía Rápida para Reconocer el Cangrejo Azul (Cardisoma guanhumi) en Veracruz</p>
+      </div>
+
+      <!-- Contenido -->
+      <div class="guide-form-modal">
+        <!-- Diferencias entre machos y hembras -->
+        <div class="form-step">
+          <h3 class="step-title">
+            <i class="bi bi-gender-ambiguous"></i>
+            Diferencias entre Machos y Hembras
+          </h3>
+          
+          <div class="guide-columns">
+            <div class="guide-column">
+              <div class="guide-card">
+                <div class="guide-card-header">
+                  <i class="bi bi-gender-male"></i>
+                  <h4>Machos</h4>
+                </div>
+                <ul class="guide-list">
+                  <li>Generalmente más grandes y robustos.</li>
+                  <li>Una de sus pinzas suele ser desproporcionadamente más grande que la otra (asimetría).</li>
+                  <li>El abdomen (parte inferior del caparazón) es angosto y en forma de "V" o "T".</li>
+                </ul>
+                <div class="guide-card-image">
+                  <img src="assets/img/cangrejo/macho_cardisoma.jpg" alt="Cangrejo macho">
+                </div>
+              </div>
+            </div>
+
+            <div class="guide-column">
+              <div class="guide-card">
+                <div class="guide-card-header">
+                  <i class="bi bi-gender-female"></i>
+                  <h4>Hembras</h4>
+                </div>
+                <ul class="guide-list">
+                  <li>De tamaño similar o ligeramente menor que los machos.</li>
+                  <li>Pinzas más simétricas.</li>
+                  <li>El abdomen es ancho y redondeado, en forma de "U" o "cúpula", porque ahí protegen sus huevos.</li>
+                </ul>
+                <div class="guide-card-image">
+                  <img src="assets/img/cangrejo/hembra_cardisoma.jpeg" alt="Cangrejo hembra">
+                </div>
+              </div>
+            </div>
+
+            <div class="guide-column">
+              <div class="guide-card">
+                <div class="guide-card-header">
+                  <i class="bi bi-egg-fill"></i>
+                  <h4>Hembras con Huevos (Ovígeras)</h4>
+                </div>
+                <ul class="guide-list">
+                  <li>Se distinguen porque debajo del abdomen cargan una masa compacta de huevos de color naranja, café o gris oscuro.</li>
+                  <li>Durante el verano (junio-septiembre) es común verlas migrando hacia el mar o estuarios para liberar sus larvas.</li>
+                </ul>
+                <div class="guide-card-image">
+                  <img src="assets/img/cangrejo/hembra_con_hueva.png" alt="Cangrejo hembra con huevos">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comportamientos más comunes -->
+        <div class="form-step">
+          <h3 class="step-title">
+            <i class="bi bi-activity"></i>
+            Comportamientos Más Comunes
+          </h3>
+          
+          <div class="guide-behaviors">
+            <div class="guide-behavior-item">
+              <div class="guide-behavior-header">
+                <i class="bi bi-arrow-right-circle"></i>
+                <h4>Migrando</h4>
+              </div>
+              <p class="guide-text">
+                Los cangrejos caminan en grupos desde manglares o madrigueras en tierra hacia el mar/laguna, especialmente al atardecer y en época de lluvias. Es frecuente verlos cruzando carreteras en grandes cantidades.
+              </p>
+            </div>
+
+            <div class="guide-behavior-item">
+              <div class="guide-behavior-header">
+                <i class="bi bi-egg-fried"></i>
+                <h4>Alimentándose</h4>
+              </div>
+              <p class="guide-text">
+                Salen de sus madrigueras para comer hojas, frutos o restos vegetales. Se les ve activos al amanecer o atardecer, con alimento en las pinzas.
+              </p>
+            </div>
+
+            <div class="guide-behavior-item">
+              <div class="guide-behavior-header">
+                <i class="bi bi-eye-slash"></i>
+                <h4>Escondiéndose</h4>
+              </div>
+              <p class="guide-text">
+                Al detectar ruido o movimiento brusco corren rápidamente a refugiarse en su madriguera o bajo vegetación densa.
+              </p>
+            </div>
+
+            <div class="guide-behavior-item">
+              <div class="guide-behavior-header">
+                <i class="bi bi-signpost-split"></i>
+                <h4>Cruzando Carretera</h4>
+              </div>
+              <p class="guide-text">
+                Durante la migración, cientos de cangrejos pueden cruzar caminos y carreteras, lo que provoca mortalidad por atropellamiento. Suelen cruzar de manera lenta y en oleadas.
+              </p>
+            </div>
+
+            <div class="guide-behavior-item">
+              <div class="guide-behavior-header">
+                <i class="bi bi-house-door"></i>
+                <h4>En Madrigueras</h4>
+              </div>
+              <p class="guide-text">
+                Viven en túneles que ellos mismos excavan en el suelo arenoso o fangoso. Las bocas de madrigueras se ven como agujeros redondos, a veces rodeados de montículos de tierra húmeda.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="step-navigation">
+        <div class="spacer"></div>
+        <button class="btn-step btn-submit-modal" (click)="cerrarModalGuia()">
+          <i class="bi bi-check-circle-fill"></i>
+          Entendido
         </button>
       </div>
     </div>

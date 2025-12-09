@@ -85,22 +85,16 @@
           </div>
         </div>
       </div>
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-5 col-md-6 mb-4">
+      <div class="col-12 mb-3">
+        <div class="row justify-content-center g-2">
+          <div class="col-lg-5 col-md-6">
             <div class="caracteristica-card">
-              <div class="caracteristica-icon">
-                <i class="bi bi-arrow-left-right"></i>
-              </div>
               <h3>Distancia</h3>
               <p>2.5 - 3.5 km de recorrido desde el manglar hasta la playa</p>
             </div>
           </div>
-          <div class="col-lg-5 col-md-6 mb-4">
+          <div class="col-lg-5 col-md-6">
             <div class="caracteristica-card">
-              <div class="caracteristica-icon">
-                <i class="bi bi-heart-pulse"></i>
-              </div>
               <h3>Supervivencia</h3>
               <p>Solo el 5% de los cangrejos completa el recorrido exitosamente</p>
             </div>
@@ -110,26 +104,38 @@
       <div class="col-12 mb-4">
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-10">
-            <div class="ecologia-card">
-              <div class="ecologia-header">
-                <h3><i class="bi bi-exclamation-triangle"></i> Puntos Críticos</h3>
-              </div>
-              <p class="mb-3">
-                Durante el recorrido, los cangrejos enfrentan <strong>zonas de alta vulnerabilidad</strong>:
-              </p>
-              <ul class="papel-ecologico-list">
-                <li>Zonas urbanas y fraccionamientos (40% de mortalidad)</li>
-                <li>Intersecciones y carreteras (30% de mortalidad)</li>
-                <li>Zonas costeras con alta actividad humana (20% de mortalidad)</li>
-                <li>Áreas con depredadores naturales (10% de mortalidad)</li>
-              </ul>
-              <div class="mt-3">
-                <h6 class="text-primary"><i class="bi bi-info-circle"></i> Vulnerabilidad durante el recorrido</h6>
-                <p class="mt-2 mb-0">
-                  La vulnerabilidad aumenta significativamente durante las horas de mayor tráfico vehicular y actividad humana. 
-                  Los cangrejos son más susceptibles durante la noche cuando realizan su migración, pero las luces urbanas y 
-                  el tráfico nocturno los exponen a mayores riesgos.
-                </p>
+            <div class="ecologia-card puntos-criticos-card">
+              <div class="row g-0 align-items-center puntos-criticos-layout">
+                <div class="col-lg-7 col-md-7">
+                  <div class="puntos-criticos-text">
+                    <div class="ecologia-header">
+                      <h3><i class="bi bi-exclamation-triangle"></i> Puntos Críticos</h3>
+                    </div>
+                    <p class="mb-3">
+                      Durante el recorrido, los cangrejos enfrentan <strong>zonas de alta vulnerabilidad</strong>:
+                    </p>
+                    <ul class="papel-ecologico-list">
+                      <li class="papel-ecologico-list-item">Zonas urbanas y fraccionamientos (40% de mortalidad)</li>
+                      <li class="papel-ecologico-list-item">Intersecciones y carreteras (30% de mortalidad)</li>
+                      <li class="papel-ecologico-list-item">Zonas costeras con alta actividad humana (20% de mortalidad)</li>
+                      <li class="papel-ecologico-list-item">Áreas con depredadores naturales (10% de mortalidad)</li>
+                    </ul>
+                    <div class="mt-3">
+                      <h6 class="text-primary"><i class="bi bi-info-circle"></i> Vulnerabilidad durante el recorrido</h6>
+                      <p class="mt-2 mb-0">
+                        La vulnerabilidad aumenta significativamente durante las horas de mayor tráfico vehicular y actividad humana. 
+                        Los cangrejos son más susceptibles durante la noche cuando realizan su migración, pero las luces urbanas y 
+                        el tráfico nocturno los exponen a mayores riesgos.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-5 col-md-5">
+                  <div class="puntos-criticos-image" *ngIf="amenazasImages?.length">
+                    <img [src]="amenazasImages[0].src" [alt]="amenazasImages[0].alt">
+                    <div class="puntos-criticos-image-caption">{{amenazasImages[0].caption}}</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -212,75 +218,34 @@
               </gmp-map>
             </div>
 
-            <!-- Leyenda del Mapa -->
-            <div class="map-legend mt-3">
-              <div class="row justify-content-center">
-                <div class="col-lg-10 col-md-12">
-                  <h2 class="section-title"><i class="bi bi-map"></i> Leyenda del Mapa</h2>
-                </div>
+            <!-- Leyenda Resumida -->
+            <div class="map-legend-compact mt-3">
+              <div class="legend-compact-item">
+                <div class="legend-color" style="background: #0045c4; opacity: 0.6;"></div>
+                <span>Hábitat Natural</span>
               </div>
-              
-              <div class="row justify-content-center">
-                <div class="col-lg-10 col-md-12">
-                  <!-- Ruta de Migración -->
-                  <div class="mb-3">
-                    <h6 class="text-primary mb-2"><i class="bi bi-arrow-right-circle"></i> Migración de Cangrejos</h6>
-                    <div class="legend-items">
-                      <div class="legend-item">
-                        <div class="legend-danger-zone" style="background: #0045c4; opacity: 0.6; border: 2px solid #003399;"></div>
-                        <span><strong>Zona Azul:</strong> Hábitat Natural (Manglar)</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="legend-line" style="background: #00E5FF; height: 4px; width: 40px; opacity: 0.6;"></div>
-                        <span>Múltiples Rutas de Migración</span>
-                      </div>
-                      <div class="legend-item">
-                        <span style="font-size: 20px;">🦀</span>
-                        <span>Cangrejos migrando</span>
-                      </div>
-                      <div class="legend-item">
-                        <span style="font-size: 20px;">✅</span>
-                        <span>Llegaron a la playa</span>
-                      </div>
-                      <div class="legend-item">
-                        <span style="font-size: 20px;">🏢🚗👤🦅</span>
-                        <span>No sobrevivieron (Zona Urbana > Atropellamiento > Captura > Depredador)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Zonas Peligrosas -->
-                  <div>
-                    <h6 class="text-danger mb-2"><i class="bi bi-exclamation-triangle"></i> Zonas Peligrosas</h6>
-                    <div class="legend-items">
-                      <div class="legend-item">
-                        <div class="legend-danger-zone" style="background: #FF6B00;"></div>
-                        <span>Zona Urbana / Fraccionamientos</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="legend-danger-zone" style="background: #D50000;"></div>
-                        <span>Intersección Peligrosa / Carretera</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="legend-danger-zone" style="background: #C41C00;"></div>
-                        <span>Zona Costera (Alta actividad humana)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="legend-compact-item">
+                <div class="legend-color" style="background: #00E5FF; height: 4px;"></div>
+                <span>Rutas de Migración</span>
               </div>
-              
-              <div class="row justify-content-center mt-3">
-                <div class="col-lg-10 col-md-12">
-                  <p class="text-muted small">
-                    <i class="bi bi-info-circle"></i> 
-                    <strong>Simulación:</strong> 100 cangrejos salen simultáneamente de diferentes puntos de la zona azul (manglar) hacia la playa. 
-                    Solo aproximadamente el 5% sobrevivirá al recorrido. Las principales causas de muerte son: 
-                    <strong>40% Zona Urbana</strong>, <strong>30% Atropellamiento</strong>, <strong>20% Captura humana</strong>, y <strong>10% Depredadores</strong>.
-                  </p>
-                </div>
+              <div class="legend-compact-item">
+                <span style="font-size: 18px;">🦀</span>
+                <span>Cangrejos</span>
+              </div>
+              <div class="legend-compact-item">
+                <span style="font-size: 18px;">✅</span>
+                <span>Llegaron</span>
+              </div>
+              <div class="legend-compact-item">
+                <div class="legend-color" style="background: #FF6B00;"></div>
+                <span>Zona Urbana</span>
+              </div>
+              <div class="legend-compact-item">
+                <div class="legend-color" style="background: #D50000;"></div>
+                <span>Carretera</span>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -363,51 +328,6 @@
       </div>
     </div>
 
-    <!-- Amenazas en Imágenes (Carrusel) -->
-    <div class="row mb-5">
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <h2 class="section-title">
-              <i class="bi bi-images"></i> Amenazas en Imágenes
-            </h2>
-          </div>
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="row justify-content-center">
-          <div class="col-lg-6 col-md-8 col-sm-10">
-            <div class="instagram-post">
-              <!-- Imagen del post -->
-              <div class="instagram-image-wrapper">
-                <div class="instagram-slides" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
-                  <div class="instagram-slide" *ngFor="let image of amenazasImages; let i = index">
-                    <img [src]="image.src" [alt]="image.alt" class="instagram-image">
-                  </div>
-                </div>
-
-                <!-- Controles del carrusel -->
-                <button class="carousel-control prev" (click)="prevSlide()" aria-label="Anterior">
-                  <i class="bi bi-chevron-left"></i>
-                </button>
-                <button class="carousel-control next" (click)="nextSlide()" aria-label="Siguiente">
-                  <i class="bi bi-chevron-right"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Información adicional -->
-            <div class="carousel-info mt-4">
-              <p class="text-center">
-                <i class="bi bi-info-circle"></i>
-                Estas imágenes documentan las principales amenazas que enfrenta el Cangrejo Azul en su hábitat natural y durante su migración reproductiva.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Evidencias y Datos -->
     <div id="evidencias-datos" class="row mb-5 section-anchor">
       <div class="col-12 mb-4">
@@ -451,17 +371,6 @@
                 <h3><i class="bi bi-people"></i> Testimonios de la Comunidad</h3>
               </div>
               <p>Los habitantes locales reportan disminución significativa en avistamientos de cangrejos.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-10">
-            <div class="alert-danger">
-              <i class="bi bi-exclamation-triangle"></i>
-              <strong>Nota:</strong> Los datos presentados se basan en observaciones científicas y testimonios de la comunidad local. 
-              Se requiere más investigación para cuantificar completamente el impacto de cada amenaza.
             </div>
           </div>
         </div>

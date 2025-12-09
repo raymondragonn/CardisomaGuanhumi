@@ -31,10 +31,6 @@
         <span class="marker-dot"></span>
         <span class="marker-label">Papel Ecológico</span>
       </a>
-      <a href="#estado-conservacion" class="guide-marker" [class.active]="activeSection === 'estado-conservacion'" (click)="scrollToSection('estado-conservacion', $event)">
-        <span class="marker-dot"></span>
-        <span class="marker-label">Conservación</span>
-      </a>
     </div>
   </div>
 
@@ -90,22 +86,32 @@
       </div>
       <div class="col-12 mb-4">
         <div class="row justify-content-center">
-          <div class="col-lg-5 col-md-6 mb-4">
-            <div class="ecologia-card">
-              <div class="ecologia-header">
-                <h3><i class="bi bi-globe"></i> Distribución</h3>
+          <div class="col-lg-10 col-md-12">
+            <div class="distribucion-habitat-container">
+              <div class="row g-4">
+                <!-- Distribución -->
+                <div class="col-lg-6 col-md-6 mb-4">
+                  <div class="distribucion-card">
+                    <div class="distribucion-header">
+                      <h3>Distribución Geográfica</h3>
+                    </div>
+                    <div class="distribucion-content">
+                      <p>{{distribucionHabitat.distribucion}}</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Hábitat -->
+                <div class="col-lg-6 col-md-6 mb-4">
+                  <div class="habitat-card">
+                    <div class="habitat-header">
+                      <h3>Hábitat Natural</h3>
+                    </div>
+                    <div class="habitat-content">
+                      <p>{{distribucionHabitat.habitat}}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p>{{distribucionHabitat.distribucion}}</p>
-            </div>
-          </div>
-          <div class="col-lg-5 col-md-6 mb-4">
-            <div class="ecologia-card">
-              <div class="ecologia-header">
-                <h3><i class="bi bi-tree"></i> Hábitat</h3>
-              </div>
-              <p>{{distribucionHabitat.habitat}}</p>
-              <p class="mt-3"><strong>Altitud:</strong> {{distribucionHabitat.altitud}}</p>
-              <p><strong>Sustrato:</strong> {{distribucionHabitat.sustrato}}</p>
             </div>
           </div>
         </div>
@@ -191,13 +197,16 @@
       </div>
       <div class="col-12 mb-4">
         <div class="row justify-content-center">
-          <div class="col-lg-5 col-md-6 mb-4" *ngFor="let ciclo of ciclosMuda">
-            <div class="caracteristica-card">
-              <div class="caracteristica-icon">
-                <i class="bi bi-arrow-repeat"></i>
+          <div class="col-lg-10 col-md-12">
+            <div class="ciclos-muda-container">
+              <div class="ciclos-muda-grid">
+                <div class="ciclo-muda-card" *ngFor="let ciclo of ciclosMuda">
+                  <div class="ciclo-muda-content">
+                    <h3>{{ciclo.etapa}}</h3>
+                    <p>{{ciclo.descripcion}}</p>
+                  </div>
+                </div>
               </div>
-              <h3>{{ciclo.etapa}}</h3>
-              <p>{{ciclo.descripcion}}</p>
             </div>
           </div>
         </div>
@@ -218,12 +227,16 @@
       </div>
       <div class="col-12 mb-4">
         <div class="row justify-content-center">
-          <div class="col-lg-5 col-md-6 mb-4" *ngFor="let comportamientoItem of comportamiento">
-            <div class="ecologia-card">
-              <div class="ecologia-header">
-                <h3>{{comportamientoItem.aspecto}}</h3>
+          <div class="col-lg-10 col-md-12">
+            <div class="comportamiento-container">
+              <div class="comportamiento-grid">
+                <div class="comportamiento-card" *ngFor="let comportamientoItem of comportamiento">
+                  <div class="comportamiento-content">
+                    <h3>{{comportamientoItem.aspecto}}</h3>
+                    <p>{{comportamientoItem.descripcion}}</p>
+                  </div>
+                </div>
               </div>
-              <p>{{comportamientoItem.descripcion}}</p>
             </div>
           </div>
         </div>
@@ -314,12 +327,27 @@
       <div class="col-12">
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-10">
-            <div class="ecologia-card">
-              <div class="ecologia-header">
-                <h3>Tipo: {{alimentacion.tipo}}</h3>
+            <div class="alimentacion-container">
+              <div class="alimentacion-card">
+                <div class="alimentacion-header">
+                  <div class="alimentacion-title-wrapper">
+                    <h3>Tipo de Alimentación</h3>
+                    <span class="alimentacion-badge">{{alimentacion.tipo}}</span>
+                  </div>
+                </div>
+                <div class="alimentacion-body">
+                  <ul class="alimentacion-list">
+                    <li class="alimentacion-list-item">
+                      <strong>Dieta:</strong>
+                      <span>{{alimentacion.dieta}}</span>
+                    </li>
+                    <li class="alimentacion-list-item">
+                      <strong>Importancia Ecológica:</strong>
+                      <span>{{alimentacion.importancia}}</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <p><strong>Dieta:</strong> {{alimentacion.dieta}}</p>
-              <p class="mt-3"><strong>Importancia ecológica:</strong> {{alimentacion.importancia}}</p>
             </div>
           </div>
         </div>
@@ -340,62 +368,20 @@
       <div class="col-12">
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-10">
-            <div class="ecologia-card importancia-alta">
-              <div class="ecologia-header">
-                <h3>{{papelEcologico.rol}}</h3>
-              </div>
-              <ul class="papel-ecologico-list">
-                <li *ngFor="let funcion of papelEcologico.funciones">{{funcion}}</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 8. Estado de Conservación -->
-    <div id="estado-conservacion" class="row mb-5 section-anchor">
-      <div class="col-12 mb-4">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-12">
-            <h2 class="section-title">
-              <i class="bi bi-shield-exclamation"></i> Estado de Conservación
-            </h2>
-          </div>
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-10">
-            <div class="conservacion-card">
-              <div class="row">
-                <div class="col-lg-3 col-md-6 mb-3">
-                  <div class="conservacion-item estado-vulnerable">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    <h4>Estado</h4>
-                    <p class="conservacion-valor">{{conservacion.estado}}</p>
+            <div class="papel-ecologico-container">
+              <div class="papel-ecologico-card">
+                <div class="papel-ecologico-header">
+                  <div class="papel-ecologico-title-wrapper">
+                    <h3>{{papelEcologico.rol}}</h3>
+                    <p class="papel-ecologico-subtitle">Funciones clave en el ecosistema</p>
                   </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                  <div class="conservacion-item tendencia-negativa">
-                    <i class="bi bi-graph-down-arrow"></i>
-                    <h4>Tendencia</h4>
-                    <p class="conservacion-valor">{{conservacion.tendencia}}</p>
-                  </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                  <div class="conservacion-item">
-                    <i class="bi bi-people-fill"></i>
-                    <h4>Población</h4>
-                    <p class="conservacion-descripcion">{{conservacion.poblacion}}</p>
-                  </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                  <div class="conservacion-item proteccion">
-                    <i class="bi bi-shield-check"></i>
-                    <h4>Protección</h4>
-                    <p class="conservacion-descripcion">{{conservacion.proteccion}}</p>
-                  </div>
+                <div class="papel-ecologico-body">
+                  <ul class="papel-ecologico-list">
+                    <li class="papel-ecologico-list-item" *ngFor="let funcion of papelEcologico.funciones">
+                      {{funcion}}
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -404,7 +390,7 @@
       </div>
     </div>
 
-    <!-- 9. Invitación a AMENAZAS -->
+    <!-- 8. Invitación a AMENAZAS -->
     <div class="row">
       <div class="col-12">
         <div class="row justify-content-center">

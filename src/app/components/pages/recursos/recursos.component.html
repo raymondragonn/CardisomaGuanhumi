@@ -4,7 +4,7 @@
     <!-- Header de la Sección -->
     <div class="row">
       <div class="col-12">
-        <div class="section-header text-center mb-5">
+        <div class="section-header text-center mb-5" #sectionHeader>
           <h1 class="title">Recursos</h1>
           <p class="subtitle">Explora artículos, investigaciones, videos y contenido sobre el Cangrejo Azul</p>
         </div>
@@ -14,7 +14,7 @@
     <!-- Filtros minimalistas -->
     <div class="row justify-content-center mb-4">
       <div class="col-lg-10">
-        <div class="news-filters">
+        <div class="news-filters" #filtersContainer>
           <div class="filter-tabs">
             <button 
               *ngFor="let categoria of categorias" 
@@ -36,12 +36,13 @@
     <!-- Noticias Destacadas (2 grandes) -->
     <div class="row justify-content-center mb-4" *ngIf="recursosFiltrados.length > 0">
       <div class="col-lg-10">
-        <div class="featured-news">
+        <div class="featured-news" #featuredContainer>
           <a 
             *ngFor="let recurso of recursosFiltrados.slice(0, 2); let i = index"
             [href]="recurso.enlace" 
             target="_blank"
             class="featured-card"
+            #featuredCard
             [style.background-image]="recurso.imagen ? 'url(' + recurso.imagen + ')' : 'linear-gradient(135deg, #0c4a6e 0%, #075985 100%)'">
             <div class="featured-overlay"></div>
             <div class="featured-content">
@@ -59,12 +60,13 @@
     <!-- Grid de Noticias (tarjetas pequeñas) -->
     <div class="row justify-content-center" *ngIf="recursosFiltrados.length > 2">
       <div class="col-lg-10">
-        <div class="news-grid">
+        <div class="news-grid" #newsGrid>
           <a 
             *ngFor="let recurso of recursosFiltrados.slice(2)"
             [href]="recurso.enlace" 
             target="_blank"
-            class="news-card">
+            class="news-card"
+            #newsCard>
             <div class="news-image" [style.background-image]="recurso.imagen ? 'url(' + recurso.imagen + ')' : 'linear-gradient(135deg, #0c4a6e 0%, #075985 100%)'">
               <span class="news-category-small" [style.background-color]="getColorPorTipo(recurso.tipo)">
                 {{ getNombreTipo(recurso.tipo) }}
@@ -106,7 +108,7 @@
       <div class="col-12">
         <div class="row justify-content-center">
           <div class="col-lg-10">
-            <div class="cta-box text-center">
+            <div class="cta-box text-center" #ctaBox>
               <h2>¿Tienes Contenido para Compartir?</h2>
               <p>Si tienes artículos, investigaciones o contenido relacionado con el cangrejo azul, compártelo con nosotros</p>
               <button class="btn btn-primary btn-lg" routerLink="/comunidad">

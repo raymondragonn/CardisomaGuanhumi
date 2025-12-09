@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CrearEventoService } from 'src/app/services/crear-evento.service';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 Chart.register(...registerables);
 
@@ -25,6 +27,9 @@ interface ObservacionNaturalista {
   url_origen: string;
   url_ejemplar: string;
   created_at: string;
+  // Campos adicionales para observaciones del formulario
+  esFormulario?: boolean;
+  datosFormulario?: any; // Datos originales del formulario
 }
 
 interface Estadisticas {
@@ -89,6 +94,7 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
   // Estadísticas
   estadisticas: Estadisticas | null = null;
   totalObservaciones: number = 0;
+  totalObservacionesFormulario: number = 0;
   
   // Filtros
   municipioFiltro: string = '';
@@ -103,6 +109,9 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
   observacionForm: FormGroup;
   selectedFileModal: File | null = null;
   isSubmittingModal: boolean = false;
+
+  // Modal de Guía Rápida
+  mostrarModalGuia: boolean = false;
 
   constructor(
     private crearEventoService: CrearEventoService,
@@ -190,16 +199,16 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
     this.observationMarkers.forEach(marker => marker.setMap(null));
     this.observationMarkers = [];
 
-    // Filtrar observaciones válidas (solo Boca del Río y Alvarado)
-    const municipiosPermitidos = ['alvarado', 'boca del río', 'boca del rio'];
-    const validObservations = this.observaciones.filter(obs => 
-      obs.latitud != null && 
-      obs.longitud != null && 
-      !isNaN(obs.latitud) && 
-      !isNaN(obs.longitud) &&
-      obs.municipio && 
-      municipiosPermitidos.includes(obs.municipio.toLowerCase())
-    );
+    // Filtrar observaciones válidas (solo BOCA DEL RIO y ALVARADO)
+    // Normalizar los municipios antes de comparar
+    const municipiosPermitidos = ['ALVARADO', 'BOCA DEL RIO'];
+    const validObservations = this.observaciones.filter(obs => {
+      if (!obs.latitud || !obs.longitud || isNaN(obs.latitud) || isNaN(obs.longitud) || !obs.municipio) {
+        return false;
+      }
+      const municipioNormalizado = this.normalizarNombreMunicipio(obs.municipio);
+      return municipiosPermitidos.includes(municipioNormalizado);
+    });
 
     // Crear marcadores
     validObservations.forEach((obs, index) => {
@@ -693,9 +702,34 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cargando = true;
     this.error = null;
 
-    this.crearEventoService.getObservacionesNaturalista({ limit: 100 }).subscribe({
-      next: (response) => {
-          this.observaciones = response;
+    // Cargar observaciones de Naturalista y del formulario en paralelo
+    const naturalistaObs$ = this.crearEventoService.getObservacionesNaturalista({ limit: 100 })
+      .pipe(catchError(() => of([])));
+    
+    const formularioObs$ = this.crearEventoService.isAuthenticated() 
+      ? this.crearEventoService.getObservaciones().pipe(catchError(() => of([])))
+      : of([]);
+
+    // Combinar ambas fuentes usando forkJoin
+    forkJoin({
+      naturalista: naturalistaObs$,
+      formulario: formularioObs$
+    }).subscribe({
+      next: ({ naturalista, formulario }) => {
+        // Normalizar municipios en observaciones de Naturalista
+        const naturalistaNormalizado = (naturalista || []).map(obs => ({
+          ...obs,
+          municipio: this.normalizarNombreMunicipio(obs.municipio)
+        }));
+        
+        // Convertir observaciones del formulario al formato de Naturalista
+        const observacionesFormulario = this.convertirObservacionesFormulario(formulario || []);
+        this.totalObservacionesFormulario = observacionesFormulario.length;
+        
+        // Combinar y ordenar por fecha (más recientes primero)
+        const todasLasObservaciones = [...naturalistaNormalizado, ...observacionesFormulario];
+        this.observaciones = this.ordenarObservacionesPorFecha(todasLasObservaciones);
+        
         this.extraerMunicipios();
         this.cargando = false;
         
@@ -709,6 +743,63 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
         this.error = 'No se pudieron cargar las observaciones. Verifica que el servidor esté activo.';
         this.cargando = false;
       }
+    });
+  }
+
+  // Función para normalizar nombres de municipios/comunidades
+  normalizarNombreMunicipio(nombre: string | null | undefined): string {
+    if (!nombre) return '';
+    
+    const nombreLower = nombre.toLowerCase().trim();
+    
+    // Normalizar "Boca del Río" / "Boca del Rio" / "boca del rio" -> "BOCA DEL RIO"
+    if (nombreLower === 'boca del río' || nombreLower === 'boca del rio' || nombreLower === 'boca del rió') {
+      return 'BOCA DEL RIO';
+    }
+    
+    // Normalizar "Alvarado" / "alvarado" -> "ALVARADO"
+    if (nombreLower === 'alvarado') {
+      return 'ALVARADO';
+    }
+    
+    // Para otros nombres, mantener el formato original
+    return nombre.trim();
+  }
+
+  convertirObservacionesFormulario(observaciones: any[]): ObservacionNaturalista[] {
+    return observaciones.map(obs => {
+      const municipioNormalizado = this.normalizarNombreMunicipio(obs.comunidad);
+      
+      return {
+        id: obs.id || 0,
+        id_ejemplar: `FORM-${obs.id}`,
+        especie_valida_busqueda: 'Cardisoma guanhumi',
+        latitud: obs.latitud || 0,
+        longitud: obs.longitud || 0,
+        localidad: obs.lugar_observacion || '',
+        municipio: municipioNormalizado,
+        estado: 'Veracruz',
+        pais: 'México',
+        fecha_colecta: obs.fecha_observacion || obs.created_at || new Date().toISOString(),
+        colector: obs.nombre_observador || 'Observador anónimo',
+        coleccion: '',
+        institucion: '',
+        proyecto: 'Observación Comunitaria',
+        url_origen: '',
+        url_ejemplar: '',
+        created_at: obs.created_at || obs.fecha_observacion || new Date().toISOString(),
+        esFormulario: true,
+        datosFormulario: obs // Guardar los datos originales del formulario
+      };
+    });
+  }
+
+  ordenarObservacionesPorFecha(observaciones: ObservacionNaturalista[]): ObservacionNaturalista[] {
+    return observaciones.sort((a, b) => {
+      const fechaA = a.fecha_colecta ? new Date(a.fecha_colecta).getTime() : 0;
+      const fechaB = b.fecha_colecta ? new Date(b.fecha_colecta).getTime() : 0;
+      // Ordenar de más reciente a más antigua (fechaB - fechaA)
+      return fechaB - fechaA;
     });
   }
 
@@ -738,14 +829,18 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
     const municipios = new Set<string>();
     this.observaciones.forEach(obs => {
       if (obs.municipio) {
-        municipios.add(obs.municipio);
+        // Normalizar el nombre antes de agregarlo al Set
+        const municipioNormalizado = this.normalizarNombreMunicipio(obs.municipio);
+        if (municipioNormalizado) {
+          municipios.add(municipioNormalizado);
+        }
       }
     });
     this.municipiosUnicos = Array.from(municipios).sort();
     
-    // Preseleccionar "Alvarado" si está disponible
-    if (this.municipiosUnicos.includes('Alvarado') && !this.municipioFiltro) {
-      this.municipioFiltro = 'Alvarado';
+    // Preseleccionar "ALVARADO" si está disponible
+    if (this.municipiosUnicos.includes('ALVARADO') && !this.municipioFiltro) {
+      this.municipioFiltro = 'ALVARADO';
       this.filtrarObservaciones();
     }
   }
@@ -765,9 +860,71 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
       params.fecha_fin = `${this.anioFiltro}-12-31`;
     }
 
-    this.crearEventoService.getObservacionesNaturalista(params).subscribe({
-      next: (response) => {
-        this.observaciones = response;
+    // Cargar observaciones de Naturalista y del formulario
+    const naturalistaObs$ = this.crearEventoService.getObservacionesNaturalista(params)
+      .pipe(catchError(() => of([])));
+    
+    const formularioObs$ = this.crearEventoService.isAuthenticated() 
+      ? this.crearEventoService.getObservaciones().pipe(catchError(() => of([])))
+      : of([]);
+
+    // Combinar ambas fuentes usando forkJoin
+    forkJoin({
+      naturalista: naturalistaObs$,
+      formulario: formularioObs$
+    }).subscribe({
+      next: ({ naturalista, formulario }) => {
+        // Normalizar municipios en observaciones de Naturalista
+        const naturalistaNormalizado = (naturalista || []).map(obs => ({
+          ...obs,
+          municipio: this.normalizarNombreMunicipio(obs.municipio)
+        }));
+        
+        // Convertir observaciones del formulario al formato de Naturalista
+        const observacionesFormulario = this.convertirObservacionesFormulario(formulario || []);
+        
+        // Aplicar filtros a las observaciones del formulario
+        let observacionesFiltradas = observacionesFormulario;
+        if (this.municipioFiltro) {
+          const municipioFiltroNormalizado = this.normalizarNombreMunicipio(this.municipioFiltro);
+          observacionesFiltradas = observacionesFiltradas.filter(obs => {
+            const municipioObsNormalizado = this.normalizarNombreMunicipio(obs.municipio);
+            return municipioObsNormalizado === municipioFiltroNormalizado;
+          });
+        }
+        if (this.anioFiltro) {
+          observacionesFiltradas = observacionesFiltradas.filter(obs => {
+            if (obs.fecha_colecta) {
+              const fecha = new Date(obs.fecha_colecta);
+              return fecha.getFullYear().toString() === this.anioFiltro;
+            }
+            return false;
+          });
+        }
+        
+        // Aplicar filtros también a las observaciones de Naturalista
+        let naturalistaFiltrado = naturalistaNormalizado;
+        if (this.municipioFiltro) {
+          const municipioFiltroNormalizado = this.normalizarNombreMunicipio(this.municipioFiltro);
+          naturalistaFiltrado = naturalistaFiltrado.filter(obs => {
+            const municipioObsNormalizado = this.normalizarNombreMunicipio(obs.municipio);
+            return municipioObsNormalizado === municipioFiltroNormalizado;
+          });
+        }
+        if (this.anioFiltro) {
+          naturalistaFiltrado = naturalistaFiltrado.filter(obs => {
+            if (obs.fecha_colecta) {
+              const fecha = new Date(obs.fecha_colecta);
+              return fecha.getFullYear().toString() === this.anioFiltro;
+            }
+            return false;
+          });
+        }
+        
+        // Combinar y ordenar por fecha (más recientes primero)
+        const todasLasObservaciones = [...naturalistaFiltrado, ...observacionesFiltradas];
+        this.observaciones = this.ordenarObservacionesPorFecha(todasLasObservaciones);
+        
         this.cargando = false;
         // Actualizar marcadores del mapa
         this.updateMapMarkers();
@@ -796,6 +953,24 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
   verDetalle(observacion: ObservacionNaturalista): void {
     this.observacionSeleccionada = observacion;
     this.mostrarModal = true;
+    
+    // Si es una observación del formulario y no tiene los datos completos, cargarlos
+    if (observacion.esFormulario && !observacion.datosFormulario && observacion.id) {
+      this.cargarDatosCompletosFormulario(observacion.id);
+    }
+  }
+
+  cargarDatosCompletosFormulario(observacionId: number): void {
+    this.crearEventoService.getObservacionById(observacionId).subscribe({
+      next: (data) => {
+        if (this.observacionSeleccionada) {
+          this.observacionSeleccionada.datosFormulario = data;
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar datos completos del formulario:', error);
+      }
+    });
   }
 
   cerrarModal(): void {
@@ -850,6 +1025,32 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mostrarModalObservacion = true;
     this.pasoActual = 1;
     document.body.style.overflow = 'hidden';
+    
+    // Pre-llenar el nombre del usuario si hay sesión iniciada
+    this.crearEventoService.getCurrentUserInfo().subscribe({
+      next: (userInfo) => {
+        if (userInfo && userInfo.full_name) {
+          this.observacionForm.patchValue({
+            nombre: userInfo.full_name
+          });
+        } else if (userInfo && userInfo.username) {
+          // Si no hay full_name, usar username como alternativa
+          this.observacionForm.patchValue({
+            nombre: userInfo.username
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener información del usuario:', error);
+        // Si falla, intentar usar el username del localStorage
+        const username = this.crearEventoService.getCurrentUsername();
+        if (username) {
+          this.observacionForm.patchValue({
+            nombre: username
+          });
+        }
+      }
+    });
   }
 
   cerrarModalObservacion(): void {
@@ -927,6 +1128,9 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
             alert('¡Observación publicada con éxito! Gracias por contribuir.');
             this.cerrarModalObservacion();
             this.isSubmittingModal = false;
+            // Recargar observaciones y estadísticas después de publicar
+            this.cargarObservaciones();
+            this.cargarEstadisticas();
           }
         },
         error: (error) => {
@@ -948,11 +1152,17 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
         alert('¡Observación y foto publicadas con éxito! Gracias por contribuir.');
         this.cerrarModalObservacion();
         this.isSubmittingModal = false;
+        // Recargar observaciones y estadísticas después de publicar
+        this.cargarObservaciones();
+        this.cargarEstadisticas();
       },
       error: () => {
         alert('Observación guardada, pero hubo un error al subir la foto.');
         this.cerrarModalObservacion();
         this.isSubmittingModal = false;
+        // Recargar observaciones y estadísticas aunque haya fallado la foto
+        this.cargarObservaciones();
+        this.cargarEstadisticas();
       }
     });
   }
@@ -1061,6 +1271,20 @@ export class ComunidadComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     return selected;
+  }
+
+  // ==========================================
+  // MODAL DE GUÍA RÁPIDA
+  // ==========================================
+  
+  abrirModalGuia(): void {
+    this.mostrarModalGuia = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  cerrarModalGuia(): void {
+    this.mostrarModalGuia = false;
+    document.body.style.overflow = 'auto';
   }
   
   ngOnDestroy(): void {

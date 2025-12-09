@@ -126,7 +126,8 @@ $white: #fff;
         font-weight: 500;
         color: $text-gray;
         cursor: pointer;
-        transition: all 0.2s;
+        will-change: transform;
+        backface-visibility: hidden;
 
         &:hover {
           border-color: $blue-dark;
@@ -191,10 +192,10 @@ $white: #fff;
       grid-template-columns: 1fr;
     }
 
-    .featured-card {
+      .featured-card {
       position: relative;
       height: 380px;
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
       background-size: cover;
       background-position: center;
@@ -203,7 +204,11 @@ $white: #fff;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      transition: transform 0.3s ease;
+      will-change: transform;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      transform-style: preserve-3d;
 
       @media (max-width: 992px) {
         height: 320px;
@@ -213,18 +218,7 @@ $white: #fff;
         height: 280px;
       }
 
-      &:hover {
-        transform: scale(1.02);
-
-        .featured-overlay {
-          background: linear-gradient(
-            to top,
-            rgba(0, 0, 0, 0.9) 0%,
-            rgba(0, 0, 0, 0.5) 50%,
-            rgba(0, 0, 0, 0.2) 100%
-          );
-        }
-      }
+      // Hover manejado por GSAP para mejor rendimiento
 
       .featured-overlay {
         position: absolute;
@@ -238,13 +232,14 @@ $white: #fff;
           rgba(0, 0, 0, 0.4) 50%,
           rgba(0, 0, 0, 0.1) 100%
         );
-        transition: background 0.3s ease;
+        will-change: background;
       }
 
       .featured-content {
         position: relative;
         z-index: 2;
         padding: 24px;
+        will-change: transform;
 
         @media (max-width: 576px) {
           padding: 16px;
@@ -319,17 +314,18 @@ $white: #fff;
       border-radius: 8px;
       overflow: hidden;
       text-decoration: none;
-      transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
+      will-change: transform, box-shadow;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transition: box-shadow 0.35s ease;
 
       &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-
         .news-image {
           &::after {
-            opacity: 0.3;
+            opacity: 0.2;
           }
         }
 
@@ -344,6 +340,8 @@ $white: #fff;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        overflow: hidden;
+        will-change: transform;
 
         @media (max-width: 576px) {
           height: 200px;
@@ -488,6 +486,32 @@ $white: #fff;
     padding: 3rem 2rem;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    will-change: transform;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.6;
+      }
+    }
 
     @media (max-width: 768px) {
       padding: 2rem 1.5rem;
@@ -504,6 +528,8 @@ $white: #fff;
       font-weight: 700;
       color: #333;
       margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
 
       @media (max-width: 992px) {
         font-size: 2.2rem;
@@ -523,6 +549,8 @@ $white: #fff;
       font-size: 1.2rem;
       color: #555;
       margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
 
       @media (max-width: 768px) {
         font-size: 1.1rem;
@@ -545,6 +573,8 @@ $white: #fff;
       border-radius: 50px;
       transition: all 0.3s ease;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
 
       @media (max-width: 768px) {
         padding: 0.9rem 2rem;
