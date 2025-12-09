@@ -167,7 +167,8 @@
         .marker-label {
           opacity: 1;
           transform: translateX(0);
-          font-weight: 600;
+        font-weight: 700;
+        color: #0a1f44;
         }
       }
 
@@ -187,7 +188,7 @@
       }
 
       .marker-label {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         white-space: nowrap;
         opacity: 0;
         transform: translateX(-10px);
@@ -195,10 +196,12 @@
         position: absolute;
         left: 30px;
         background: rgba(199, 237, 253, 0.9);
-        padding: 4px 10px;
-        border-radius: 4px;
+        padding: 6px 12px;
+        border-radius: 6px;
         backdrop-filter: blur(10px);
         pointer-events: none;
+      color: #0a1f44;
+      font-weight: 700;
       }
     }
   }
@@ -623,7 +626,7 @@
         }
 
         p {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         line-height: 1.5;
           color: #555;
           margin: 0;
@@ -660,7 +663,7 @@
     h3 {
       color: #ffffff;
       font-size: 1.5rem;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 1.5rem;
 
       @media (max-width: 768px) {
@@ -934,7 +937,7 @@
       }
 
       span {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         color: #333;
         font-weight: 500;
         line-height: 1.2;
@@ -1187,7 +1190,7 @@
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 1rem;
           }
 
@@ -1409,7 +1412,7 @@
       line-height: 1.5;
 
       @media (max-width: 576px) {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
       }
     }
   }
@@ -1664,7 +1667,7 @@
     color: #ffffff;
     border-radius: 25px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
 
     @media (max-width: 576px) {
       font-size: 0.9rem;
@@ -2022,7 +2025,7 @@
       opacity: 1;
 
       @media (max-width: 992px) {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
       }
 
       @media (max-width: 576px) {
@@ -2124,7 +2127,7 @@
     .conservacion-descripcion {
       color: #111;
       opacity: 1;
-      font-weight: 600;
+      font-weight: 700;
       text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
     }
   }
@@ -2157,7 +2160,7 @@
     .conservacion-descripcion {
       color: #111;
       opacity: 1;
-      font-weight: 600;
+      font-weight: 700;
       text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
     }
   }
@@ -2188,7 +2191,7 @@
   .conservacion-descripcion {
     font-family: 'Lato', sans-serif;
     font-size: 1.05rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #111;
     margin: 0;
     line-height: 1.7;
@@ -2240,7 +2243,7 @@
       }
 
       .importancia-badge {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         padding: 0.4rem 0.8rem;
       }
 
